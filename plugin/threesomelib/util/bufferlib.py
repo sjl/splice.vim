@@ -1,5 +1,6 @@
 import os
 import vim
+import windows
 
 ap = os.path.abspath
 
@@ -9,7 +10,9 @@ class Buffer(object):
         self._buffer = vim.buffers[i]
         self.name = self._buffer.name
 
-    def open(self):
+    def open(self, winnr=None):
+        if winnr is not None:
+            windows.focus(winnr)
         vim.command('%dbuffer' % self.number)
 
     def set_lines(self, lines):

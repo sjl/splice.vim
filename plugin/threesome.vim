@@ -98,6 +98,9 @@ endfunction"}}}
 function! s:ThreesomeDiff()"{{{
     python ThreesomeDiff()
 endfunction"}}}
+function! s:ThreesomeDiffoff()"{{{
+    python ThreesomeDiffoff()
+endfunction"}}}
 function! s:ThreesomeNext()"{{{
     python ThreesomeNext()
 endfunction"}}}
@@ -122,6 +125,7 @@ command! -nargs=0 ThreesomeTwo call s:ThreesomeTwo()
 command! -nargs=0 ThreesomeResult call s:ThreesomeResult()
 
 command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
+command! -nargs=0 ThreesomeDiffoff call s:ThreesomeDiffoff()
 command! -nargs=0 ThreesomeNext call s:ThreesomeNext()
 command! -nargs=0 ThreesomePrev call s:ThreesomePrev()
 

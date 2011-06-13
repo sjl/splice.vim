@@ -11,13 +11,18 @@ class Mode(object):
 
 
     def diff(self, diffmode):
+        curwindow = windows.currentnr()
         getattr(self, '_diff_%d' % diffmode)()
+        windows.focus(curwindow)
 
     def key_diff(self, diffmode=None):
         next_diff_mode = self._current_diff_mode + 1
         if next_diff_mode >= self._number_of_diff_modes:
             next_diff_mode = 0
         self.diff(next_diff_mode)
+
+    def key_diffoff(self):
+        self.diff(0)
 
 
     def key_original(self):
@@ -211,8 +216,7 @@ class CompareMode(Mode):
 
     def key_one(self):
         def open_one(winnr):
-            windows.focus(winnr)
-            buffers.one.open()
+            buffers.one.open(winnr)
             self.diff(self._current_diff_mode)
 
         curwindow = windows.currentnr()
@@ -246,8 +250,7 @@ class CompareMode(Mode):
 
     def key_two(self):
         def open_two(winnr):
-            windows.focus(winnr)
-            buffers.two.open()
+            buffers.two.open(winnr)
             self.diff(self._current_diff_mode)
 
         curwindow = windows.currentnr()
@@ -358,11 +361,13 @@ class PathMode(Mode):
         windows.focus(2)
         buffers.one.open()
         self.diff(self._current_diff_mode)
+        windows.focus(2)
 
     def key_two(self):
         windows.focus(2)
         buffers.two.open()
         self.diff(self._current_diff_mode)
+        windows.focus(2)
 
     def key_result(self):
         windows.focus(3)

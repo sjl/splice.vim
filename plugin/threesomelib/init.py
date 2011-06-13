@@ -1,3 +1,4 @@
+import vim
 import modes
 from util import buffers, keys, windows
 
@@ -40,11 +41,30 @@ def bind_global_keys():
     keys.bind('r', ':ThreesomeResult<cr>')
 
     keys.bind('d', ':ThreesomeDiff<cr>')
+    keys.bind('D', ':ThreesomeDiffoff<cr>')
     keys.bind('n', ':ThreesomeNext<cr>')
     keys.bind('N', ':ThreesomePrev<cr>')
 
+def setlocal_buffers():
+    buffers.original.open()
+    vim.command('setlocal buftype=nofile')
+    vim.command('setlocal noswapfile')
+    vim.command('setlocal nomodifiable')
+
+    buffers.one.open()
+    vim.command('setlocal buftype=nofile')
+    vim.command('setlocal noswapfile')
+    vim.command('setlocal nomodifiable')
+
+    buffers.two.open()
+    vim.command('setlocal buftype=nofile')
+    vim.command('setlocal noswapfile')
+    vim.command('setlocal nomodifiable')
+
+
 def init():
     process_result()
+    setlocal_buffers()
     bind_global_keys()
     modes.current_mode = modes.grid
     modes.current_mode.activate()

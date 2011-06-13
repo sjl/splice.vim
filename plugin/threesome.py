@@ -47,6 +47,9 @@ def ThreesomePath():
 def ThreesomeDiff():
     threesome.modes.current_mode.key_diff()
 
+def ThreesomeDiffoff():
+    threesome.modes.current_mode.key_diffoff()
+
 def ThreesomeNext():
     threesome.modes.current_mode.key_next()
 
