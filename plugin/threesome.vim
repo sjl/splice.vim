@@ -78,6 +78,9 @@ endfunction"}}}
 function! s:ThreesomeCompare()"{{{
     python ThreesomeCompare()
 endfunction"}}}
+function! s:ThreesomePath()"{{{
+    python ThreesomePath()
+endfunction"}}}
 
 function! s:ThreesomeOriginal()"{{{
     python ThreesomeOriginal()
@@ -95,6 +98,12 @@ endfunction"}}}
 function! s:ThreesomeDiff()"{{{
     python ThreesomeDiff()
 endfunction"}}}
+function! s:ThreesomeNext()"{{{
+    python ThreesomeNext()
+endfunction"}}}
+function! s:ThreesomePrev()"{{{
+    python ThreesomePrev()
+endfunction"}}}
 
 "}}}
 
@@ -105,6 +114,7 @@ command! -nargs=0 ThreesomeInit call s:ThreesomeInit()
 command! -nargs=0 ThreesomeGrid call s:ThreesomeGrid()
 command! -nargs=0 ThreesomeLoupe call s:ThreesomeLoupe()
 command! -nargs=0 ThreesomeCompare call s:ThreesomeCompare()
+command! -nargs=0 ThreesomePath call s:ThreesomePath()
 
 command! -nargs=0 ThreesomeOriginal call s:ThreesomeOriginal()
 command! -nargs=0 ThreesomeOne call s:ThreesomeOne()
@@ -112,6 +122,8 @@ command! -nargs=0 ThreesomeTwo call s:ThreesomeTwo()
 command! -nargs=0 ThreesomeResult call s:ThreesomeResult()
 
 command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
+command! -nargs=0 ThreesomeNext call s:ThreesomeNext()
+command! -nargs=0 ThreesomePrev call s:ThreesomePrev()
 
 "}}}
 

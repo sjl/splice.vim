@@ -37,6 +37,15 @@ class Mode(object):
         self._diff_0()
 
 
+    def key_next(self):
+        self.goto_result()
+        vim.command(r'exe "normal! /\=\=\=\=\=\=\=\<cr>"')
+
+    def key_prev(self):
+        self.goto_result()
+        vim.command(r'exe "normal! ?\=\=\=\=\=\=\=\<cr>"')
+
+
 class GridMode(Mode):
     """
     Layout 1                 Layout 2
@@ -109,6 +118,10 @@ class GridMode(Mode):
     def key_result(self):
         windows.focus(4)
 
+
+    def goto_result(self):
+        windows.focus(4)
+
 class LoupeMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 1
@@ -149,6 +162,10 @@ class LoupeMode(Mode):
     def key_result(self):
         windows.focus(1)
         buffers.result.open()
+
+
+    def goto_result(self):
+        self.key_result()
 
 class CompareMode(Mode):
     def __init__(self):
@@ -224,8 +241,8 @@ class CompareMode(Mode):
             open_one(1)
             return
 
-        # Otherwise, open file one in window 1.
-        open_one(1)
+        # Otherwise, open file one in the current window.
+        open_one(curwindow)
 
     def key_two(self):
         def open_two(winnr):
@@ -260,7 +277,7 @@ class CompareMode(Mode):
             return
 
         # Otherwise, open file two in window 2.
-        open_two(2)
+        open_two(curwindow)
 
     def key_result(self):
         windows.focus(2)
@@ -268,9 +285,97 @@ class CompareMode(Mode):
         self.diff(self._current_diff_mode)
 
 
+    def goto_result(self):
+        self.key_result()
+
+class PathMode(Mode):
+    def __init__(self):
+        self._number_of_diff_modes = 4
+        return super(PathMode, self).__init__()
+
+
+    def _init_layout(self):
+        # Open the layout
+        windows.close_all()
+        windows.vsplit()
+        windows.vsplit()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.original.open()
+
+        windows.focus(2)
+        buffers.one.open()
+
+        windows.focus(3)
+        buffers.result.open()
+
+
+    def _diff_0(self):
+        vim.command('diffoff!')
+        self._current_diff_mode = 0
+
+    def _diff_1(self):
+        vim.command('diffoff!')
+        self._current_diff_mode = 1
+
+        windows.focus(1)
+        vim.command('diffthis')
+
+        windows.focus(3)
+        vim.command('diffthis')
+
+    def _diff_2(self):
+        vim.command('diffoff!')
+        self._current_diff_mode = 2
+
+        windows.focus(1)
+        vim.command('diffthis')
+
+        windows.focus(2)
+        vim.command('diffthis')
+
+    def _diff_3(self):
+        vim.command('diffoff!')
+        self._current_diff_mode = 3
+
+        windows.focus(2)
+        vim.command('diffthis')
+
+        windows.focus(3)
+        vim.command('diffthis')
+
+
+    def activate(self):
+        self._init_layout()
+        super(PathMode, self).activate()
+
+
+    def key_original(self):
+        windows.focus(1)
+
+    def key_one(self):
+        windows.focus(2)
+        buffers.one.open()
+        self.diff(self._current_diff_mode)
+
+    def key_two(self):
+        windows.focus(2)
+        buffers.two.open()
+        self.diff(self._current_diff_mode)
+
+    def key_result(self):
+        windows.focus(3)
+
+
+    def goto_result(self):
+        windows.focus(3)
+
+
 grid = GridMode()
 loupe = LoupeMode()
 compare = CompareMode()
+path = PathMode()
 
 
 def key_grid():
@@ -286,3 +391,7 @@ def key_compare():
     global current_mode
     current_mode = compare
     compare.activate()
+def key_path():
+    global current_mode
+    current_mode = path
+    path.activate()

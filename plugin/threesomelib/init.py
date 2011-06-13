@@ -32,6 +32,7 @@ def bind_global_keys():
     keys.bind('g', ':ThreesomeGrid<cr>')
     keys.bind('l', ':ThreesomeLoupe<cr>')
     keys.bind('c', ':ThreesomeCompare<cr>')
+    keys.bind('p', ':ThreesomePath<cr>')
 
     keys.bind('o', ':ThreesomeOriginal<cr>')
     keys.bind('1', ':ThreesomeOne<cr>')
@@ -39,6 +40,8 @@ def bind_global_keys():
     keys.bind('r', ':ThreesomeResult<cr>')
 
     keys.bind('d', ':ThreesomeDiff<cr>')
+    keys.bind('n', ':ThreesomeNext<cr>')
+    keys.bind('N', ':ThreesomePrev<cr>')
 
 def init():
     process_result()

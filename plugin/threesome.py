@@ -40,7 +40,16 @@ def ThreesomeLoupe():
 def ThreesomeCompare():
     threesome.modes.key_compare()
 
+def ThreesomePath():
+    threesome.modes.key_path()
+
 
 def ThreesomeDiff():
     threesome.modes.current_mode.key_diff()
+
+def ThreesomeNext():
+    threesome.modes.current_mode.key_next()
+
+def ThreesomePrev():
+    threesome.modes.current_mode.key_prev()
 
