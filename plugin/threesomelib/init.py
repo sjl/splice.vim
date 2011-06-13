@@ -64,9 +64,23 @@ def setlocal_buffers():
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
 
+    buffers.hud.open()
+    vim.command('setlocal noswapfile')
+    vim.command('setlocal nomodifiable')
+    vim.command('setlocal nobuflisted')
+    vim.command('setlocal buftype=nofile')
+    vim.command('setlocal winfixheight')
+    vim.command('setlocal noundofile')
+    vim.command('setlocal nolist')
+    vim.command('resize ' + setting('hud_size', '3'))
+
+def create_hud():
+    vim.command('new __Threesome_HUD__')
+
 
 def init():
     process_result()
+    create_hud()
     setlocal_buffers()
     bind_global_keys()
 

@@ -1,6 +1,7 @@
 import os
 import vim
 import windows
+from io import error
 
 ap = os.path.abspath
 
@@ -40,6 +41,10 @@ class _BufferList(object):
     @property
     def result(self):
         return Buffer(3)
+
+    @property
+    def hud(self):
+        return Buffer(int(vim.eval("bufnr('__Threesome_HUD__')")) - 1)
 
 
     @property

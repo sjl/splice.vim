@@ -1,7 +1,6 @@
 import vim
 from util import buffers, windows
 from settings import boolsetting, setting
-from util.io import error
 
 
 current_mode = None
@@ -30,7 +29,7 @@ class Mode(object):
     def diffoff(self):
         curwindow = windows.currentnr()
 
-        for winnr in range(1, 1 + self._number_of_windows):
+        for winnr in range(2, 2 + self._number_of_windows):
             windows.focus(winnr)
             curbuffer = buffers.current
 
@@ -54,7 +53,7 @@ class Mode(object):
         pos = vim.current.window.cursor
         self._current_scrollbind = enabled
 
-        for winnr in range(1, 1 + self._number_of_windows):
+        for winnr in range(2, 2 + self._number_of_windows):
             windows.focus(winnr)
 
             if enabled:
@@ -75,6 +74,7 @@ class Mode(object):
     def layout(self, layoutnr):
         getattr(self, '_layout_%d' % layoutnr)()
         self.diff(self._current_diff_mode)
+        self.redraw_hud()
 
     def key_layout(self, diffmode=None):
         next_layout = self._current_layout + 1
@@ -112,6 +112,53 @@ class Mode(object):
         vim.command(r'exe "normal! ?\=\=\=\=\=\=\=\<cr>"')
 
 
+    def hud_lines(self):
+        def pad(lines):
+            l = max([len(line) for line in lines])
+            return [line.ljust(l) for line in lines]
+
+        sep = '    |    '
+
+        modes = pad([
+            r'Threesome Modes',
+            r'x[G]rid   y[C]ompare'.replace('x', self._id == 'grid' and '*' or ' ')
+                                   .replace('y', self._id == 'comp' and '*' or ' '),
+            r'x[L]oupe  y[P]ath'.replace('x', self._id == 'loup' and '*' or ' ')
+                                .replace('y', self._id == 'path' and '*' or ' '),
+        ])
+        diagram = pad(self.hud_diagram())
+        commands = pad([
+            r'Threesome Commands',
+            r'd: cycle diffs   n: next conflict   space: cycle layouts',
+            r'D: diffs off     N: prev conflict   s: toggle scrollbind',
+        ])
+
+        lines = []
+        for line in modes:
+            lines.append(line + sep)
+        for i, line in enumerate(diagram):
+            lines[i] += line + sep
+        for i, line in enumerate(commands):
+            lines[i] += line + sep
+
+        return lines
+
+    def redraw_hud(self):
+        curwindow = windows.currentnr()
+
+        windows.focus(1)
+
+        vim.command('setlocal modifiable')
+        buffers.hud.set_lines(self.hud_lines())
+        vim.command('setlocal nomodifiable')
+
+        vim.command('set winfixheight')
+        vim.command('resize ' + setting('hud_size', '3'))
+        vim.command('wincmd =')
+
+        windows.focus(curwindow)
+
+
 class GridMode(Mode):
     """
     Layout 0                 Layout 1                        Layout 2
@@ -128,6 +175,7 @@ class GridMode(Mode):
     """
 
     def __init__(self):
+        self._id = 'grid'
         self._current_layout = int(setting('initial_layout_grid', 0))
         self._current_diff_mode = int(setting('initial_diff_grid', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_grid')
@@ -162,6 +210,12 @@ class GridMode(Mode):
         windows.focus(4)
         buffers.result.open()
 
+        # HUD
+        windows.split()
+        windows.focus(5)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
     def _layout_1(self):
         self._number_of_windows = 3
         self._current_layout = 1
@@ -180,6 +234,12 @@ class GridMode(Mode):
 
         windows.focus(3)
         buffers.two.open()
+
+        # HUD
+        windows.split()
+        windows.focus(4)
+        buffers.hud.open()
+        vim.command('wincmd K')
 
     def _layout_2(self):
         self._number_of_windows = 4
@@ -200,6 +260,12 @@ class GridMode(Mode):
         windows.focus(3)
         buffers.two.open()
 
+        # HUD
+        windows.split()
+        windows.focus(4)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
 
     def _diff_0(self):
         self.diffoff()
@@ -209,7 +275,7 @@ class GridMode(Mode):
         self.diffoff()
         self._current_diff_mode = 1
 
-        for i in range(1, self._number_of_windows + 1):
+        for i in range(2, self._number_of_windows + 2):
             windows.focus(i)
             vim.command('diffthis')
 
@@ -255,8 +321,30 @@ class GridMode(Mode):
         elif self._current_layout == 2:
             windows.focus(2)
 
+
+    def hud_diagram(self):
+        if self._current_layout == 0:
+            return [
+                r'           Original',
+                r'Layout ->  One  Two',
+                r'            Result',
+            ]
+        elif self._current_layout == 1:
+            return [
+                r'',
+                r'Layout ->  One  Result  Two',
+                r'',
+            ]
+        elif self._current_layout == 2:
+            return [
+                r'           One',
+                r'Layout ->  Result',
+                r'           Two',
+            ]
+
 class LoupeMode(Mode):
     def __init__(self):
+        self._id = 'loup'
         self._current_layout = int(setting('initial_layout_loupe', 0))
         self._current_diff_mode = int(setting('initial_diff_loupe', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_loupe')
@@ -285,33 +373,60 @@ class LoupeMode(Mode):
         windows.focus(1)
         self._current_buffer.open()
 
+        # HUD
+        windows.split()
+        windows.focus(2)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
 
     def key_original(self):
-        windows.focus(1)
+        windows.focus(2)
         buffers.original.open()
         self._current_buffer = buffers.original
+        self.redraw_hud()
 
     def key_one(self):
-        windows.focus(1)
+        windows.focus(2)
         buffers.one.open()
         self._current_buffer = buffers.one
+        self.redraw_hud()
 
     def key_two(self):
-        windows.focus(1)
+        windows.focus(2)
         buffers.two.open()
         self._current_buffer = buffers.two
+        self.redraw_hud()
 
     def key_result(self):
-        windows.focus(1)
+        windows.focus(2)
         buffers.result.open()
         self._current_buffer = buffers.result
+        self.redraw_hud()
 
 
     def goto_result(self):
         self.key_result()
 
+
+    def hud_diagram(self):
+        bufmap = { buffers.original.name: 'Original',
+                   buffers.one.name: 'One',
+                   buffers.two.name: 'Two',
+                   buffers.result.name: 'Result' }
+
+        buf = bufmap[self._current_buffer.name]
+
+        if self._current_layout == 0:
+            return [
+                r'',
+                r'Layout ->  %s ' % (buf,),
+                r'',
+            ]
+
 class CompareMode(Mode):
     def __init__(self):
+        self._id = 'comp'
         self._current_layout = int(setting('initial_layout_compare', 0))
         self._current_diff_mode = int(setting('initial_diff_compare', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_compare')
@@ -333,10 +448,10 @@ class CompareMode(Mode):
         self.diffoff()
         self._current_diff_mode = 1
 
-        windows.focus(1)
+        windows.focus(2)
         vim.command('diffthis')
 
-        windows.focus(2)
+        windows.focus(3)
         vim.command('diffthis')
 
 
@@ -355,6 +470,12 @@ class CompareMode(Mode):
         windows.focus(2)
         self._current_buffer_second.open()
 
+        # HUD
+        windows.split()
+        windows.focus(3)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
     def _layout_1(self):
         self._number_of_windows = 2
         self._current_layout = 1
@@ -370,46 +491,57 @@ class CompareMode(Mode):
         windows.focus(2)
         self._current_buffer_second.open()
 
+        # HUD
+        windows.split()
+        windows.focus(3)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
 
     def key_original(self):
-        windows.focus(1)
+        windows.focus(2)
         buffers.original.open()
         self._current_buffer_first = buffers.original
         self.diff(self._current_diff_mode)
 
+        self.redraw_hud()
+
     def key_one(self):
         def open_one(winnr):
             buffers.one.open(winnr)
-            if winnr == 1:
+            if winnr == 2:
                 self._current_buffer_first = buffers.one
             else:
                 self._current_buffer_second = buffers.one
             self.diff(self._current_diff_mode)
+            self.redraw_hud()
 
         curwindow = windows.currentnr()
+        if curwindow == 1:
+            curwindow = 2
 
         # If file one is showing, go to it.
-        windows.focus(1)
+        windows.focus(2)
         if buffers.current.name == buffers.one.name:
             return
 
-        windows.focus(2)
+        windows.focus(3)
         if buffers.current.name == buffers.one.name:
             return
 
         # If both the original and result are showing, open file one in the
         # current window.
-        windows.focus(1)
+        windows.focus(2)
         if buffers.current.name == buffers.original.name:
-            windows.focus(2)
+            windows.focus(3)
             if buffers.current.name == buffers.result.name:
                 open_one(curwindow)
                 return
 
         # If file two is in window 1, then we open file one in window 1.
-        windows.focus(1)
+        windows.focus(2)
         if buffers.current.name == buffers.two.name:
-            open_one(1)
+            open_one(2)
             return
 
         # Otherwise, open file one in the current window.
@@ -418,53 +550,81 @@ class CompareMode(Mode):
     def key_two(self):
         def open_two(winnr):
             buffers.two.open(winnr)
-            if winnr == 1:
+            if winnr == 2:
                 self._current_buffer_first = buffers.two
             else:
                 self._current_buffer_second = buffers.two
             self.diff(self._current_diff_mode)
+            self.redraw_hud()
 
         curwindow = windows.currentnr()
+        if curwindow == 1:
+            curwindow = 2
 
         # If file two is showing, go to it.
-        windows.focus(1)
+        windows.focus(2)
         if buffers.current.name == buffers.two.name:
             return
 
-        windows.focus(2)
+        windows.focus(3)
         if buffers.current.name == buffers.two.name:
             return
 
         # If both the original and result are showing, open file two in the
         # current window.
-        windows.focus(1)
+        windows.focus(2)
         if buffers.current.name == buffers.original.name:
-            windows.focus(2)
+            windows.focus(3)
             if buffers.current.name == buffers.result.name:
                 open_two(curwindow)
                 return
 
         # If file one is in window 2, then we open file two in window 2.
-        windows.focus(2)
+        windows.focus(3)
         if buffers.current.name == buffers.two.name:
-            open_two(2)
+            open_two(3)
             return
 
         # Otherwise, open file two in window 2.
         open_two(curwindow)
 
     def key_result(self):
-        windows.focus(2)
+        windows.focus(3)
         buffers.result.open()
         self._current_buffer_second = buffers.result
         self.diff(self._current_diff_mode)
+
+        self.redraw_hud()
 
 
     def goto_result(self):
         self.key_result()
 
+    def hud_diagram(self):
+        bufmap = { buffers.original.name: 'Original',
+                   buffers.one.name: 'One',
+                   buffers.two.name: 'Two',
+                   buffers.result.name: 'Result' }
+
+        first = bufmap[self._current_buffer_first.name]
+        second = bufmap[self._current_buffer_second.name]
+
+        if self._current_layout == 0:
+            return [
+                r'',
+                r'Layout ->  %s %s' % (first, second),
+                r'',
+            ]
+        elif self._current_layout == 1:
+            return [
+                r'',
+                r'Layout ->  %s' % first,
+                r'           %s' % second,
+            ]
+
 class PathMode(Mode):
     def __init__(self):
+        self._id = 'path'
         self._current_layout = int(setting('initial_layout_path', 0))
         self._current_diff_mode = int(setting('initial_diff_path', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_path')
@@ -485,43 +645,43 @@ class PathMode(Mode):
         self.diffoff()
         self._current_diff_mode = 1
 
-        windows.focus(1)
+        windows.focus(2)
         vim.command('diffthis')
 
-        windows.focus(3)
+        windows.focus(4)
         vim.command('diffthis')
 
     def _diff_2(self):
         self.diffoff()
         self._current_diff_mode = 2
 
-        windows.focus(1)
+        windows.focus(2)
         vim.command('diffthis')
 
-        windows.focus(2)
+        windows.focus(3)
         vim.command('diffthis')
 
     def _diff_3(self):
         self.diffoff()
         self._current_diff_mode = 3
 
-        windows.focus(2)
+        windows.focus(3)
         vim.command('diffthis')
 
-        windows.focus(3)
+        windows.focus(4)
         vim.command('diffthis')
 
     def _diff_4(self):
         self.diffoff()
         self._current_diff_mode = 4
 
-        windows.focus(1)
-        vim.command('diffthis')
-
         windows.focus(2)
         vim.command('diffthis')
 
         windows.focus(3)
+        vim.command('diffthis')
+
+        windows.focus(4)
         vim.command('diffthis')
 
 
@@ -544,6 +704,12 @@ class PathMode(Mode):
         windows.focus(3)
         buffers.result.open()
 
+        # HUD
+        windows.split()
+        windows.focus(4)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
     def _layout_1(self):
         self._number_of_windows = 3
         self._current_layout = 1
@@ -563,30 +729,58 @@ class PathMode(Mode):
         windows.focus(3)
         buffers.result.open()
 
+        # HUD
+        windows.split()
+        windows.focus(4)
+        buffers.hud.open()
+        vim.command('wincmd K')
+
 
     def key_original(self):
-        windows.focus(1)
+        windows.focus(2)
 
     def key_one(self):
-        windows.focus(2)
+        windows.focus(3)
         buffers.one.open()
         self._current_mid_buffer = buffers.one
         self.diff(self._current_diff_mode)
-        windows.focus(2)
+        windows.focus(3)
+        self.redraw_hud()
 
     def key_two(self):
-        windows.focus(2)
+        windows.focus(3)
         buffers.two.open()
         self._current_mid_buffer = buffers.two
         self.diff(self._current_diff_mode)
-        windows.focus(2)
+        windows.focus(3)
+        self.redraw_hud()
 
     def key_result(self):
-        windows.focus(3)
+        windows.focus(4)
 
 
     def goto_result(self):
-        windows.focus(3)
+        windows.focus(4)
+
+
+    def hud_diagram(self):
+        if self._current_mid_buffer.name == buffers.one.name:
+            buf = 'One'
+        else:
+            buf = 'Two'
+
+        if self._current_layout == 0:
+            return [
+                r'',
+                r'Layout ->  Original  %s  Result' % buf,
+                r'',
+            ]
+        elif self._current_layout == 1:
+            return [
+                r'           Original',
+                r'Layout ->  %s' % buf,
+                r'           Result',
+            ]
 
 
 grid = GridMode()
