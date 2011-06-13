@@ -45,6 +45,9 @@ choice:
     cmd = "mvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
     trustExitCode = true
 
+**Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you
+prefer to keep the editor in the console.
+
 Basic Usage
 ===========
 
