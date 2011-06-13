@@ -22,6 +22,21 @@ Mercurial and Git.
 * Changelog
 * License
 
+Requirements
+============
+
+Vim 7.3+ compiled with Python 2.5+ support.
+
+Yes, that's some (relatively) new stuff.  No, I'm not going to support anything less
+than that.
+
+Threesome is a merge tool which means you'll be working with it on your development
+machine, not over SSH on your servers.
+
+If you can't be bothered to run up-to-date versions of your tools on your main
+development machine, I can't be bothered to clutter the codebase to support you.
+Feels bad, man.
+
 Installation
 ============
 
