@@ -7,7 +7,6 @@ current_mode = None
 
 class Mode(object):
     def __init__(self):
-        self._current_diff_mode = 0
         return super(Mode, self).__init__()
 
 
@@ -68,7 +67,7 @@ class Mode(object):
 
     def activate(self):
         self.layout(self._current_layout)
-        self._diff_0()
+        self.diff(self._current_diff_mode)
 
 
     def key_next(self):
@@ -97,6 +96,8 @@ class GridMode(Mode):
 
     def __init__(self):
         self._current_layout = int(setting('initial_layout_grid', 0))
+        self._current_diff_mode = int(setting('initial_diff_grid', 0))
+
         self._number_of_diff_modes = 2
         self._number_of_layouts = 3
 
@@ -223,6 +224,8 @@ class GridMode(Mode):
 class LoupeMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_loupe', 0))
+        self._current_diff_mode = int(setting('initial_diff_loupe', 0))
+
         self._number_of_diff_modes = 1
         self._number_of_layouts = 1
 
@@ -275,6 +278,8 @@ class LoupeMode(Mode):
 class CompareMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_compare', 0))
+        self._current_diff_mode = int(setting('initial_diff_compare', 0))
+
         self._number_of_diff_modes = 2
         self._number_of_layouts = 2
 
@@ -425,6 +430,8 @@ class CompareMode(Mode):
 class PathMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_path', 0))
+        self._current_diff_mode = int(setting('initial_diff_path', 0))
+
         self._number_of_diff_modes = 5
         self._number_of_layouts = 2
 

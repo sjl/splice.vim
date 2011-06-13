@@ -43,11 +43,15 @@ CONTENTS                                                  *Threesome-contents*
     5. Configuration .......................... |ThreesomeConfig|
         5.1 threesome_debug ................... |ThreesomeConfig-debug|
         5.2 threesome_disable ................. |ThreesomeConfig-disable|
-        5.3 threesome_initial_layout_grid ..... |ThreesomeConfig-il_grid|
-        5.4 threesome_initial_layout_loupe .... |ThreesomeConfig-il_loupe|
-        5.5 threesome_initial_layout_compare .. |ThreesomeConfig-il_compare|
-        5.6 threesome_initial_layout_path ..... |ThreesomeConfig-il_path|
-        5.7 threesome_initial_mode ............ |ThreesomeConfig-initial_mode|
+        5.3 threesome_initial_diff_grid ....... |ThreesomeConfig-id_grid|
+        5.4 threesome_initial_diff_loupe ...... |ThreesomeConfig-id_loupe|
+        5.5 threesome_initial_diff_compare .... |ThreesomeConfig-id_compare|
+        5.6 threesome_initial_diff_path ....... |ThreesomeConfig-id_path|
+        5.7 threesome_initial_layout_grid ..... |ThreesomeConfig-il_grid|
+        5.8 threesome_initial_layout_loupe .... |ThreesomeConfig-il_loupe|
+        5.9 threesome_initial_layout_compare .. |ThreesomeConfig-il_compare|
+        5.10 threesome_initial_layout_path .... |ThreesomeConfig-il_path|
+        5.11 threesome_initial_mode ........... |ThreesomeConfig-initial_mode|
     6. License ................................ |ThreesomeLicense|
     7. Bugs ................................... |ThreesomeBugs|
     8. Contributing ........................... |ThreesomeContributing|
@@ -263,7 +267,7 @@ This section describes each mode in detail.
 The grid view is used to get an overview of all files at once to get a birds'
 eye view of the merge.
 
-Grid Layouts
+Grid Layouts                                     *ThreesomeModes-grid-layouts*
 ------------
 
     Layout 0                 Layout 1                        Layout 2
@@ -278,7 +282,7 @@ Grid Layouts
     |                   |    |        |        |        |    |               |
     +-------------------+    +--------------------------+    +---------------+
 
-Grid-Specific Key Bindings
+Grid-Specific Key Bindings                          *ThreesomeModes-grid-keys*
 --------------------------
 
 <localleader>o                                   *Original-Grid*
@@ -293,23 +297,18 @@ Grid-Specific Key Bindings
 <localleader>u2                                  *UseHunk2-Grid*
                         Place a hunk from file two into the result file.
 
-Grid Diffs
+Grid Diffs                                         *ThreesomeModes-grid-diffs*
 ----------
 
 1. No diff.
 2. Diff all files.
-3. Diff the original and file one.
-4. Diff the original and file two.
-5. Diff file one and the result.
-6. Diff file two and the result.
-7. Diff the original and the result.
 
 ------------------------------------------------------------------------------
 4.2 Loupe                                               *ThreesomeModes-loupe*
 
 The loupe view is used to focus on and examine a single file in detail.
 
-Loupe Layouts
+Loupe Layouts                                   *ThreesomeModes-loupe-layouts*
 -------------
 
     Layout 0
@@ -322,13 +321,13 @@ Loupe Layouts
     |                 |
     +-----------------+
 
-Loupe-Specific Key Bindings
+Loupe-Specific Key Bindings                        *ThreesomeModes-loupe-keys*
 ---------------------------
 
 <localleader>u                                    *UseHunk-Loupe*
                         Disabled in this mode.
 
-Loupe Diffs
+Loupe Diffs                                       *ThreesomeModes-loupe-diffs*
 -----------
 
 No diffs are possible in loupe mode.
@@ -339,7 +338,7 @@ No diffs are possible in loupe mode.
 The compare view is used to examine the differences between two files at
 a time.
 
-Compare Layouts
+Compare Layouts                               *ThreesomeModes-compare-layouts*
 ---------------
 
     Layout 0                 Layout 1
@@ -355,7 +354,7 @@ Compare Layouts
     | Two     | Two     |    |                   |
     +-------------------+    +-------------------+
 
-Compare-Specific Key Bindings
+Compare-Specific Key Bindings                    *ThreesomeModes-compare-keys*
 -----------------------------
 
 <localleader>u                                    *UseHunk-Compare*
@@ -363,7 +362,7 @@ Compare-Specific Key Bindings
                         both visible, place a hunk from one/two
                         into the result file.  Otherwise: disabled.
 
-Compare Diffs
+Compare Diffs                                   *ThreesomeModes-compare-diffs*
 -------------
 
 1. No diff.
@@ -375,7 +374,7 @@ Compare Diffs
 The path view is used to view the flow of changed through one "path" or
 "branch" of the merge.
 
-Path Layouts
+Path Layouts                                     *ThreesomeModes-path-layouts*
 ------------
 
     Layout 0                        Layout 1
@@ -391,7 +390,7 @@ Path Layouts
     +--------------------------+    +-------------------+
     
 
-Path-Specific Key Bindings
+Path-Specific Key Bindings                          *ThreesomeModes-path-keys*
 --------------------------
 
 <localleader>u                                    *UseHunk-Path*
@@ -399,7 +398,7 @@ Path-Specific Key Bindings
                         is currently in the center window) into the
                         result file.
 
-Path Diffs
+Path Diffs                                         *ThreesomeModes-path-diffs*
 ----------
 
 1. No diff.
@@ -437,39 +436,87 @@ Options: 0 or 1
 Default: 0 (Threesome is enabled as usual)
 
 ------------------------------------------------------------------------------
-5.3 g:threesome_initial_layout_grid                  *ThreesomeConfig-il_grid*
+5.3 g:threesome_initial_diff_grid                    *ThreesomeConfig-id_grid*
 
-Set this to change the layout the grid mode starts in.
+Set this to change the diff the grid mode starts in.
 
-Options: 0, 1, or 2
+See |ThreesomeModes-grid-diffs| for the list of diffs.
+
+Options: 0, or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.4 g:threesome_initial_layout_loupe                *ThreesomeConfig-il_loupe*
+5.4 g:threesome_initial_diff_loupe                  *ThreesomeConfig-id_loupe*
 
-Set this to change the layout the loupe mode starts in.
+Set this to change the diff the loupe mode starts in.
+
+See |ThreesomeModes-loupe-diffs| for the list of diffs.
 
 Options: 0
 Default: 0
 
 ------------------------------------------------------------------------------
-5.5 g:threesome_initial_layout_compare            *ThreesomeConfig-il_compare*
+5.5 g:threesome_initial_diff_compare              *ThreesomeConfig-id_compare*
+
+Set this to change the diff the compare mode starts in.
+
+See |ThreesomeModes-compare-diffs| for the list of diffs.
+
+Options: 0 or 1
+Default: 0
+
+------------------------------------------------------------------------------
+5.6 g:threesome_initial_diff_path                    *ThreesomeConfig-id_path*
+
+Set this to change the diff the path mode starts in.
+
+See |ThreesomeModes-path-diffs| for the list of diffs.
+
+options: 0, 1, 2, 3, or 4
+Default: 0
+
+------------------------------------------------------------------------------
+5.7 g:threesome_initial_layout_grid                  *ThreesomeConfig-il_grid*
+
+Set this to change the layout the grid mode starts in.
+
+See |ThreesomeModes-grid-layouts| for the list of layouts.
+
+Options: 0, 1, or 2
+Default: 0
+
+------------------------------------------------------------------------------
+5.8 g:threesome_initial_layout_loupe                *ThreesomeConfig-il_loupe*
+
+Set this to change the layout the loupe mode starts in.
+
+See |ThreesomeModes-loupe-layouts| for the list of layouts.
+
+Options: 0
+Default: 0
+
+------------------------------------------------------------------------------
+5.9 g:threesome_initial_layout_compare            *ThreesomeConfig-il_compare*
 
 Set this to change the layout the compare mode starts in.
 
+See |ThreesomeModes-compare-layouts| for the list of layouts.
+
 Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.6 g:threesome_initial_layout_path                  *ThreesomeConfig-il_path*
+5.10 g:threesome_initial_layout_path                 *ThreesomeConfig-il_path*
 
 Set this to change the layout the path mode starts in.
 
+See |ThreesomeModes-path-layouts| for the list of layouts.
+
 Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.7 g:threesome_initial_mode                    *ThreesomeConfig-initial_mode*
+5.11 g:threesome_initial_mode                   *ThreesomeConfig-initial_mode*
 
 Set this to change the mode Threesome initially starts up in.
 

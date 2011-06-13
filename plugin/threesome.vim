@@ -71,6 +71,18 @@ endif " }}}
 if !exists('g:threesome_initial_layout_path') " {{{
     let g:threesome_initial_layout_path = 0
 endif " }}}
+if !exists('g:threesome_initial_diff_grid') " {{{
+    let g:threesome_initial_diff_grid = 0
+endif " }}}
+if !exists('g:threesome_initial_diff_loupe') " {{{
+    let g:threesome_initial_diff_loupe = 0
+endif " }}}
+if !exists('g:threesome_initial_diff_compare') " {{{
+    let g:threesome_initial_diff_compare = 0
+endif " }}}
+if !exists('g:threesome_initial_diff_path') " {{{
+    let g:threesome_initial_diff_path = 0
+endif " }}}
 
 "}}}
 
