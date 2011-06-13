@@ -1,6 +1,6 @@
 import vim
 from util import buffers, windows
-from settings import setting
+from settings import boolsetting, setting
 from util.io import error
 
 
@@ -130,7 +130,7 @@ class GridMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_grid', 0))
         self._current_diff_mode = int(setting('initial_diff_grid', 0))
-        self._current_scrollbind = int(setting('initial_scrollbind_grid', 0)) and True or False
+        self._current_scrollbind = boolsetting('initial_scrollbind_grid')
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 3
@@ -259,7 +259,7 @@ class LoupeMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_loupe', 0))
         self._current_diff_mode = int(setting('initial_diff_loupe', 0))
-        self._current_scrollbind = int(setting('initial_scrollbind_loupe', 0)) and True or False
+        self._current_scrollbind = boolsetting('initial_scrollbind_loupe')
 
         self._number_of_diff_modes = 1
         self._number_of_layouts = 1
@@ -314,7 +314,7 @@ class CompareMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_compare', 0))
         self._current_diff_mode = int(setting('initial_diff_compare', 0))
-        self._current_scrollbind = int(setting('initial_scrollbind_compare', 0)) and True or False
+        self._current_scrollbind = boolsetting('initial_scrollbind_compare')
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 2
@@ -467,7 +467,7 @@ class PathMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_path', 0))
         self._current_diff_mode = int(setting('initial_diff_path', 0))
-        self._current_scrollbind = int(setting('initial_scrollbind_path', 0)) and True or False
+        self._current_scrollbind = boolsetting('initial_scrollbind_path')
 
         self._number_of_diff_modes = 5
         self._number_of_layouts = 2

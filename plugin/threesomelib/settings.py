@@ -8,3 +8,9 @@ def setting(name, default=None):
         return default
     else:
         return vim.eval(full_name)
+
+def boolsetting(name):
+    if int(setting(name, 0)):
+        return True
+    else:
+        False
