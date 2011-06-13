@@ -25,38 +25,42 @@ Mercurial and Git.
 ==============================================================================
 CONTENTS                                                  *Threesome-contents*
 
-    1. Version Control Integration ............ |ThreesomeVCS|
-        1.1 Mercurial ......................... |ThreesomeVCS-hg|
-        1.2 Git ............................... |ThreesomeVCS-git|
-    2. Basic Usage ............................ |ThreesomeUsage|
-        2.1 Files ............................. |ThreesomeUsage-files|
-        2.2 Modes ............................. |ThreesomeUsage-modes|
-    3. Key Bindings ........................... |ThreesomeKeys|
-        3.1 Mode Selection Keys ............... |ThreesomeKeys-mode|
-        3.2 File Selection Keys ............... |ThreesomeKeys-file|
-        3.3 Other Keys ........................ |ThreesomeKeys-other|
-    4. Modes .................................. |ThreesomeModes|
-        4.1 Grid .............................. |ThreesomeModes-grid|
-        4.2 Loupe ............................. |ThreesomeModes-loupe|
-        4.3 Compare ........................... |ThreesomeModes-compare|
-        4.4 Path .............................. |ThreesomeModes-path|
-    5. Configuration .......................... |ThreesomeConfig|
-        5.1 threesome_debug ................... |ThreesomeConfig-debug|
-        5.2 threesome_disable ................. |ThreesomeConfig-disable|
-        5.3 threesome_initial_diff_grid ....... |ThreesomeConfig-id_grid|
-        5.4 threesome_initial_diff_loupe ...... |ThreesomeConfig-id_loupe|
-        5.5 threesome_initial_diff_compare .... |ThreesomeConfig-id_compare|
-        5.6 threesome_initial_diff_path ....... |ThreesomeConfig-id_path|
-        5.7 threesome_initial_layout_grid ..... |ThreesomeConfig-il_grid|
-        5.8 threesome_initial_layout_loupe .... |ThreesomeConfig-il_loupe|
-        5.9 threesome_initial_layout_compare .. |ThreesomeConfig-il_compare|
-        5.10 threesome_initial_layout_path .... |ThreesomeConfig-il_path|
-        5.11 threesome_initial_mode ........... |ThreesomeConfig-initial_mode|
-    6. License ................................ |ThreesomeLicense|
-    7. Bugs ................................... |ThreesomeBugs|
-    8. Contributing ........................... |ThreesomeContributing|
-    9. Changelog .............................. |ThreesomeChangelog|
-   10. Credits ................................ |ThreesomeCredits|
+    1. Version Control Integration ................. |ThreesomeVCS|
+        1.1 Mercurial .............................. |ThreesomeVCS-hg|
+        1.2 Git .................................... |ThreesomeVCS-git|
+    2. Basic Usage ................................. |ThreesomeUsage|
+        2.1 Files .................................. |ThreesomeUsage-files|
+        2.2 Modes .................................. |ThreesomeUsage-modes|
+    3. Key Bindings ................................ |ThreesomeKeys|
+        3.1 Mode Selection Keys .................... |ThreesomeKeys-mode|
+        3.2 File Selection Keys .................... |ThreesomeKeys-file|
+        3.3 Other Keys ............................. |ThreesomeKeys-other|
+    4. Modes ....................................... |ThreesomeModes|
+        4.1 Grid ................................... |ThreesomeModes-grid|
+        4.2 Loupe .................................. |ThreesomeModes-loupe|
+        4.3 Compare ................................ |ThreesomeModes-compare|
+        4.4 Path ................................... |ThreesomeModes-path|
+    5. Configuration ............................... |ThreesomeConfig|
+        5.1 threesome_debug ........................ |ThreesomeConfig-debug|
+        5.2 threesome_disable ...................... |ThreesomeConfig-disable|
+        5.3 threesome_initial_diff_grid ............ |ThreesomeConfig-id_grid|
+        5.4 threesome_initial_diff_loupe ........... |ThreesomeConfig-id_loupe|
+        5.5 threesome_initial_diff_compare ......... |ThreesomeConfig-id_compare|
+        5.6 threesome_initial_diff_path ............ |ThreesomeConfig-id_path|
+        5.7 threesome_initial_layout_grid .......... |ThreesomeConfig-il_grid|
+        5.8 threesome_initial_layout_loupe ......... |ThreesomeConfig-il_loupe|
+        5.9 threesome_initial_layout_compare ....... |ThreesomeConfig-il_compare|
+        5.10 threesome_initial_layout_path ......... |ThreesomeConfig-il_path|
+        5.11 threesome_initial_scrollbind_grid ..... |ThreesomeConfig-is_grid|
+        5.12 threesome_initial_scrollbind_loupe .... |ThreesomeConfig-is_loupe|
+        5.13 threesome_initial_scrollbind_compare .. |ThreesomeConfig-is_compare|
+        5.14 threesome_initial_scrollbind_path ..... |ThreesomeConfig-is_path|
+        5.15 threesome_initial_mode ................ |ThreesomeConfig-im|
+    6. License ..................................... |ThreesomeLicense|
+    7. Bugs ........................................ |ThreesomeBugs|
+    8. Contributing ................................ |ThreesomeContributing|
+    9. Changelog ................................... |ThreesomeChangelog|
+   10. Credits ..................................... |ThreesomeCredits|
 
 
 ==============================================================================
@@ -516,9 +520,43 @@ Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.11 g:threesome_initial_mode                   *ThreesomeConfig-initial_mode*
+5.11 g:threesome_initial_scrollbind_grid             *ThreesomeConfig-is_grid*
+
+Set this to 1 to enable |scrollbind| by default in grid mode.
+
+Options: 0 or 1
+Default: 0
+
+------------------------------------------------------------------------------
+5.12 g:threesome_initial_scrollbind_loupe           *ThreesomeConfig-is_loupe*
+
+Set this to 1 to enable |scrollbind| by default in loupe mode.
+
+Options: 0 or 1
+Default: 0
+
+------------------------------------------------------------------------------
+5.13 g:threesome_initial_scrollbind_compare       *ThreesomeConfig-is_compare*
+
+Set this to 1 to enable |scrollbind| by default in compare mode.
+
+Options: 0 or 1
+Default: 0
+
+------------------------------------------------------------------------------
+5.14 g:threesome_initial_scrollbind_path             *ThreesomeConfig-is_path*
+
+Set this to 1 to enable |scrollbind| by default in path mode.
+
+Options: 0 or 1
+Default: 0
+
+------------------------------------------------------------------------------
+5.15 g:threesome_initial_mode                             *ThreesomeConfig-im*
 
 Set this to change the mode Threesome initially starts up in.
+
+See |ThreesomeModes| for a description of each mode.
 
 Options: "grid", "loupe", "compare", or "path"
 Default: "grid"
@@ -550,6 +588,8 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.0.5
+    * Configurable scrollbinding.
 v0.0.4
     * Basic configuration settings.
 v0.0.3

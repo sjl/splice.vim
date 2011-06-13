@@ -1,6 +1,7 @@
 import vim
 from util import buffers, windows
 from settings import setting
+from util.io import error
 
 
 current_mode = None
@@ -14,6 +15,10 @@ class Mode(object):
         curwindow = windows.currentnr()
         getattr(self, '_diff_%d' % diffmode)()
         windows.focus(curwindow)
+
+        # Reset the scrollbind to whatever it was before we diffed.
+        if not diffmode:
+            self.scrollbind(self._current_scrollbind)
 
     def key_diff(self, diffmode=None):
         next_diff_mode = self._current_diff_mode + 1
@@ -39,6 +44,32 @@ class Mode(object):
 
     def key_diffoff(self):
         self.diff(0)
+
+
+    def scrollbind(self, enabled):
+        if self._current_diff_mode:
+            return
+
+        curwindow = windows.currentnr()
+        pos = vim.current.window.cursor
+        self._current_scrollbind = enabled
+
+        for winnr in range(1, 1 + self._number_of_windows):
+            windows.focus(winnr)
+
+            if enabled:
+                vim.command('set scrollbind')
+            else:
+                vim.command('set noscrollbind')
+
+        if enabled:
+            vim.command('syncbind')
+
+        windows.focus(curwindow)
+        vim.current.window.cursor = pos
+
+    def key_scrollbind(self):
+        self.scrollbind(not self._current_scrollbind)
 
 
     def layout(self, layoutnr):
@@ -69,6 +100,8 @@ class Mode(object):
         self.layout(self._current_layout)
         self.diff(self._current_diff_mode)
 
+        self.scrollbind(self._current_scrollbind)
+
 
     def key_next(self):
         self.goto_result()
@@ -97,6 +130,7 @@ class GridMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_grid', 0))
         self._current_diff_mode = int(setting('initial_diff_grid', 0))
+        self._current_scrollbind = int(setting('initial_scrollbind_grid', 0)) and True or False
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 3
@@ -225,6 +259,7 @@ class LoupeMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_loupe', 0))
         self._current_diff_mode = int(setting('initial_diff_loupe', 0))
+        self._current_scrollbind = int(setting('initial_scrollbind_loupe', 0)) and True or False
 
         self._number_of_diff_modes = 1
         self._number_of_layouts = 1
@@ -279,6 +314,7 @@ class CompareMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_compare', 0))
         self._current_diff_mode = int(setting('initial_diff_compare', 0))
+        self._current_scrollbind = int(setting('initial_scrollbind_compare', 0)) and True or False
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 2
@@ -431,6 +467,7 @@ class PathMode(Mode):
     def __init__(self):
         self._current_layout = int(setting('initial_layout_path', 0))
         self._current_diff_mode = int(setting('initial_diff_path', 0))
+        self._current_scrollbind = int(setting('initial_scrollbind_path', 0)) and True or False
 
         self._number_of_diff_modes = 5
         self._number_of_layouts = 2

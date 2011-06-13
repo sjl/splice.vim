@@ -83,6 +83,18 @@ endif " }}}
 if !exists('g:threesome_initial_diff_path') " {{{
     let g:threesome_initial_diff_path = 0
 endif " }}}
+if !exists('g:threesome_initial_scrollbind_grid') " {{{
+    let g:threesome_initial_scrollbind_grid = 0
+endif " }}}
+if !exists('g:threesome_initial_scrollbind_loupe') " {{{
+    let g:threesome_initial_scrollbind_loupe = 0
+endif " }}}
+if !exists('g:threesome_initial_scrollbind_compare') " {{{
+    let g:threesome_initial_scrollbind_compare = 0
+endif " }}}
+if !exists('g:threesome_initial_scrollbind_path') " {{{
+    let g:threesome_initial_scrollbind_path = 0
+endif " }}}
 
 "}}}
 
@@ -128,6 +140,9 @@ endfunction"}}}
 function! s:ThreesomeDiffoff()"{{{
     python ThreesomeDiffoff()
 endfunction"}}}
+function! s:ThreesomeScroll()"{{{
+    python ThreesomeScroll()
+endfunction"}}}
 function! s:ThreesomeLayout()"{{{
     python ThreesomeLayout()
 endfunction"}}}
@@ -156,6 +171,7 @@ command! -nargs=0 ThreesomeResult call s:ThreesomeResult()
 
 command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
 command! -nargs=0 ThreesomeDiffoff call s:ThreesomeDiffoff()
+command! -nargs=0 ThreesomeScroll call s:ThreesomeScroll()
 command! -nargs=0 ThreesomeLayout call s:ThreesomeLayout()
 command! -nargs=0 ThreesomeNext call s:ThreesomeNext()
 command! -nargs=0 ThreesomePrev call s:ThreesomePrev()

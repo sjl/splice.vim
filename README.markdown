@@ -77,8 +77,7 @@ Read the full documentation to learn more `:help threesome`
 TODO for v1.0.0
 ===============
 
-* Add hunk-pulling functionality.
-* Add scroll-locking functionality.
 * Add a help/status bar at the top.
+* Add hunk-pulling functionality.
 * Add a basic test suite.
 * Remove the eat-your-data warnings in the docs.
