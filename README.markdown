@@ -1,3 +1,15 @@
+This plugin is still under active development.
+==============================================
+
+It is not even remotely ready yet.
+==================================
+
+It will probably eat your data.
+===============================
+
+Seriously. If you use it and complain about it eating your data I am going to make fun of you on Twitter.
+======================
+
 Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial and Git.
