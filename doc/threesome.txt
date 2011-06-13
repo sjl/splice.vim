@@ -308,16 +308,14 @@ Loupe Layouts
 -------------
 
     Layout 0
-    +-------------------+
-    |  Any Single File  |
-    |                   |
-    |                   |
-    |                   |
-    |                   |
-    |                   |
-    |                   |
-    |                   |
-    +-------------------+
+    +-----------------+
+    | Any Single File |
+    |                 |
+    |                 |
+    |                 |
+    |                 |
+    |                 |
+    +-----------------+
 
 Loupe-Specific Key Bindings
 ---------------------------
@@ -378,15 +376,15 @@ Path Layouts
     Layout 0                        Layout 1
     +--------------------------+    +-------------------+
     | Orig   |        | Result |    | Orig              |
-    |        |        |        |    |                   |
-    |        | One    |        |    +-------------------+
-    |        |        |        |    | One               |
-    |        |   or   |        |    | or Two            |
+    |        | One    |        |    |                   |
     |        |        |        |    +-------------------+
-    |        | Two    |        |    | Result            |
+    |        |   or   |        |    | One               |
+    |        |        |        |    | or Two            |
+    |        | Two    |        |    +-------------------+
+    |        |        |        |    | Result            |
     |        |        |        |    |                   |
-    |        |        |        |    +-------------------+
-    +--------------------------+
+    +--------------------------+    +-------------------+
+    
 
 Path-Specific Key Bindings
 --------------------------
@@ -456,8 +454,10 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.0.3
+    * Multiple layout support.
 v0.0.2
-    * There's still nothing working, but at least there's some help now.
+    * There's still not much working, but at least there's some help now!
 v0.0.1
     * Oh god nothing works please don't use this for real work yet.
 
