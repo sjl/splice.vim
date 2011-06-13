@@ -8,6 +8,26 @@ for p in vim.eval("&runtimepath").split(','):
          sys.path.append(plugin_dir)
       break
 
+
+# Wrapper functions
+threesome = None
 def ThreesomeInit():
-    from threesomelib.init import init
-    init()
+    global threesome
+    import threesomelib.init as init
+    init.init()
+    threesome = init
+
+def ThreesomeDiff():
+    threesome.current_mode.key_diff()
+
+def ThreesomeOriginal():
+    threesome.current_mode.key_original()
+
+def ThreesomeOne():
+    threesome.current_mode.key_one()
+
+def ThreesomeTwo():
+    threesome.current_mode.key_two()
+
+def ThreesomeResult():
+    threesome.current_mode.key_result()

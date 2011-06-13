@@ -68,12 +68,32 @@ function! s:ThreesomeInit()"{{{
     exe 'pyfile ' . python_module
     python ThreesomeInit()
 endfunction"}}}
+function! s:ThreesomeDiff()"{{{
+    python ThreesomeDiff()
+endfunction"}}}
+function! s:ThreesomeOriginal()"{{{
+    python ThreesomeOriginal()
+endfunction"}}}
+function! s:ThreesomeOne()"{{{
+    python ThreesomeOne()
+endfunction"}}}
+function! s:ThreesomeTwo()"{{{
+    python ThreesomeTwo()
+endfunction"}}}
+function! s:ThreesomeResult()"{{{
+    python ThreesomeResult()
+endfunction"}}}
 
 "}}}
 
 "{{{ Commands
 
 command! -nargs=0 ThreesomeInit call s:ThreesomeInit()
+command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
+command! -nargs=0 ThreesomeOriginal call s:ThreesomeOriginal()
+command! -nargs=0 ThreesomeOne call s:ThreesomeOne()
+command! -nargs=0 ThreesomeTwo call s:ThreesomeTwo()
+command! -nargs=0 ThreesomeResult call s:ThreesomeResult()
 
 "}}}
 
