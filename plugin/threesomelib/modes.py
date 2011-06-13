@@ -7,6 +7,7 @@ current_mode = None
 class Mode(object):
     def __init__(self):
         self._current_diff_mode = 0
+        self._current_layout = 0
         return super(Mode, self).__init__()
 
 
@@ -14,6 +15,13 @@ class Mode(object):
         curwindow = windows.currentnr()
         getattr(self, '_diff_%d' % diffmode)()
         windows.focus(curwindow)
+
+    def key_diff(self, diffmode=None):
+        next_diff_mode = self._current_diff_mode + 1
+        if next_diff_mode >= self._number_of_diff_modes:
+            next_diff_mode = 0
+        self.diff(next_diff_mode)
+
 
     def diffoff(self):
         curwindow = windows.currentnr()
@@ -30,14 +38,19 @@ class Mode(object):
 
         windows.focus(curwindow)
 
-    def key_diff(self, diffmode=None):
-        next_diff_mode = self._current_diff_mode + 1
-        if next_diff_mode >= self._number_of_diff_modes:
-            next_diff_mode = 0
-        self.diff(next_diff_mode)
-
     def key_diffoff(self):
         self.diff(0)
+
+
+    def layout(self, layoutnr):
+        getattr(self, '_layout_%d' % layoutnr)()
+        self.diff(self._current_diff_mode)
+
+    def key_layout(self, diffmode=None):
+        next_layout = self._current_layout + 1
+        if next_layout >= self._number_of_layouts:
+            next_layout = 0
+        self.layout(next_layout)
 
 
     def key_original(self):
@@ -54,6 +67,7 @@ class Mode(object):
 
 
     def activate(self):
+        self.layout(self._current_layout)
         self._diff_0()
 
 
@@ -68,26 +82,30 @@ class Mode(object):
 
 class GridMode(Mode):
     """
-    Layout 1                 Layout 2
-    +-------------------+    +--------------------------+
-    |     Original      |    | One    | Result | Two    |
-    |1                  |    |        |        |        |
-    +-------------------+    |        |        |        |
-    |  One    |    Two  |    |        |        |        |
-    |2        |3        |    |        |        |        |
-    +-------------------+    |        |        |        |
-    |      Result       |    |        |        |        |
-    |4                  |    |1       |2       |3       |
-    +-------------------+    +--------------------------+
+    Layout 0                 Layout 1                        Layout 2             
+    +-------------------+    +--------------------------+    +---------------+
+    |     Original      |    | One    | Result | Two    |    |      One      |
+    |1                  |    |        |        |        |    |1              |
+    +-------------------+    |        |        |        |    +---------------+
+    |  One    |    Two  |    |        |        |        |    |     Result    |
+    |2        |3        |    |        |        |        |    |2              |
+    +-------------------+    |        |        |        |    +---------------+
+    |      Result       |    |        |        |        |    |      Two      |
+    |4                  |    |1       |2       |3       |    |3              |
+    +-------------------+    +--------------------------+    +---------------+
     """
 
     def __init__(self):
         self._number_of_diff_modes = 2
-        self._number_of_windows = 4
+        self._number_of_layouts = 3
+
         return super(GridMode, self).__init__()
 
 
-    def _init_layout(self):
+    def _layout_0(self):
+        self._number_of_windows = 4
+        self._current_layout = 0
+
         # Open the layout
         windows.close_all()
         windows.split()
@@ -108,6 +126,44 @@ class GridMode(Mode):
         windows.focus(4)
         buffers.result.open()
 
+    def _layout_1(self):
+        self._number_of_windows = 3
+        self._current_layout = 1
+
+        # Open the layout
+        windows.close_all()
+        windows.vsplit()
+        windows.vsplit()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.one.open()
+
+        windows.focus(2)
+        buffers.result.open()
+
+        windows.focus(3)
+        buffers.two.open()
+
+    def _layout_2(self):
+        self._number_of_windows = 4
+        self._current_layout = 2
+
+        # Open the layout
+        windows.close_all()
+        windows.split()
+        windows.split()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.one.open()
+
+        windows.focus(2)
+        buffers.result.open()
+
+        windows.focus(3)
+        buffers.two.open()
+
 
     def _diff_0(self):
         self.diffoff()
@@ -117,46 +173,60 @@ class GridMode(Mode):
         self.diffoff()
         self._current_diff_mode = 1
 
-        for i in range(1, 5):
+        for i in range(1, self._number_of_windows + 1):
             windows.focus(i)
             vim.command('diffthis')
 
 
-    def activate(self):
-        self._init_layout()
-        super(GridMode, self).activate()
-
-
     def key_original(self):
-        windows.focus(1)
+        if self._current_layout == 0:
+            windows.focus(1)
+        elif self._current_layout == 1:
+            return
+        elif self._current_layout == 2:
+            return
 
     def key_one(self):
-        windows.focus(2)
+        if self._current_layout == 0:
+            windows.focus(2)
+        elif self._current_layout == 1:
+            windows.focus(1)
+        elif self._current_layout == 2:
+            windows.focus(1)
 
     def key_two(self):
-        windows.focus(3)
+        if self._current_layout == 0:
+            windows.focus(3)
+        elif self._current_layout == 1:
+            windows.focus(3)
+        elif self._current_layout == 2:
+            windows.focus(3)
 
     def key_result(self):
-        windows.focus(4)
+        if self._current_layout == 0:
+            windows.focus(4)
+        elif self._current_layout == 1:
+            windows.focus(2)
+        elif self._current_layout == 2:
+            windows.focus(2)
 
 
     def goto_result(self):
-        windows.focus(4)
+        if self._current_layout == 0:
+            windows.focus(4)
+        elif self._current_layout == 1:
+            windows.focus(2)
+        elif self._current_layout == 2:
+            windows.focus(2)
 
 class LoupeMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 1
-        self._number_of_windows = 1
+        self._number_of_layouts = 1
+
+        self._current_buffer = buffers.result
+
         return super(LoupeMode, self).__init__()
-
-
-    def _init_layout(self):
-        # Open the layout
-        windows.close_all()
-
-        # Put the buffers in the appropriate windows
-        windows.focus(1)
-        buffers.original.open()
 
 
     def _diff_0(self):
@@ -164,26 +234,37 @@ class LoupeMode(Mode):
         self._current_diff_mode = 0
 
 
-    def activate(self):
-        self._init_layout()
-        super(LoupeMode, self).activate()
+    def _layout_0(self):
+        self._number_of_windows = 1
+        self._current_layout = 0
+
+        # Open the layout
+        windows.close_all()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        self._current_buffer.open()
 
 
     def key_original(self):
         windows.focus(1)
         buffers.original.open()
+        self._current_buffer = buffers.original
 
     def key_one(self):
         windows.focus(1)
         buffers.one.open()
+        self._current_buffer = buffers.one
 
     def key_two(self):
         windows.focus(1)
         buffers.two.open()
+        self._current_buffer = buffers.two
 
     def key_result(self):
         windows.focus(1)
         buffers.result.open()
+        self._current_buffer = buffers.result
 
 
     def goto_result(self):
@@ -192,21 +273,12 @@ class LoupeMode(Mode):
 class CompareMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 2
-        self._number_of_windows = 2
+        self._number_of_layouts = 2
+
+        self._current_buffer_first = buffers.original
+        self._current_buffer_second = buffers.result
+
         return super(CompareMode, self).__init__()
-
-
-    def _init_layout(self):
-        # Open the layout
-        windows.close_all()
-        windows.vsplit()
-
-        # Put the buffers in the appropriate windows
-        windows.focus(1)
-        buffers.original.open()
-
-        windows.focus(2)
-        buffers.result.open()
 
 
     def _diff_0(self):
@@ -217,24 +289,57 @@ class CompareMode(Mode):
         self.diffoff()
         self._current_diff_mode = 1
 
-        for i in range(1, 3):
-            windows.focus(i)
-            vim.command('diffthis')
+        windows.focus(1)
+        vim.command('diffthis')
+
+        windows.focus(2)
+        vim.command('diffthis')
 
 
-    def activate(self):
-        self._init_layout()
-        super(CompareMode, self).activate()
+    def _layout_0(self):
+        self._number_of_windows = 2
+        self._current_layout = 0
+
+        # Open the layout
+        windows.close_all()
+        windows.vsplit()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        self._current_buffer_first.open()
+
+        windows.focus(2)
+        self._current_buffer_second.open()
+
+    def _layout_1(self):
+        self._number_of_windows = 2
+        self._current_layout = 1
+
+        # Open the layout
+        windows.close_all()
+        windows.split()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        self._current_buffer_first.open()
+
+        windows.focus(2)
+        self._current_buffer_second.open()
 
 
     def key_original(self):
         windows.focus(1)
         buffers.original.open()
+        self._current_buffer_first = buffers.original
         self.diff(self._current_diff_mode)
 
     def key_one(self):
         def open_one(winnr):
             buffers.one.open(winnr)
+            if winnr == 1:
+                self._current_buffer_first = buffers.one
+            else:
+                self._current_buffer_second = buffers.one
             self.diff(self._current_diff_mode)
 
         curwindow = windows.currentnr()
@@ -269,6 +374,10 @@ class CompareMode(Mode):
     def key_two(self):
         def open_two(winnr):
             buffers.two.open(winnr)
+            if winnr == 1:
+                self._current_buffer_first = buffers.two
+            else:
+                self._current_buffer_second = buffers.two
             self.diff(self._current_diff_mode)
 
         curwindow = windows.currentnr()
@@ -303,6 +412,7 @@ class CompareMode(Mode):
     def key_result(self):
         windows.focus(2)
         buffers.result.open()
+        self._current_buffer_second = buffers.result
         self.diff(self._current_diff_mode)
 
 
@@ -311,26 +421,12 @@ class CompareMode(Mode):
 
 class PathMode(Mode):
     def __init__(self):
-        self._number_of_diff_modes = 4
-        self._number_of_windows = 3
+        self._number_of_diff_modes = 5
+        self._number_of_layouts = 2
+
+        self._current_mid_buffer = buffers.one
+
         return super(PathMode, self).__init__()
-
-
-    def _init_layout(self):
-        # Open the layout
-        windows.close_all()
-        windows.vsplit()
-        windows.vsplit()
-
-        # Put the buffers in the appropriate windows
-        windows.focus(1)
-        buffers.original.open()
-
-        windows.focus(2)
-        buffers.one.open()
-
-        windows.focus(3)
-        buffers.result.open()
 
 
     def _diff_0(self):
@@ -367,10 +463,57 @@ class PathMode(Mode):
         windows.focus(3)
         vim.command('diffthis')
 
+    def _diff_4(self):
+        self.diffoff()
+        self._current_diff_mode = 4
 
-    def activate(self):
-        self._init_layout()
-        super(PathMode, self).activate()
+        windows.focus(1)
+        vim.command('diffthis')
+
+        windows.focus(2)
+        vim.command('diffthis')
+
+        windows.focus(3)
+        vim.command('diffthis')
+
+
+    def _layout_0(self):
+        self._number_of_windows = 3
+        self._current_layout = 0
+
+        # Open the layout
+        windows.close_all()
+        windows.vsplit()
+        windows.vsplit()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.original.open()
+
+        windows.focus(2)
+        self._current_mid_buffer.open()
+
+        windows.focus(3)
+        buffers.result.open()
+
+    def _layout_1(self):
+        self._number_of_windows = 3
+        self._current_layout = 1
+
+        # Open the layout
+        windows.close_all()
+        windows.split()
+        windows.split()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.original.open()
+
+        windows.focus(2)
+        self._current_mid_buffer.open()
+
+        windows.focus(3)
+        buffers.result.open()
 
 
     def key_original(self):
@@ -379,12 +522,14 @@ class PathMode(Mode):
     def key_one(self):
         windows.focus(2)
         buffers.one.open()
+        self._current_mid_buffer = buffers.one
         self.diff(self._current_diff_mode)
         windows.focus(2)
 
     def key_two(self):
         windows.focus(2)
         buffers.two.open()
+        self._current_mid_buffer = buffers.two
         self.diff(self._current_diff_mode)
         windows.focus(2)
 
@@ -411,10 +556,12 @@ def key_loupe():
     global current_mode
     current_mode = loupe
     loupe.activate()
+
 def key_compare():
     global current_mode
     current_mode = compare
     compare.activate()
+
 def key_path():
     global current_mode
     current_mode = path

@@ -44,23 +44,21 @@ def bind_global_keys():
     keys.bind('D', ':ThreesomeDiffoff<cr>')
     keys.bind('n', ':ThreesomeNext<cr>')
     keys.bind('N', ':ThreesomePrev<cr>')
+    keys.bind('<space>', ':ThreesomeLayout<cr>')
 
     keys.bind('q', ':wa<cr>:qa<cr>')
     keys.bind('CC', ':cq<cr>')
 
 def setlocal_buffers():
     buffers.original.open()
-    vim.command('setlocal buftype=nofile')
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
 
     buffers.one.open()
-    vim.command('setlocal buftype=nofile')
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
 
     buffers.two.open()
-    vim.command('setlocal buftype=nofile')
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
 

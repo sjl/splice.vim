@@ -51,6 +51,9 @@ def ThreesomeDiff():
 def ThreesomeDiffoff():
     threesome.modes.current_mode.key_diffoff()
 
+def ThreesomeLayout():
+    threesome.modes.current_mode.key_layout()
+
 def ThreesomeNext():
     threesome.modes.current_mode.key_next()
 

@@ -215,6 +215,9 @@ effects should be fairly intuitive.
 <localleader>d                                       *Diff*
                         Cycle through various diff combinations.
 
+<localleader>D                                    *DiffOff*
+                        Turn off all diffs.
+
 <localleader>u                                    *UseHunk*
                         Place a hunk from file one or two into
                         the result file.
