@@ -45,6 +45,9 @@ def bind_global_keys():
     keys.bind('n', ':ThreesomeNext<cr>')
     keys.bind('N', ':ThreesomePrev<cr>')
 
+    keys.bind('q', ':wa<cr>:qa<cr>')
+    keys.bind('CC', ':cq<cr>')
+
 def setlocal_buffers():
     buffers.original.open()
     vim.command('setlocal buftype=nofile')

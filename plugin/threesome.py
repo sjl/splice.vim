@@ -1,5 +1,6 @@
 import vim, os, sys
 
+
 # Add the library to the Python path.
 for p in vim.eval("&runtimepath").split(','):
    plugin_dir = os.path.join(p, "plugin")
