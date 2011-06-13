@@ -422,6 +422,7 @@ You can tweak the behavior of Threesome by setting a few variables in your
 
 Set this to 1 to force Threesome to reload every time its file is sourced.
 
+Options: 0 or 1
 Default: 0 (Threesome is loaded only once)
 
 ------------------------------------------------------------------------------
@@ -432,6 +433,7 @@ Set this to 1 to disable Threesome entirely.
 Useful if you use the same ~/.vim folder on multiple machines and some of
 them may not have Python support.
 
+Options: 0 or 1
 Default: 0 (Threesome is enabled as usual)
 
 ------------------------------------------------------------------------------
@@ -440,7 +442,6 @@ Default: 0 (Threesome is enabled as usual)
 Set this to change the layout the grid mode starts in.
 
 Options: 0, 1, or 2
-
 Default: 0
 
 ------------------------------------------------------------------------------
@@ -449,7 +450,6 @@ Default: 0
 Set this to change the layout the loupe mode starts in.
 
 Options: 0
-
 Default: 0
 
 ------------------------------------------------------------------------------
@@ -458,7 +458,6 @@ Default: 0
 Set this to change the layout the compare mode starts in.
 
 Options: 0 or 1
-
 Default: 0
 
 ------------------------------------------------------------------------------
@@ -467,7 +466,6 @@ Default: 0
 Set this to change the layout the path mode starts in.
 
 Options: 0 or 1
-
 Default: 0
 
 ------------------------------------------------------------------------------
@@ -476,7 +474,6 @@ Default: 0
 Set this to change the mode Threesome initially starts up in.
 
 Options: "grid", "loupe", "compare", or "path"
-
 Default: "grid"
 
 ==============================================================================
