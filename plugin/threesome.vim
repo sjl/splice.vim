@@ -66,7 +66,7 @@ endif " }}}
 function! s:ThreesomeInit()"{{{
     let python_module = fnameescape(globpath(&runtimepath, 'plugin/threesome.py'))
     exe 'pyfile ' . python_module
-    python "ThreesomeInit()"
+    python ThreesomeInit()
 endfunction"}}}
 
 "}}}
