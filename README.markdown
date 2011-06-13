@@ -32,7 +32,7 @@ choice:
 
     [merge-tools]
     threesome.executable = mvim
-    threesome.args = -f -O4 $base $local $other $output -c 'ThreesomeInit'
+    threesome.args = -f $base $local $other $output -c 'ThreesomeInit'
     threesome.premerge = keep
     threesome.priority = 1
 
