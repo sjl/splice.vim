@@ -240,7 +240,7 @@ effects should be fairly intuitive.
                         contents of the result file as the result.
 
 <localleader>CC                                    *Cancel*
-                        Exits Vim with an error code (like :cq).
+                        Exits Vim with an error code (like |:cquit|).
                         Indicates to the VCS that the merge was
                         NOT successful.
 

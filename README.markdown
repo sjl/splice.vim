@@ -72,7 +72,5 @@ prefer to keep the editor in the console.
 More Information
 ================
 
-Read the full documentation to learn more:
-
-    :help threesome
+Read the full documentation to learn more `:help threesome`
 
