@@ -17,11 +17,11 @@ Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial and Git.
 
-**Source (Mercurial):** <http://bitbucket.org/sjl/threesome.vim>
-**Source (Git):** <http://github.com/sjl/threesome.vim>
-**Issues:** <http://github.com/sjl/threesome.vim/issues>
-**License:** MIT X11
-**Full Documentation:** `:help threesome`
+* **Source (Mercurial):** <http://bitbucket.org/sjl/threesome.vim>
+* **Source (Git):** <http://github.com/sjl/threesome.vim>
+* **Issues:** <http://github.com/sjl/threesome.vim/issues>
+* **License:** MIT X11
+* **Full Documentation:** `:help threesome`
 
 Requirements
 ============

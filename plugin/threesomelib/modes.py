@@ -164,13 +164,13 @@ class GridMode(Mode):
     Layout 0                 Layout 1                        Layout 2
     +-------------------+    +--------------------------+    +---------------+
     |     Original      |    | One    | Result | Two    |    |      One      |
-    |1                  |    |        |        |        |    |1              |
+    |2                  |    |        |        |        |    |2              |
     +-------------------+    |        |        |        |    +---------------+
     |  One    |    Two  |    |        |        |        |    |     Result    |
-    |2        |3        |    |        |        |        |    |2              |
+    |3        |4        |    |        |        |        |    |3              |
     +-------------------+    |        |        |        |    +---------------+
     |      Result       |    |        |        |        |    |      Two      |
-    |4                  |    |1       |2       |3       |    |3              |
+    |5                  |    |2       |3       |4       |    |4              |
     +-------------------+    +--------------------------+    +---------------+
     """
 
@@ -315,11 +315,11 @@ class GridMode(Mode):
 
     def goto_result(self):
         if self._current_layout == 0:
-            windows.focus(4)
+            windows.focus(5)
         elif self._current_layout == 1:
-            windows.focus(2)
+            windows.focus(3)
         elif self._current_layout == 2:
-            windows.focus(2)
+            windows.focus(3)
 
 
     def hud_diagram(self):
@@ -599,6 +599,7 @@ class CompareMode(Mode):
 
     def goto_result(self):
         self.key_result()
+
 
     def hud_diagram(self):
         bufmap = { buffers.original.name: 'Original',
