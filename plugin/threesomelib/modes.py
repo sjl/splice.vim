@@ -1,7 +1,8 @@
 import vim
-from util import keys, windows
-from util.buffers import buffers
-from util.io import error
+from util import buffers, windows
+
+
+current_mode = None
 
 class Mode(object):
     def __init__(self):
@@ -9,14 +10,14 @@ class Mode(object):
         return super(Mode, self).__init__()
 
 
+    def diff(self, diffmode):
+        getattr(self, '_diff_%d' % diffmode)()
+
     def key_diff(self, diffmode=None):
-        if diffmode is not None:
-            getattr(self, '_diff_%d' % diffmode)()
-        else:
-            next_diff_mode = self._current_diff_mode + 1
-            if next_diff_mode >= self._number_of_diff_modes:
-                next_diff_mode = 0
-            self.diff(next_diff_mode)
+        next_diff_mode = self._current_diff_mode + 1
+        if next_diff_mode >= self._number_of_diff_modes:
+            next_diff_mode = 0
+        self.diff(next_diff_mode)
 
 
     def key_original(self):
@@ -30,6 +31,10 @@ class Mode(object):
 
     def key_result(self):
         pass
+
+
+    def activate(self):
+        self._diff_0()
 
 
 class GridMode(Mode):
@@ -62,7 +67,7 @@ class GridMode(Mode):
 
         # Put the buffers in the appropriate windows
         windows.focus(1)
-        buffers.base.open()
+        buffers.original.open()
 
         windows.focus(2)
         buffers.one.open()
@@ -72,13 +77,6 @@ class GridMode(Mode):
 
         windows.focus(4)
         buffers.result.open()
-
-    def _init_keys(self):
-        keys.bind('d', ':ThreesomeDiff<cr>')
-        keys.bind('o', ':ThreesomeOriginal<cr>')
-        keys.bind('1', ':ThreesomeOne<cr>')
-        keys.bind('2', ':ThreesomeTwo<cr>')
-        keys.bind('r', ':ThreesomeResult<cr>')
 
 
     def _diff_0(self):
@@ -96,7 +94,7 @@ class GridMode(Mode):
 
     def activate(self):
         self._init_layout()
-        self._init_keys()
+        super(GridMode, self).activate()
 
 
     def key_original(self):
@@ -111,6 +109,58 @@ class GridMode(Mode):
     def key_result(self):
         windows.focus(4)
 
+class LoupeMode(Mode):
+    def __init__(self):
+        self._number_of_diff_modes = 1
+        return super(LoupeMode, self).__init__()
 
 
-Grid = GridMode()
+    def _init_layout(self):
+        # Open the layout
+        windows.close_all()
+
+        # Put the buffers in the appropriate windows
+        windows.focus(1)
+        buffers.original.open()
+
+
+    def _diff_0(self):
+        vim.command('diffoff!')
+        self._current_diff_mode = 0
+
+
+    def activate(self):
+        self._init_layout()
+        super(LoupeMode, self).activate()
+
+
+    def key_original(self):
+        windows.focus(1)
+        buffers.original.open()
+
+    def key_one(self):
+        windows.focus(1)
+        buffers.one.open()
+
+    def key_two(self):
+        windows.focus(1)
+        buffers.two.open()
+
+    def key_result(self):
+        windows.focus(1)
+        buffers.result.open()
+
+
+grid = GridMode()
+loupe = LoupeMode()
+
+
+def key_grid():
+    global current_mode
+    current_mode = grid
+    grid.activate()
+
+def key_loupe():
+    global current_mode
+    current_mode = loupe
+    loupe.activate()

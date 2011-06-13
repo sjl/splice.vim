@@ -21,7 +21,7 @@ class Buffer(object):
 
 class _BufferList(object):
     @property
-    def base(self):
+    def original(self):
         return Buffer(0)
 
     @property

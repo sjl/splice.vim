@@ -68,9 +68,14 @@ function! s:ThreesomeInit()"{{{
     exe 'pyfile ' . python_module
     python ThreesomeInit()
 endfunction"}}}
-function! s:ThreesomeDiff()"{{{
-    python ThreesomeDiff()
+
+function! s:ThreesomeGrid()"{{{
+    python ThreesomeGrid()
 endfunction"}}}
+function! s:ThreesomeLoupe()"{{{
+    python ThreesomeLoupe()
+endfunction"}}}
+
 function! s:ThreesomeOriginal()"{{{
     python ThreesomeOriginal()
 endfunction"}}}
@@ -84,16 +89,25 @@ function! s:ThreesomeResult()"{{{
     python ThreesomeResult()
 endfunction"}}}
 
+function! s:ThreesomeDiff()"{{{
+    python ThreesomeDiff()
+endfunction"}}}
+
 "}}}
 
 "{{{ Commands
 
 command! -nargs=0 ThreesomeInit call s:ThreesomeInit()
-command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
+
+command! -nargs=0 ThreesomeGrid call s:ThreesomeGrid()
+command! -nargs=0 ThreesomeLoupe call s:ThreesomeLoupe()
+
 command! -nargs=0 ThreesomeOriginal call s:ThreesomeOriginal()
 command! -nargs=0 ThreesomeOne call s:ThreesomeOne()
 command! -nargs=0 ThreesomeTwo call s:ThreesomeTwo()
 command! -nargs=0 ThreesomeResult call s:ThreesomeResult()
+
+command! -nargs=0 ThreesomeDiff call s:ThreesomeDiff()
 
 "}}}
 

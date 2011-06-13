@@ -1,1 +1,2 @@
-from misc import *
+# This is kind of a dirty hack.  Feels bad, man.
+from bufferlib import buffers
