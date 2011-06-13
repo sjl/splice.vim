@@ -1,5 +1,4 @@
 import vim
-from io import error
 
 
 def focus(winnr):
@@ -18,3 +17,7 @@ def split():
 
 def vsplit():
     vim.command('wincmd v')
+
+def currentnr():
+    return int(vim.eval('winnr()'))
+

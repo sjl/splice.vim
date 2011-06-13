@@ -17,8 +17,6 @@ def ThreesomeInit():
     init.init()
     threesome = init
 
-def ThreesomeDiff():
-    threesome.modes.current_mode.key_diff()
 
 def ThreesomeOriginal():
     threesome.modes.current_mode.key_original()
@@ -32,8 +30,17 @@ def ThreesomeTwo():
 def ThreesomeResult():
     threesome.modes.current_mode.key_result()
 
+
 def ThreesomeGrid():
     threesome.modes.key_grid()
 
 def ThreesomeLoupe():
     threesome.modes.key_loupe()
+
+def ThreesomeCompare():
+    threesome.modes.key_compare()
+
+
+def ThreesomeDiff():
+    threesome.modes.current_mode.key_diff()
+

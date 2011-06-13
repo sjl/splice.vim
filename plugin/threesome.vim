@@ -75,6 +75,9 @@ endfunction"}}}
 function! s:ThreesomeLoupe()"{{{
     python ThreesomeLoupe()
 endfunction"}}}
+function! s:ThreesomeCompare()"{{{
+    python ThreesomeCompare()
+endfunction"}}}
 
 function! s:ThreesomeOriginal()"{{{
     python ThreesomeOriginal()
@@ -101,6 +104,7 @@ command! -nargs=0 ThreesomeInit call s:ThreesomeInit()
 
 command! -nargs=0 ThreesomeGrid call s:ThreesomeGrid()
 command! -nargs=0 ThreesomeLoupe call s:ThreesomeLoupe()
+command! -nargs=0 ThreesomeCompare call s:ThreesomeCompare()
 
 command! -nargs=0 ThreesomeOriginal call s:ThreesomeOriginal()
 command! -nargs=0 ThreesomeOne call s:ThreesomeOne()

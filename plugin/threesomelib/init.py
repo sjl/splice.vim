@@ -31,6 +31,7 @@ def process_result():
 def bind_global_keys():
     keys.bind('g', ':ThreesomeGrid<cr>')
     keys.bind('l', ':ThreesomeLoupe<cr>')
+    keys.bind('c', ':ThreesomeCompare<cr>')
 
     keys.bind('o', ':ThreesomeOriginal<cr>')
     keys.bind('1', ':ThreesomeOne<cr>')

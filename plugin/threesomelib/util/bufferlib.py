@@ -1,5 +1,7 @@
+import os
 import vim
 
+ap = os.path.abspath
 
 class Buffer(object):
     def __init__(self, i):
@@ -35,5 +37,20 @@ class _BufferList(object):
     @property
     def result(self):
         return Buffer(3)
+
+
+    @property
+    def current(self):
+        bufname = ap(vim.eval('bufname("%")'))
+
+        if bufname == ap(self.original.name):
+            return self.original
+        elif bufname == ap(self.one.name):
+            return self.one
+        elif bufname == ap(self.two.name):
+            return self.two
+        elif bufname == ap(self.result.name):
+            return self.result
+
 
 buffers = _BufferList()
