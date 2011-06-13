@@ -14,14 +14,6 @@ Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial and Git.
 
-* Basic Usage
-* Key Bindings
-* Modes
-* Configuration
-* Contributing
-* Changelog
-* License
-
 Requirements
 ============
 
@@ -40,8 +32,13 @@ Feels bad, man.
 Installation
 ============
 
-Use Pathogen to install the plugin, then add it as a merge tool for your VCS of
-choice:
+Use Pathogen to install the plugin.
+
+Build the docs:
+
+    :call pathogen#helptags()
+    
+Add it as a merge tool for your VCS of choice:
 
 **Mercurial:** add the following lines to `~/.hgrc`:
 
@@ -63,28 +60,10 @@ choice:
 **Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you
 prefer to keep the editor in the console.
 
-Basic Usage
-===========
+More Information
+================
 
-Threesome takes a lot of inspiration for its user interface from Adobe
-Lightroom, a photo editing program.
-
-When resolving a merge there are four files you will work with:
-
-* **Original**: the original file, as it appears in the parent revision of the two revisions being merged.
-* **One**: the file as it appears in the first revision being merged (usually the "current" revision, or the one you are at when you run 'hg merge REV').
-* **Two**: the file as it appears in the second revision being merged (usually the "target" revision, or the one you specify in the 'hg merge REV' command).
-* **Result**: the result of merging the two revisions of the file (this is the file that your version control system expects to contain the final result once you're done).
-
-Threesome has four "modes" or "views" for working with these files:
-
-* **Grid**: shows all four files at once, to give you an overview of the merge.
-* **Loupe**: shows a single file at a time, for close examination of a single file.
-* **Compare**: shows two files at a time, for examining the movement of changes between pairs of files.
-* **Path**: shows three files at a time: the original, either one or two, and the result, for examining how a change moves through one "path" or "branch" of the merge.
-
-Your goal is to use these views to resolve all merge conflicts by making the
-result file look like it should, saving it to disk, and closing Vim.
+Read the docs: `:help threesome`
 
 Key Bindings
 ============

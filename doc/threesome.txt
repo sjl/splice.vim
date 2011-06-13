@@ -1,0 +1,109 @@
+*threesome.txt*   A plugin for resulving three-way merge conflicts.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+               This plugin is still under active development.
+
+    It is not even remotely ready yet.  Lots of things are unimplemented.
+
+                       It will probably eat your data.
+
+        Seriously. If you use it and complain about it eating your data
+                I am going to make fun of you on Twitter.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+Threesome is a Vim plugin for resolving conflicts during three-way merges.
+It's designed to be used as a merge tool for version control systems like
+Mercurial and Git.
+
+==============================================================================
+CONTENTS                                                  *Threesome-contents*
+
+    1. Basic Usage .................... |ThreesomeUsage|
+        1.1 Files ..................... |ThreesomeUsage-files|
+        1.2 Modes ..................... |ThreesomeUsage-modes|
+    2. Key Bindings ................... |ThreesomeKeys|
+    3. Modes .......................... |ThreesomeModes|
+        3.1 Grid ...................... |ThreesomeModes-grid|
+        3.2 Loupe ..................... |ThreesomeModes-loupe|
+        3.3 Compare ................... |ThreesomeModes-compare|
+        3.4 Path ...................... |ThreesomeModes-path|
+    4. Configuration .................. |ThreesomeConfig|
+        4.1 threesome_disable ......... |threesome_disable|
+    5. License ........................ |ThreesomeLicense|
+    6. Bugs ........................... |ThreesomeBugs|
+    7. Contributing ................... |ThreesomeContributing|
+    8. Changelog ...................... |ThreesomeChangelog|
+    9. Credits ........................ |ThreesomeCredits|
+
+==============================================================================
+1. Basic Usage                                                *ThreesomeUsage*
+
+Threesome takes a lot of inspiration for its user interface from Adobe
+Lightroom, a photo editing program.
+
+------------------------------------------------------------------------------
+1.1 Files                                               *ThreesomeUsage-files*
+
+When resolving a merge there are four files you will work with:
+
+Original                                       *ThreesomeUsage-files-original*
+    The original file, as it appears in the parent revision of the two
+    revisions being merged.
+
+One                                                 *ThreesomeUsage-files-one*
+    The file as it appears in the first revision being merged.
+
+    This is usually the "current" revision, or the one you are at when you
+    run "hg merge REV").
+
+Two                                                 *ThreesomeUsage-files-two*
+    The file as it appears in the second revision being merged.
+
+    This is usually the "target" revision, or the one you specify in the
+    "hg merge REV" command).
+
+Result                                           *ThreesomeUsage-files-result*
+    The result of merging the two revisions of the file.
+
+    This is the file that your version control system expects to contain the
+    final result once you're done.
+
+------------------------------------------------------------------------------
+1.2 Modes                                               *ThreesomeUsage-modes*
+
+Threesome has four "modes" or "views" for working with these files.
+
+Your goal is to use these views to resolve all merge conflicts by making the
+result file look like it should, saving it to disk, and closing Vim.**
+
+Grid                                               *ThreesomeUsage-modes-grid*
+    Shows all four files at once to give you an overview of the merge.
+
+    See |ThreesomeModes-grid| for more information.
+
+Loupe                                             *ThreesomeUsage-modes-loupe*
+    Shows a single file at a time for close examination of a single file.
+
+    See |ThreesomeModes-loupe| for more information.
+
+Compare                                         *ThreesomeUsage-modes-compare*
+    Shows two files at a time for examining the movement of changes between
+    pairs of files.
+
+    See |ThreesomeModes-compare| for more information.
+
+Path                                               *ThreesomeUsage-modes-path*
+    Shows three files at a time:
+
+      - The original
+      - Either one or two
+      - The result
+
+    Used for examining how a change moves through one "path" or "branch"
+    of the merge.
+
+    See |ThreesomeModes-path| for more information.
+
