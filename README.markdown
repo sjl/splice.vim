@@ -1,8 +1,8 @@
 This plugin is still under active development.
 ==============================================
 
-It is not even remotely ready yet.
-==================================
+It is not even remotely ready yet.  Lots of things are unimplemented.
+=====================================================================
 
 It will probably eat your data.
 ===============================
@@ -21,6 +21,29 @@ Mercurial and Git.
 * Contributing
 * Changelog
 * License
+
+Installation
+============
+
+Use Pathogen to install the plugin, then add it as a merge tool for your VCS of
+choice:
+
+**Mercurial:** add the following lines to `~/.hgrc`:
+
+    [merge-tools]
+    threesome.executable = mvim
+    threesome.args = -f -O4 $base $local $other $output -c 'ThreesomeInit'
+    threesome.premerge = keep
+    threesome.priority = 1
+
+**Git:** add the following lines to `~/.gitconfig`:
+
+    [merge]
+    tool = threesome
+
+    [mergetool "threesome"]
+    cmd = "mvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    trustExitCode = true
 
 Basic Usage
 ===========
