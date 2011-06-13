@@ -25,13 +25,16 @@ CONTENTS                                                  *Threesome-contents*
         1.1 Files ..................... |ThreesomeUsage-files|
         1.2 Modes ..................... |ThreesomeUsage-modes|
     2. Key Bindings ................... |ThreesomeKeys|
+        2.1 Mode Selection Keys ....... |ThreesomeKeys-mode|
+        2.2 File Selection Keys ....... |ThreesomeKeys-file|
+        2.3 Other Keys ................ |ThreesomeKeys-other|
     3. Modes .......................... |ThreesomeModes|
         3.1 Grid ...................... |ThreesomeModes-grid|
         3.2 Loupe ..................... |ThreesomeModes-loupe|
         3.3 Compare ................... |ThreesomeModes-compare|
         3.4 Path ...................... |ThreesomeModes-path|
     4. Configuration .................. |ThreesomeConfig|
-        4.1 threesome_disable ......... |threesome_disable|
+        4.1 threesome_disable ......... |ThreesomeConfig-disable|
     5. License ........................ |ThreesomeLicense|
     6. Bugs ........................... |ThreesomeBugs|
     7. Contributing ................... |ThreesomeContributing|
@@ -43,6 +46,15 @@ CONTENTS                                                  *Threesome-contents*
 
 Threesome takes a lot of inspiration for its user interface from Adobe
 Lightroom, a photo editing program.
+
+When resolving merge conflicts your goal is:
+
+  - Examine the three files describing the changes being merged.
+  - Combine these changes into a fourth file (the "result").
+  - Save the result to disk.
+  - Exit Vim with a non-error status code to tell the VCS the merge succeeded.
+
+Threesome has several "modes" to help you work with the various files.
 
 ------------------------------------------------------------------------------
 1.1 Files                                               *ThreesomeUsage-files*
@@ -74,10 +86,7 @@ Result                                           *ThreesomeUsage-files-result*
 ------------------------------------------------------------------------------
 1.2 Modes                                               *ThreesomeUsage-modes*
 
-Threesome has four "modes" or "views" for working with these files.
-
-Your goal is to use these views to resolve all merge conflicts by making the
-result file look like it should, saving it to disk, and closing Vim.**
+Threesome has four "modes" or "views" for working with the files.
 
 Grid                                               *ThreesomeUsage-modes-grid*
     Shows all four files at once to give you an overview of the merge.
@@ -107,3 +116,239 @@ Path                                               *ThreesomeUsage-modes-path*
 
     See |ThreesomeModes-path| for more information.
 
+==============================================================================
+2. Key Bindings                                                *ThreesomeKeys*
+
+Threesome makes use of <localleader> for all of its key bindings to avoid
+clashing with global mappings. If you've never used <localleader> now
+would be a good time to read the |maplocalleader| documentation and
+configure a key for it.
+
+All keybindings are used across (almost) all modes.
+
+The behavior of some of them changes depending on the current mode, but the
+effects should be fairly intuitive.
+
+------------------------------------------------------------------------------
+2.1 Mode Selection Keys                                   *ThreesomeKeys-mode*
+
+<localleader>g                                       *Grid*
+                        Switch to grid view.
+
+<localleader>l                                      *Loupe*
+                        Switch to loupe view.
+
+<localleader>c                                    *Compare*
+                        Switch to compare view.
+
+<localleader>p                                       *Path*
+                        Switch to path view.
+
+------------------------------------------------------------------------------
+2.2 File Selection Keys                                    *ThreesomeKeys-file*
+
+<localleader>o                                   *Original*
+                        Select the original file.
+
+<localleader>1                                        *One*
+                        Select file one.
+
+<localleader>2                                        *Two*
+                        Select file two.
+
+<localleader>r                                     *Result*
+                        Select the result file.
+
+------------------------------------------------------------------------------
+2.3 Other Keys                                           *ThreesomeKeys-other*
+
+<localleader>d                                       *Diff*
+                        Cycle through various diff combinations.
+
+<localleader>u                                    *UseHunk*
+                        Place a hunk from file one or two into
+                        the result file.
+
+<localleader>s                                     *Scroll*
+                        Toggle scroll locking on and off.
+
+<localleader><space>                               *Layout*
+                        Cycle through various layouts of the
+                        current view.
+
+<localleader>n                                       *Next*
+                        Move to the next unresolved conflict.
+
+<localleader>N                                   *Previous*
+                        Move to the previous unresolved conflict.
+
+<localleader>q                                       *Quit*
+                        Save the result file and exit Vim.
+
+                        Indicates to the VCS that the merge was
+                        successful and it should use the current
+                        contents of the result file as the result.
+
+<localleader>CC                                    *Cancel*
+                        Exits Vim with an error code (like :cq).
+                        Indicates to the VCS that the merge was
+                        NOT successful.
+
+==============================================================================
+3. Modes                                                      *ThreesomeModes*
+
+This section describes each mode in detail.
+
+------------------------------------------------------------------------------
+3.1 Grid                                                 *ThreesomeModes-grid*
+
+The grid view is used to get an overview of all files at once to get a birds'
+eye view of the merge.
+
+Grid Layouts
+------------
+
+    Layout 1                 Layout 2
+    +-------------------+    +--------------------------+
+    |     Original      |    | One    | Result | Two    |
+    |                   |    |        |        |        |
+    +-------------------+    |        |        |        |
+    |  One    |    Two  |    |        |        |        |
+    |         |         |    |        |        |        |
+    +-------------------+    |        |        |        |
+    |      Result       |    |        |        |        |
+    |                   |    |        |        |        |
+    +-------------------+    +--------------------------+
+
+Grid-Specific Key Bindings
+--------------------------
+
+<localleader>o                                   *Original*
+                        Select the original file, but only in layout 1.
+
+<localleader>u                                    *UseHunk*
+                        Disabled in this mode.
+
+<localleader>u1                                  *UseHunk1*
+                        Place a hunk from file one into the result file.
+
+<localleader>u2                                  *UseHunk2*
+                        Place a hunk from file two into the result file.
+
+Grid Diffs
+----------
+
+1. No diff.
+2. Diff all files.
+3. Diff the original and file one.
+4. Diff the original and file two.
+5. Diff file one and the result.
+6. Diff file two and the result.
+7. Diff the original and the result.
+
+------------------------------------------------------------------------------
+3.2 Loupe                                               *ThreesomeModes-loupe*
+
+The loupe view is used to focus on and examine a single file in detail.
+
+Loupe Layouts
+-------------
+
+    Layout 1
+    +-------------------+
+    |  Any Single File  |
+    |                   |
+    |                   |
+    |                   |
+    |                   |
+    |                   |
+    |                   |
+    |                   |
+    +-------------------+
+
+Loupe-Specific Key Bindings
+---------------------------
+
+<localleader>u                                    *UseHunk*
+                        Disabled in this mode.
+
+Loupe Diffs
+-----------
+
+No diffs are possible in loupe mode.
+
+------------------------------------------------------------------------------
+3.3 Compare                                           *ThreesomeModes-compare*
+
+The compare view is used to examine the differences between two files at
+a time.
+
+Compare Layouts
+---------------
+
+    Layout 1                 Layout 2
+    +-------------------+    +-------------------+
+    | Orig    | Result  |    | Orig              |
+    |         |         |    | or One            |
+    |    or   |    or   |    | or Two            |
+    |         |         |    |                   |
+    | One     | One     |    +-------------------+
+    |         |         |    | One               |
+    |    or   |    or   |    | or Two            |
+    |         |         |    | or Result         |
+    | Two     | Two     |    |                   |
+    +-------------------+    +-------------------+
+
+Compare-Specific Key Bindings
+-----------------------------
+
+<localleader>u                                    *UseHunk*
+                        If the result file and file one/two are
+                        both visible, place a hunk from one/two
+                        into the result file.  Otherwise: disabled.
+
+Compare Diffs
+-------------
+
+1. No diff.
+2. Diff both files.
+
+------------------------------------------------------------------------------
+3.4 Path                                                 *ThreesomeModes-path*
+
+The path view is used to view the flow of changed through one "path" or
+"branch" of the merge.
+
+Path Layouts
+------------
+
+    Layout 1                        Layout 2
+    +--------------------------+    +-------------------+
+    | Orig   |        | Result |    | Orig              |
+    |        |        |        |    |                   |
+    |        | One    |        |    |                   |
+    |        |        |        |    +-------------------+
+    |        |   or   |        |    | One               |
+    |        |        |        |    | or Two            |
+    |        | Two    |        |    |                   |
+    |        |        |        |    +-------------------+
+    |        |        |        |    | Result            |
+    +--------------------------+    |                   |
+                                    |                   |
+                                    +-------------------+
+
+Path-Specific Key Bindings
+--------------------------
+
+<localleader>u                                    *UseHunk*
+                        Place a hunk from file one or two (whichever
+                        is currently in the center window) into the
+                        result file.
+
+Path Diffs
+----------
+
+1. No diff.
+2. Diff the original and center windows.
+3. Diff the center and result windows.
+4. Diff the original and result windows.
