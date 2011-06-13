@@ -550,6 +550,8 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.0.4
+    * Basic configuration settings.
 v0.0.3
     * Multiple layout support.
 v0.0.2

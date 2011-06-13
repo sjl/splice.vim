@@ -80,6 +80,5 @@ TODO for v1.0.0
 * Add hunk-pulling functionality.
 * Add scroll-locking functionality.
 * Add a help/status bar at the top.
-* Add a few simple config options.
 * Add a basic test suite.
 * Remove the eat-your-data warnings in the docs.
