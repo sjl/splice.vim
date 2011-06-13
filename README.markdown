@@ -1,18 +1,27 @@
 This plugin is still under active development.
 ==============================================
 
-It is not even remotely ready yet.  Lots of things are unimplemented.
-=====================================================================
+It is not even remotely ready yet.
+==================================
+
+Lots of things are unimplemented.
+=================================
 
 It will probably eat your data.
 ===============================
 
 Seriously. If you use it and complain about it eating your data I am going to make fun of you on Twitter.
-======================
+=========================================================================================================
 
 Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial and Git.
+
+**Source (Mercurial):** <http://bitbucket.org/sjl/threesome.vim>
+**Source (Git):** <http://github.com/sjl/threesome.vim>
+**Issues:** <http://github.com/sjl/threesome.vim/issues>
+**License:** MIT X11
+**Full Documentation:** `:help threesome`
 
 Requirements
 ============
@@ -63,6 +72,7 @@ prefer to keep the editor in the console.
 More Information
 ================
 
-Read the docs: `:help threesome`
+Read the full documentation to learn more:
 
+    :help threesome
 

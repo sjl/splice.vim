@@ -1,17 +1,21 @@
-*threesome.txt*   A plugin for resulving three-way merge conflicts.
+*threesome.txt*   A plugin for resolving three-way merge conflicts.
 
+==============================================================================
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+==============================================================================
 
                This plugin is still under active development.
 
     It is not even remotely ready yet.  Lots of things are unimplemented.
 
-                       It will probably eat your data.
+                      It will probably eat your data.
 
-        Seriously. If you use it and complain about it eating your data
-                I am going to make fun of you on Twitter.
+       Seriously. If you use it and complain about it eating your data
+                 I am going to make fun of you on Twitter.
 
+==============================================================================
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+==============================================================================
 
 
 Threesome is a Vim plugin for resolving conflicts during three-way merges.
@@ -21,28 +25,73 @@ Mercurial and Git.
 ==============================================================================
 CONTENTS                                                  *Threesome-contents*
 
-    1. Basic Usage .................... |ThreesomeUsage|
-        1.1 Files ..................... |ThreesomeUsage-files|
-        1.2 Modes ..................... |ThreesomeUsage-modes|
-    2. Key Bindings ................... |ThreesomeKeys|
-        2.1 Mode Selection Keys ....... |ThreesomeKeys-mode|
-        2.2 File Selection Keys ....... |ThreesomeKeys-file|
-        2.3 Other Keys ................ |ThreesomeKeys-other|
-    3. Modes .......................... |ThreesomeModes|
-        3.1 Grid ...................... |ThreesomeModes-grid|
-        3.2 Loupe ..................... |ThreesomeModes-loupe|
-        3.3 Compare ................... |ThreesomeModes-compare|
-        3.4 Path ...................... |ThreesomeModes-path|
-    4. Configuration .................. |ThreesomeConfig|
-        4.1 threesome_disable ......... |ThreesomeConfig-disable|
-    5. License ........................ |ThreesomeLicense|
-    6. Bugs ........................... |ThreesomeBugs|
-    7. Contributing ................... |ThreesomeContributing|
-    8. Changelog ...................... |ThreesomeChangelog|
-    9. Credits ........................ |ThreesomeCredits|
+    1. Version Control Integration .... |ThreesomeVCS|
+        1.1 Mercurial ................. |ThreesomeVCS-hg|
+        1.2 Git ....................... |ThreesomeVCS-git|
+    2. Basic Usage .................... |ThreesomeUsage|
+        2.1 Files ..................... |ThreesomeUsage-files|
+        2.2 Modes ..................... |ThreesomeUsage-modes|
+    3. Key Bindings ................... |ThreesomeKeys|
+        3.1 Mode Selection Keys ....... |ThreesomeKeys-mode|
+        3.2 File Selection Keys ....... |ThreesomeKeys-file|
+        3.3 Other Keys ................ |ThreesomeKeys-other|
+    4. Modes .......................... |ThreesomeModes|
+        4.1 Grid ...................... |ThreesomeModes-grid|
+        4.2 Loupe ..................... |ThreesomeModes-loupe|
+        4.3 Compare ................... |ThreesomeModes-compare|
+        4.4 Path ...................... |ThreesomeModes-path|
+    5. Configuration .................. |ThreesomeConfig|
+        5.1 threesome_debug ........... |ThreesomeConfig-debug|
+        5.1 threesome_disable ......... |ThreesomeConfig-disable|
+    6. License ........................ |ThreesomeLicense|
+    7. Bugs ........................... |ThreesomeBugs|
+    8. Contributing ................... |ThreesomeContributing|
+    9. Changelog ...................... |ThreesomeChangelog|
+   10. Credits ........................ |ThreesomeCredits|
+
 
 ==============================================================================
-1. Basic Usage                                                *ThreesomeUsage*
+1. Version Control Integration                                  *ThreesomeVCS*
+
+Threesome is meant to be called by your version control system when it needs
+you to resolve merge conflicts.  You will need to configure your VCS to do
+this before you can use Threesome.
+
+*Note: If you'd like to use a Vim GUI instead of console vim, replace
+       "vim" in the following commands with your choice of "mvim" or "gvim".
+
+------------------------------------------------------------------------------
+1.1 Mercurial                                                *ThreesomeVCS-hg*
+
+Add the following lines to "~/.hgrc": >
+
+    [merge-tools]
+    threesome.executable = vim
+    threesome.args = -f $base $local $other $output -c 'ThreesomeInit'
+    threesome.premerge = keep
+    threesome.priority = 1
+
+Mercurial will now open Vim with Threesome whenever a file has merge conflicts
+which need to be resolved.
+
+------------------------------------------------------------------------------
+1.2 Git                                                     *ThreesomeVCS-git*
+
+Add the following lines to "~/.gitconfig": >
+
+    [merge]
+    tool = threesome
+
+    [mergetool "threesome"]
+    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    trustExitCode = true
+
+If a "git merge" or "git pull" fails with merge conflicts you can now run
+"git mergetool".  Git will loop over all the files with conflicts and allow
+you to resolve them with Vim and Threesome.
+
+==============================================================================
+2. Basic Usage                                                *ThreesomeUsage*
 
 Threesome takes a lot of inspiration for its user interface from Adobe
 Lightroom, a photo editing program.
@@ -57,7 +106,7 @@ When resolving merge conflicts your goal is:
 Threesome has several "modes" to help you work with the various files.
 
 ------------------------------------------------------------------------------
-1.1 Files                                               *ThreesomeUsage-files*
+2.1 Files                                               *ThreesomeUsage-files*
 
 When resolving a merge there are four files you will work with:
 
@@ -84,7 +133,7 @@ Result                                           *ThreesomeUsage-files-result*
     final result once you're done.
 
 ------------------------------------------------------------------------------
-1.2 Modes                                               *ThreesomeUsage-modes*
+2.2 Modes                                               *ThreesomeUsage-modes*
 
 Threesome has four "modes" or "views" for working with the files.
 
@@ -116,8 +165,9 @@ Path                                               *ThreesomeUsage-modes-path*
 
     See |ThreesomeModes-path| for more information.
 
+
 ==============================================================================
-2. Key Bindings                                                *ThreesomeKeys*
+3. Key Bindings                                                *ThreesomeKeys*
 
 Threesome makes use of <localleader> for all of its key bindings to avoid
 clashing with global mappings. If you've never used <localleader> now
@@ -130,7 +180,7 @@ The behavior of some of them changes depending on the current mode, but the
 effects should be fairly intuitive.
 
 ------------------------------------------------------------------------------
-2.1 Mode Selection Keys                                   *ThreesomeKeys-mode*
+3.1 Mode Selection Keys                                   *ThreesomeKeys-mode*
 
 <localleader>g                                       *Grid*
                         Switch to grid view.
@@ -145,7 +195,7 @@ effects should be fairly intuitive.
                         Switch to path view.
 
 ------------------------------------------------------------------------------
-2.2 File Selection Keys                                    *ThreesomeKeys-file*
+3.2 File Selection Keys                                    *ThreesomeKeys-file*
 
 <localleader>o                                   *Original*
                         Select the original file.
@@ -160,7 +210,7 @@ effects should be fairly intuitive.
                         Select the result file.
 
 ------------------------------------------------------------------------------
-2.3 Other Keys                                           *ThreesomeKeys-other*
+3.3 Other Keys                                           *ThreesomeKeys-other*
 
 <localleader>d                                       *Diff*
                         Cycle through various diff combinations.
@@ -195,12 +245,12 @@ effects should be fairly intuitive.
                         NOT successful.
 
 ==============================================================================
-3. Modes                                                      *ThreesomeModes*
+4. Modes                                                      *ThreesomeModes*
 
 This section describes each mode in detail.
 
 ------------------------------------------------------------------------------
-3.1 Grid                                                 *ThreesomeModes-grid*
+4.1 Grid                                                 *ThreesomeModes-grid*
 
 The grid view is used to get an overview of all files at once to get a birds'
 eye view of the merge.
@@ -223,16 +273,16 @@ Grid Layouts
 Grid-Specific Key Bindings
 --------------------------
 
-<localleader>o                                   *Original*
+<localleader>o                                   *Original-Grid*
                         Select the original file, but only in layout 1.
 
-<localleader>u                                    *UseHunk*
+<localleader>u                                    *UseHunk-Grid*
                         Disabled in this mode.
 
-<localleader>u1                                  *UseHunk1*
+<localleader>u1                                  *UseHunk1-Grid*
                         Place a hunk from file one into the result file.
 
-<localleader>u2                                  *UseHunk2*
+<localleader>u2                                  *UseHunk2-Grid*
                         Place a hunk from file two into the result file.
 
 Grid Diffs
@@ -247,7 +297,7 @@ Grid Diffs
 7. Diff the original and the result.
 
 ------------------------------------------------------------------------------
-3.2 Loupe                                               *ThreesomeModes-loupe*
+4.2 Loupe                                               *ThreesomeModes-loupe*
 
 The loupe view is used to focus on and examine a single file in detail.
 
@@ -269,7 +319,7 @@ Loupe Layouts
 Loupe-Specific Key Bindings
 ---------------------------
 
-<localleader>u                                    *UseHunk*
+<localleader>u                                    *UseHunk-Loupe*
                         Disabled in this mode.
 
 Loupe Diffs
@@ -278,7 +328,7 @@ Loupe Diffs
 No diffs are possible in loupe mode.
 
 ------------------------------------------------------------------------------
-3.3 Compare                                           *ThreesomeModes-compare*
+4.3 Compare                                           *ThreesomeModes-compare*
 
 The compare view is used to examine the differences between two files at
 a time.
@@ -302,7 +352,7 @@ Compare Layouts
 Compare-Specific Key Bindings
 -----------------------------
 
-<localleader>u                                    *UseHunk*
+<localleader>u                                    *UseHunk-Compare*
                         If the result file and file one/two are
                         both visible, place a hunk from one/two
                         into the result file.  Otherwise: disabled.
@@ -314,7 +364,7 @@ Compare Diffs
 2. Diff both files.
 
 ------------------------------------------------------------------------------
-3.4 Path                                                 *ThreesomeModes-path*
+4.4 Path                                                 *ThreesomeModes-path*
 
 The path view is used to view the flow of changed through one "path" or
 "branch" of the merge.
@@ -340,7 +390,7 @@ Path Layouts
 Path-Specific Key Bindings
 --------------------------
 
-<localleader>u                                    *UseHunk*
+<localleader>u                                    *UseHunk-Path*
                         Place a hunk from file one or two (whichever
                         is currently in the center window) into the
                         result file.
@@ -352,3 +402,73 @@ Path Diffs
 2. Diff the original and center windows.
 3. Diff the center and result windows.
 4. Diff the original and result windows.
+
+==============================================================================
+5. Configuration                                             *ThreesomeConfig*
+
+You can tweak the behavior of Threesome by setting a few variables in your
+|vimrc| file. For example: >
+
+    let g:threesome_disable = 1
+
+------------------------------------------------------------------------------
+5.1 g:threesome_debug                                  *ThreesomeConfig-debug*
+
+Set this to 1 to force Threesome to reload every time its file is sourced.
+
+Default: 0 (Threesome is loaded only once)
+
+------------------------------------------------------------------------------
+5.2 g:threesome_disable                              *ThreesomeConfig-disable*
+
+Set this to 1 to disable Threesome entirely.
+
+Useful if you use the same ~/.vim folder on multiple machines and some of
+them may not have Python support.
+
+Default: 0 (Threesome is enabled as usual)
+
+==============================================================================
+6. License                                                  *ThreesomeLicense*
+
+Threesome is copyright Steve Losh & contributors, 2011+ and is licensed
+under the MIT/X11 license.
+
+==============================================================================
+7. Bugs                                                        *ThreesomeBugs*
+
+Please report any bugs you may find on the GitHub issue tracker:
+
+    http://github.com/sjl/threesome.vim/issues
+
+==============================================================================
+8. Contributing                                        *ThreesomeContributing*
+
+Think you can make Threesome better?  Awesome.  New contributors are always
+welcome.
+
+Fork the project on BitBucket or GitHub and send a pull request.
+
+    BitBucket: http://bitbucket.org/sjl/threesome.vim
+    GitHub:    http://github.com/sjl/threesome.vim
+
+==============================================================================
+9. Changelog                                              *ThreesomeChangelog*
+
+v0.0.2
+    * There's still nothing working, but at least there's some help now.
+v0.0.1
+    * Oh god nothing works please don't use this for real work yet.
+
+==============================================================================
+10. Credits                                                 *ThreesomeCredits*
+
+Threesome was originally written by Steve Losh after he got fed up with the
+lack of a powerful, intuitive, beautiful three-way merge program on OS X.
+
+A lot of the inspiration for the layout of the code came from vim-orgmode.
+
+The UI is a combination of ideas from Conflict2Diff.vim, Fugitive.vim, and
+Adobe Lightroom.
+
+==============================================================================
