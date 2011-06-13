@@ -1,5 +1,6 @@
 import vim
 import modes
+from settings import setting
 from util import buffers, keys, windows
 
 
@@ -67,7 +68,12 @@ def init():
     process_result()
     setlocal_buffers()
     bind_global_keys()
-    modes.current_mode = modes.grid
+
+    initial_mode = setting('initial_mode', 'grid').lower()
+    if initial_mode not in ['grid', 'loupe', 'compare', 'path']:
+        initial_mode = 'grid'
+
+    modes.current_mode = getattr(modes, initial_mode)
     modes.current_mode.activate()
 
 

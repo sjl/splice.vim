@@ -56,6 +56,21 @@ endif
 if !exists('g:threesome_disable') " {{{
     let g:threesome_disable = 0
 endif " }}}
+if !exists('g:threesome_initial_mode') " {{{
+    let g:threesome_initial_mode = 'grid'
+endif " }}}
+if !exists('g:threesome_initial_layout_grid') " {{{
+    let g:threesome_initial_layout_grid = 0
+endif " }}}
+if !exists('g:threesome_initial_layout_loupe') " {{{
+    let g:threesome_initial_layout_loupe = 0
+endif " }}}
+if !exists('g:threesome_initial_layout_compare') " {{{
+    let g:threesome_initial_layout_compare = 0
+endif " }}}
+if !exists('g:threesome_initial_layout_path') " {{{
+    let g:threesome_initial_layout_path = 0
+endif " }}}
 
 "}}}
 

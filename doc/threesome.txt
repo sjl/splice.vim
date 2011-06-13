@@ -25,29 +25,34 @@ Mercurial and Git.
 ==============================================================================
 CONTENTS                                                  *Threesome-contents*
 
-    1. Version Control Integration .... |ThreesomeVCS|
-        1.1 Mercurial ................. |ThreesomeVCS-hg|
-        1.2 Git ....................... |ThreesomeVCS-git|
-    2. Basic Usage .................... |ThreesomeUsage|
-        2.1 Files ..................... |ThreesomeUsage-files|
-        2.2 Modes ..................... |ThreesomeUsage-modes|
-    3. Key Bindings ................... |ThreesomeKeys|
-        3.1 Mode Selection Keys ....... |ThreesomeKeys-mode|
-        3.2 File Selection Keys ....... |ThreesomeKeys-file|
-        3.3 Other Keys ................ |ThreesomeKeys-other|
-    4. Modes .......................... |ThreesomeModes|
-        4.1 Grid ...................... |ThreesomeModes-grid|
-        4.2 Loupe ..................... |ThreesomeModes-loupe|
-        4.3 Compare ................... |ThreesomeModes-compare|
-        4.4 Path ...................... |ThreesomeModes-path|
-    5. Configuration .................. |ThreesomeConfig|
-        5.1 threesome_debug ........... |ThreesomeConfig-debug|
-        5.1 threesome_disable ......... |ThreesomeConfig-disable|
-    6. License ........................ |ThreesomeLicense|
-    7. Bugs ........................... |ThreesomeBugs|
-    8. Contributing ................... |ThreesomeContributing|
-    9. Changelog ...................... |ThreesomeChangelog|
-   10. Credits ........................ |ThreesomeCredits|
+    1. Version Control Integration ............ |ThreesomeVCS|
+        1.1 Mercurial ......................... |ThreesomeVCS-hg|
+        1.2 Git ............................... |ThreesomeVCS-git|
+    2. Basic Usage ............................ |ThreesomeUsage|
+        2.1 Files ............................. |ThreesomeUsage-files|
+        2.2 Modes ............................. |ThreesomeUsage-modes|
+    3. Key Bindings ........................... |ThreesomeKeys|
+        3.1 Mode Selection Keys ............... |ThreesomeKeys-mode|
+        3.2 File Selection Keys ............... |ThreesomeKeys-file|
+        3.3 Other Keys ........................ |ThreesomeKeys-other|
+    4. Modes .................................. |ThreesomeModes|
+        4.1 Grid .............................. |ThreesomeModes-grid|
+        4.2 Loupe ............................. |ThreesomeModes-loupe|
+        4.3 Compare ........................... |ThreesomeModes-compare|
+        4.4 Path .............................. |ThreesomeModes-path|
+    5. Configuration .......................... |ThreesomeConfig|
+        5.1 threesome_debug ................... |ThreesomeConfig-debug|
+        5.2 threesome_disable ................. |ThreesomeConfig-disable|
+        5.3 threesome_initial_layout_grid ..... |ThreesomeConfig-il_grid|
+        5.4 threesome_initial_layout_loupe .... |ThreesomeConfig-il_loupe|
+        5.5 threesome_initial_layout_compare .. |ThreesomeConfig-il_compare|
+        5.6 threesome_initial_layout_path ..... |ThreesomeConfig-il_path|
+        5.7 threesome_initial_mode ............ |ThreesomeConfig-initial_mode|
+    6. License ................................ |ThreesomeLicense|
+    7. Bugs ................................... |ThreesomeBugs|
+    8. Contributing ........................... |ThreesomeContributing|
+    9. Changelog .............................. |ThreesomeChangelog|
+   10. Credits ................................ |ThreesomeCredits|
 
 
 ==============================================================================
@@ -408,7 +413,9 @@ Path Diffs
 You can tweak the behavior of Threesome by setting a few variables in your
 |vimrc| file. For example: >
 
-    let g:threesome_disable = 1
+    let g:threesome_initial_mode = "compare"
+    let g:threesome_initial_layout_grid = 2
+    let g:threesome_initial_layout_compare = 1
 
 ------------------------------------------------------------------------------
 5.1 g:threesome_debug                                  *ThreesomeConfig-debug*
@@ -426,6 +433,51 @@ Useful if you use the same ~/.vim folder on multiple machines and some of
 them may not have Python support.
 
 Default: 0 (Threesome is enabled as usual)
+
+------------------------------------------------------------------------------
+5.3 g:threesome_initial_layout_grid                  *ThreesomeConfig-il_grid*
+
+Set this to change the layout the grid mode starts in.
+
+Options: 0, 1, or 2
+
+Default: 0
+
+------------------------------------------------------------------------------
+5.4 g:threesome_initial_layout_loupe                *ThreesomeConfig-il_loupe*
+
+Set this to change the layout the loupe mode starts in.
+
+Options: 0
+
+Default: 0
+
+------------------------------------------------------------------------------
+5.5 g:threesome_initial_layout_compare            *ThreesomeConfig-il_compare*
+
+Set this to change the layout the compare mode starts in.
+
+Options: 0 or 1
+
+Default: 0
+
+------------------------------------------------------------------------------
+5.6 g:threesome_initial_layout_path                  *ThreesomeConfig-il_path*
+
+Set this to change the layout the path mode starts in.
+
+Options: 0 or 1
+
+Default: 0
+
+------------------------------------------------------------------------------
+5.7 g:threesome_initial_mode                    *ThreesomeConfig-initial_mode*
+
+Set this to change the mode Threesome initially starts up in.
+
+Options: "grid", "loupe", "compare", or "path"
+
+Default: "grid"
 
 ==============================================================================
 6. License                                                  *ThreesomeLicense*
