@@ -15,6 +15,21 @@ class Mode(object):
         getattr(self, '_diff_%d' % diffmode)()
         windows.focus(curwindow)
 
+    def diffoff(self):
+        curwindow = windows.currentnr()
+
+        for winnr in range(1, 1 + self._number_of_windows):
+            windows.focus(winnr)
+            curbuffer = buffers.current
+
+            for buffer in buffers.all:
+                buffer.open()
+                vim.command('diffoff')
+
+            curbuffer.open()
+
+        windows.focus(curwindow)
+
     def key_diff(self, diffmode=None):
         next_diff_mode = self._current_diff_mode + 1
         if next_diff_mode >= self._number_of_diff_modes:
@@ -68,6 +83,7 @@ class GridMode(Mode):
 
     def __init__(self):
         self._number_of_diff_modes = 2
+        self._number_of_windows = 4
         return super(GridMode, self).__init__()
 
 
@@ -94,11 +110,11 @@ class GridMode(Mode):
 
 
     def _diff_0(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 0
 
     def _diff_1(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 1
 
         for i in range(1, 5):
@@ -130,6 +146,7 @@ class GridMode(Mode):
 class LoupeMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 1
+        self._number_of_windows = 1
         return super(LoupeMode, self).__init__()
 
 
@@ -143,7 +160,7 @@ class LoupeMode(Mode):
 
 
     def _diff_0(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 0
 
 
@@ -175,6 +192,7 @@ class LoupeMode(Mode):
 class CompareMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 2
+        self._number_of_windows = 2
         return super(CompareMode, self).__init__()
 
 
@@ -192,11 +210,11 @@ class CompareMode(Mode):
 
 
     def _diff_0(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 0
 
     def _diff_1(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 1
 
         for i in range(1, 3):
@@ -294,6 +312,7 @@ class CompareMode(Mode):
 class PathMode(Mode):
     def __init__(self):
         self._number_of_diff_modes = 4
+        self._number_of_windows = 3
         return super(PathMode, self).__init__()
 
 
@@ -315,11 +334,11 @@ class PathMode(Mode):
 
 
     def _diff_0(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 0
 
     def _diff_1(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 1
 
         windows.focus(1)
@@ -329,7 +348,7 @@ class PathMode(Mode):
         vim.command('diffthis')
 
     def _diff_2(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 2
 
         windows.focus(1)
@@ -339,7 +358,7 @@ class PathMode(Mode):
         vim.command('diffthis')
 
     def _diff_3(self):
-        vim.command('diffoff!')
+        self.diffoff()
         self._current_diff_mode = 3
 
         windows.focus(2)

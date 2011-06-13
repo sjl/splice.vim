@@ -55,5 +55,8 @@ class _BufferList(object):
         elif bufname == ap(self.result.name):
             return self.result
 
+    @property
+    def all(self):
+        return [self.original, self.one, self.two, self.result]
 
 buffers = _BufferList()
