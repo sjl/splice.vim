@@ -261,17 +261,17 @@ eye view of the merge.
 Grid Layouts
 ------------
 
-    Layout 1                 Layout 2
-    +-------------------+    +--------------------------+
-    |     Original      |    | One    | Result | Two    |
-    |                   |    |        |        |        |
-    +-------------------+    |        |        |        |
-    |  One    |    Two  |    |        |        |        |
-    |         |         |    |        |        |        |
-    +-------------------+    |        |        |        |
-    |      Result       |    |        |        |        |
-    |                   |    |        |        |        |
-    +-------------------+    +--------------------------+
+    Layout 0                 Layout 1                        Layout 2
+    +-------------------+    +--------------------------+    +---------------+
+    |     Original      |    | One    | Result | Two    |    |      One      |
+    |                   |    |        |        |        |    |               |
+    +-------------------+    |        |        |        |    +---------------+
+    |  One    |    Two  |    |        |        |        |    |     Result    |
+    |         |         |    |        |        |        |    |               |
+    +-------------------+    |        |        |        |    +---------------+
+    |      Result       |    |        |        |        |    |      Two      |
+    |                   |    |        |        |        |    |               |
+    +-------------------+    +--------------------------+    +---------------+
 
 Grid-Specific Key Bindings
 --------------------------
@@ -307,7 +307,7 @@ The loupe view is used to focus on and examine a single file in detail.
 Loupe Layouts
 -------------
 
-    Layout 1
+    Layout 0
     +-------------------+
     |  Any Single File  |
     |                   |
@@ -339,7 +339,7 @@ a time.
 Compare Layouts
 ---------------
 
-    Layout 1                 Layout 2
+    Layout 0                 Layout 1
     +-------------------+    +-------------------+
     | Orig    | Result  |    | Orig              |
     |         |         |    | or One            |
@@ -375,20 +375,18 @@ The path view is used to view the flow of changed through one "path" or
 Path Layouts
 ------------
 
-    Layout 1                        Layout 2
+    Layout 0                        Layout 1
     +--------------------------+    +-------------------+
     | Orig   |        | Result |    | Orig              |
     |        |        |        |    |                   |
-    |        | One    |        |    |                   |
+    |        | One    |        |    +-------------------+
+    |        |        |        |    | One               |
+    |        |   or   |        |    | or Two            |
     |        |        |        |    +-------------------+
-    |        |   or   |        |    | One               |
-    |        |        |        |    | or Two            |
-    |        | Two    |        |    |                   |
+    |        | Two    |        |    | Result            |
+    |        |        |        |    |                   |
     |        |        |        |    +-------------------+
-    |        |        |        |    | Result            |
-    +--------------------------+    |                   |
-                                    |                   |
-                                    +-------------------+
+    +--------------------------+
 
 Path-Specific Key Bindings
 --------------------------

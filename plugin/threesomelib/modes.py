@@ -82,7 +82,7 @@ class Mode(object):
 
 class GridMode(Mode):
     """
-    Layout 0                 Layout 1                        Layout 2             
+    Layout 0                 Layout 1                        Layout 2
     +-------------------+    +--------------------------+    +---------------+
     |     Original      |    | One    | Result | Two    |    |      One      |
     |1                  |    |        |        |        |    |1              |
