@@ -13,6 +13,9 @@ It will probably eat your data.
 Seriously. If you use it and complain about it eating your data I am going to make fun of you on Twitter.
 =========================================================================================================
 
+Threesome
+=========
+
 Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial and Git.
@@ -24,7 +27,7 @@ Mercurial and Git.
 * **Full Documentation:** `:help threesome`
 
 Requirements
-============
+------------
 
 Vim 7.3+ compiled with Python 2.5+ support.
 
@@ -39,7 +42,7 @@ development machine, I can't be bothered to clutter the codebase to support you.
 Feels bad, man.
 
 Installation
-============
+------------
 
 Use Pathogen to install the plugin.
 
@@ -47,9 +50,11 @@ Build the docs:
 
     :call pathogen#helptags()
 
-Add it as a merge tool for your VCS of choice:
+Add it as a merge tool for your VCS of choice.
 
-**Mercurial:** add the following lines to `~/.hgrc`:
+### Mercurial
+
+Add the following lines to `~/.hgrc`:
 
     [merge-tools]
     threesome.executable = mvim
@@ -57,7 +62,9 @@ Add it as a merge tool for your VCS of choice:
     threesome.premerge = keep
     threesome.priority = 1
 
-**Git:** add the following lines to `~/.gitconfig`:
+### Git
+
+Add the following lines to `~/.gitconfig`:
 
     [merge]
     tool = threesome
@@ -70,12 +77,12 @@ Add it as a merge tool for your VCS of choice:
 prefer to keep the editor in the console.
 
 More Information
-================
+----------------
 
 Read the full documentation to learn more `:help threesome`
 
 TODO for v1.0.0
-===============
+---------------
 
 * Add a basic test suite.
 * Remove the eat-your-data warnings in the docs.
