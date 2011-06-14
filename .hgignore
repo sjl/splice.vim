@@ -11,3 +11,4 @@ tests/one
 tests/two
 tests/original
 tests/result
+tests/*.err
