@@ -1,7 +1,7 @@
 from __future__ import with_statement
 
 import vim
-from util import buffers, windows
+from util import buffers, keys, windows
 from settings import boolsetting, setting
 
 
@@ -101,6 +101,9 @@ class Mode(object):
         self.layout(self._current_layout)
         self.diff(self._current_diff_mode)
         self.scrollbind(self._current_scrollbind)
+
+    def deactivate(self):
+        pass
 
 
     def key_next(self):
@@ -314,8 +317,64 @@ class GridMode(Mode):
             windows.focus(3)
 
 
-    def key_use(self):
-        pass
+    def _key_use_0(self, target):
+        targetwin = 3 if target == 1 else 4
+
+        with windows.remain():
+            self.diffoff()
+
+            windows.focus(5)
+            vim.command('diffthis')
+
+            windows.focus(targetwin)
+            vim.command('diffthis')
+
+    def _key_use_12(self, target):
+        targetwin = 2 if target == 1 else 4
+
+        with windows.remain():
+            self.diffoff()
+
+            windows.focus(3)
+            vim.command('diffthis')
+
+            windows.focus(targetwin)
+            vim.command('diffthis')
+
+
+    def key_use1(self):
+        current_diff = self._current_diff_mode
+
+        if self._current_layout == 0:
+            self._key_use_0(1)
+        elif self._current_layout == 1:
+            self._key_use_12(1)
+        elif self._current_layout == 2:
+            self._key_use_12(1)
+
+        if buffers.current == buffers.result:
+            vim.command('diffget')
+        elif buffers.current in (buffers.one, buffers.two):
+            vim.command('diffput')
+
+        self.diff(current_diff)
+
+    def key_use2(self):
+        current_diff = self._current_diff_mode
+
+        if self._current_layout == 0:
+            self._key_use_0(2)
+        elif self._current_layout == 1:
+            self._key_use_12(2)
+        elif self._current_layout == 2:
+            self._key_use_12(2)
+
+        if buffers.current == buffers.result:
+            vim.command('diffget')
+        elif buffers.current in (buffers.one, buffers.two):
+            vim.command('diffput')
+
+        self.diff(current_diff)
 
 
     def goto_result(self):
@@ -325,6 +384,17 @@ class GridMode(Mode):
             windows.focus(3)
         elif self._current_layout == 2:
             windows.focus(3)
+
+
+    def activate(self):
+        keys.bind('u1', ':ThreesomeUse1<cr>')
+        keys.bind('u2', ':ThreesomeUse2<cr>')
+        return super(GridMode, self).activate()
+
+    def deactivate(self):
+        keys.unbind('u1')
+        keys.unbind('u2')
+        return super(GridMode, self).deactivate()
 
 
     def hud_diagram(self):

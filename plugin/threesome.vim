@@ -155,6 +155,12 @@ endfunction"}}}
 function! s:ThreesomeUse()"{{{
     python ThreesomeUse()
 endfunction"}}}
+function! s:ThreesomeUse1()"{{{
+    python ThreesomeUse1()
+endfunction"}}}
+function! s:ThreesomeUse2()"{{{
+    python ThreesomeUse2()
+endfunction"}}}
 
 "}}}
 
@@ -179,6 +185,8 @@ command! -nargs=0 ThreesomeLayout call s:ThreesomeLayout()
 command! -nargs=0 ThreesomeNext call s:ThreesomeNext()
 command! -nargs=0 ThreesomePrev call s:ThreesomePrev()
 command! -nargs=0 ThreesomeUse call s:ThreesomeUse()
+command! -nargs=0 ThreesomeUse1 call s:ThreesomeUse1()
+command! -nargs=0 ThreesomeUse2 call s:ThreesomeUse2()
 
 "}}}
 

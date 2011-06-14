@@ -66,3 +66,9 @@ def ThreesomePrev():
 def ThreesomeUse():
     threesome.modes.current_mode.key_use()
 
+def ThreesomeUse1():
+    threesome.modes.current_mode.key_use1()
+
+def ThreesomeUse2():
+    threesome.modes.current_mode.key_use2()
+
