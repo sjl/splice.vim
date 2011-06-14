@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 import vim
 from util import buffers, windows
 from settings import boolsetting, setting
@@ -11,9 +13,8 @@ class Mode(object):
 
 
     def diff(self, diffmode):
-        curwindow = windows.currentnr()
-        getattr(self, '_diff_%d' % diffmode)()
-        windows.focus(curwindow)
+        with windows.remain():
+            getattr(self, '_diff_%d' % diffmode)()
 
         # Reset the scrollbind to whatever it was before we diffed.
         if not diffmode:
@@ -27,21 +28,19 @@ class Mode(object):
 
 
     def diffoff(self):
-        curwindow = windows.currentnr()
+        with windows.remain():
+            for winnr in range(2, 2 + self._number_of_windows):
+                windows.focus(winnr)
+                curbuffer = buffers.current
 
-        for winnr in range(2, 2 + self._number_of_windows):
-            windows.focus(winnr)
-            curbuffer = buffers.current
+                for buffer in buffers.all:
+                    buffer.open()
+                    vim.command('diffoff')
+                    if setting('wrap'):
+                        vim.command('setlocal ' + setting('wrap'))
 
-            for buffer in buffers.all:
-                buffer.open()
-                vim.command('diffoff')
-                if setting('wrap'):
-                    vim.command('setlocal ' + setting('wrap'))
+                curbuffer.open()
 
-            curbuffer.open()
-
-        windows.focus(curwindow)
 
     def key_diffoff(self):
         self.diff(0)
@@ -51,23 +50,19 @@ class Mode(object):
         if self._current_diff_mode:
             return
 
-        curwindow = windows.currentnr()
-        pos = vim.current.window.cursor
-        self._current_scrollbind = enabled
+        with windows.remain():
+            self._current_scrollbind = enabled
 
-        for winnr in range(2, 2 + self._number_of_windows):
-            windows.focus(winnr)
+            for winnr in range(2, 2 + self._number_of_windows):
+                windows.focus(winnr)
+
+                if enabled:
+                    vim.command('set scrollbind')
+                else:
+                    vim.command('set noscrollbind')
 
             if enabled:
-                vim.command('set scrollbind')
-            else:
-                vim.command('set noscrollbind')
-
-        if enabled:
-            vim.command('syncbind')
-
-        windows.focus(curwindow)
-        vim.current.window.cursor = pos
+                vim.command('syncbind')
 
     def key_scrollbind(self):
         self.scrollbind(not self._current_scrollbind)
@@ -159,19 +154,16 @@ class Mode(object):
         return lines
 
     def redraw_hud(self):
-        curwindow = windows.currentnr()
+        with windows.remain():
+            windows.focus(1)
 
-        windows.focus(1)
+            vim.command('setlocal modifiable')
+            buffers.hud.set_lines(self.hud_lines())
+            vim.command('setlocal nomodifiable')
 
-        vim.command('setlocal modifiable')
-        buffers.hud.set_lines(self.hud_lines())
-        vim.command('setlocal nomodifiable')
-
-        vim.command('set winfixheight')
-        vim.command('resize ' + setting('hud_size', '3'))
-        vim.command('wincmd =')
-
-        windows.focus(curwindow)
+            vim.command('set winfixheight')
+            vim.command('resize ' + setting('hud_size', '3'))
+            vim.command('wincmd =')
 
 
 class GridMode(Mode):

@@ -21,3 +21,16 @@ def vsplit():
 def currentnr():
     return int(vim.eval('winnr()'))
 
+def pos():
+    return vim.current.window.cursor
+
+
+class remain:
+    def __enter__(self):
+        self.curwindow = currentnr()
+        self.pos = pos()
+
+    def __exit__(self, type, value, traceback):
+        focus(self.curwindow)
+        vim.current.window.cursor = self.pos
+
