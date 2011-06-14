@@ -46,7 +46,7 @@ Use Pathogen to install the plugin.
 Build the docs:
 
     :call pathogen#helptags()
-    
+
 Add it as a merge tool for your VCS of choice:
 
 **Mercurial:** add the following lines to `~/.hgrc`:
@@ -77,7 +77,6 @@ Read the full documentation to learn more `:help threesome`
 TODO for v1.0.0
 ===============
 
-* Add a help/status bar at the top.
 * Add hunk-pulling functionality.
 * Add a basic test suite.
 * Remove the eat-your-data warnings in the docs.

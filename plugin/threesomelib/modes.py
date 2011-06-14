@@ -98,6 +98,10 @@ class Mode(object):
         pass
 
 
+    def key_use(self):
+        pass
+
+
     def activate(self):
         self.layout(self._current_layout)
         self.diff(self._current_diff_mode)
@@ -287,7 +291,7 @@ class GridMode(Mode):
 
     def key_original(self):
         if self._current_layout == 0:
-            windows.focus(1)
+            windows.focus(2)
         elif self._current_layout == 1:
             return
         elif self._current_layout == 2:
@@ -295,27 +299,31 @@ class GridMode(Mode):
 
     def key_one(self):
         if self._current_layout == 0:
-            windows.focus(2)
+            windows.focus(3)
         elif self._current_layout == 1:
-            windows.focus(1)
+            windows.focus(2)
         elif self._current_layout == 2:
-            windows.focus(1)
+            windows.focus(2)
 
     def key_two(self):
         if self._current_layout == 0:
-            windows.focus(3)
+            windows.focus(4)
+        elif self._current_layout == 1:
+            windows.focus(4)
+        elif self._current_layout == 2:
+            windows.focus(4)
+
+    def key_result(self):
+        if self._current_layout == 0:
+            windows.focus(5)
         elif self._current_layout == 1:
             windows.focus(3)
         elif self._current_layout == 2:
             windows.focus(3)
 
-    def key_result(self):
-        if self._current_layout == 0:
-            windows.focus(4)
-        elif self._current_layout == 1:
-            windows.focus(2)
-        elif self._current_layout == 2:
-            windows.focus(2)
+
+    def key_use(self):
+        pass
 
 
     def goto_result(self):
@@ -408,17 +416,16 @@ class LoupeMode(Mode):
         self.redraw_hud()
 
 
+    def key_use(self):
+        pass
+
+
     def goto_result(self):
         self.key_result()
 
 
     def hud_diagram(self):
-        bufmap = { buffers.original.name: 'Original',
-                   buffers.one.name: 'One',
-                   buffers.two.name: 'Two',
-                   buffers.result.name: 'Result' }
-
-        buf = bufmap[self._current_buffer.name]
+        buf = buffers.labels[self._current_buffer.name]
 
         if self._current_layout == 0:
             return [
@@ -521,25 +528,25 @@ class CompareMode(Mode):
 
         # If file one is showing, go to it.
         windows.focus(2)
-        if buffers.current.name == buffers.one.name:
+        if buffers.current == buffers.one:
             return
 
         windows.focus(3)
-        if buffers.current.name == buffers.one.name:
+        if buffers.current == buffers.one:
             return
 
         # If both the original and result are showing, open file one in the
         # current window.
         windows.focus(2)
-        if buffers.current.name == buffers.original.name:
+        if buffers.current == buffers.original:
             windows.focus(3)
-            if buffers.current.name == buffers.result.name:
+            if buffers.current == buffers.result:
                 open_one(curwindow)
                 return
 
         # If file two is in window 1, then we open file one in window 1.
         windows.focus(2)
-        if buffers.current.name == buffers.two.name:
+        if buffers.current == buffers.two:
             open_one(2)
             return
 
@@ -562,25 +569,25 @@ class CompareMode(Mode):
 
         # If file two is showing, go to it.
         windows.focus(2)
-        if buffers.current.name == buffers.two.name:
+        if buffers.current == buffers.two:
             return
 
         windows.focus(3)
-        if buffers.current.name == buffers.two.name:
+        if buffers.current == buffers.two:
             return
 
         # If both the original and result are showing, open file two in the
         # current window.
         windows.focus(2)
-        if buffers.current.name == buffers.original.name:
+        if buffers.current == buffers.original:
             windows.focus(3)
-            if buffers.current.name == buffers.result.name:
+            if buffers.current == buffers.result:
                 open_two(curwindow)
                 return
 
         # If file one is in window 2, then we open file two in window 2.
         windows.focus(3)
-        if buffers.current.name == buffers.two.name:
+        if buffers.current == buffers.two:
             open_two(3)
             return
 
@@ -596,18 +603,17 @@ class CompareMode(Mode):
         self.redraw_hud()
 
 
+    def key_use(self):
+        pass
+
+
     def goto_result(self):
         self.key_result()
 
 
     def hud_diagram(self):
-        bufmap = { buffers.original.name: 'Original',
-                   buffers.one.name: 'One',
-                   buffers.two.name: 'Two',
-                   buffers.result.name: 'Result' }
-
-        first = bufmap[self._current_buffer_first.name]
-        second = bufmap[self._current_buffer_second.name]
+        first = buffers.labels[self._current_buffer_first.name]
+        second = buffers.labels[self._current_buffer_second.name]
 
         if self._current_layout == 0:
             return [
@@ -755,12 +761,16 @@ class PathMode(Mode):
         windows.focus(4)
 
 
+    def key_use(self):
+        pass
+
+
     def goto_result(self):
         windows.focus(4)
 
 
     def hud_diagram(self):
-        if self._current_mid_buffer.name == buffers.one.name:
+        if self._current_mid_buffer == buffers.one:
             buf = 'One'
         else:
             buf = 'Two'

@@ -1,7 +1,6 @@
 import os
 import vim
 import windows
-from io import error
 
 ap = os.path.abspath
 
@@ -23,6 +22,13 @@ class Buffer(object):
     def lines(self):
         for line in self._buffer:
             yield line
+
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __ne__(self, other):
+        return self.name != other.name
 
 
 class _BufferList(object):
@@ -64,4 +70,13 @@ class _BufferList(object):
     def all(self):
         return [self.original, self.one, self.two, self.result]
 
+
+    @property
+    def labels(self):
+        return { buffers.original.name: 'Original',
+                 buffers.one.name: 'One',
+                 buffers.two.name: 'Two',
+                 buffers.result.name: 'Result' }
+
 buffers = _BufferList()
+
