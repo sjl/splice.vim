@@ -62,6 +62,8 @@ Add the following lines to `~/.hgrc`:
     threesome.premerge = keep
     threesome.priority = 1
 
+**Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you prefer to keep the editor in the console.
+
 ### Git
 
 Add the following lines to `~/.gitconfig`:
@@ -73,8 +75,7 @@ Add the following lines to `~/.gitconfig`:
     cmd = "mvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
     trustExitCode = true
 
-**Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you
-prefer to keep the editor in the console.
+**Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you prefer to keep the editor in the console.
 
 More Information
 ----------------
