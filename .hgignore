@@ -8,3 +8,4 @@ syntax: glob
 .ropeproject
 tags
 tests/one
+tests/two
