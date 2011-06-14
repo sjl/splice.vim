@@ -56,6 +56,7 @@ CONTENTS                                                  *Threesome-contents*
         5.13 threesome_initial_scrollbind_compare .. |ThreesomeConfig-is_compare|
         5.14 threesome_initial_scrollbind_path ..... |ThreesomeConfig-is_path|
         5.15 threesome_initial_mode ................ |ThreesomeConfig-im|
+        5.16 threesome_wrap ........................ |ThreesomeConfig-wrap|
     6. License ..................................... |ThreesomeLicense|
     7. Bugs ........................................ |ThreesomeBugs|
     8. Contributing ................................ |ThreesomeContributing|
@@ -561,6 +562,17 @@ See |ThreesomeModes| for a description of each mode.
 Options: "grid", "loupe", "compare", or "path"
 Default: "grid"
 
+------------------------------------------------------------------------------
+5.16 g:threesome_wrap                                   *ThreesomeConfig-wrap*
+
+Set this to "wrap" or "nowrap" to set |wrap| or |nowrap| on all windows by
+default.
+
+By default Threesome will use your default settings.
+
+Options: "wrap", "nowrap"
+Default: None (use the default settings)
+
 ==============================================================================
 6. License                                                  *ThreesomeLicense*
 
@@ -588,6 +600,9 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.0.6
+    * Add the HUD.
+    * Configurable wrapping.
 v0.0.5
     * Configurable scrollbinding.
 v0.0.4

@@ -36,6 +36,8 @@ class Mode(object):
             for buffer in buffers.all:
                 buffer.open()
                 vim.command('diffoff')
+                if setting('wrap'):
+                    vim.command('setlocal ' + setting('wrap'))
 
             curbuffer.open()
 
@@ -99,7 +101,6 @@ class Mode(object):
     def activate(self):
         self.layout(self._current_layout)
         self.diff(self._current_diff_mode)
-
         self.scrollbind(self._current_scrollbind)
 
 
@@ -111,6 +112,13 @@ class Mode(object):
         self.goto_result()
         vim.command(r'exe "normal! ?\=\=\=\=\=\=\=\<cr>"')
 
+
+    def open_hud(self, winnr):
+        windows.split()
+        windows.focus(winnr)
+        buffers.hud.open()
+        vim.command('wincmd K')
+        self.redraw_hud()
 
     def hud_lines(self):
         def pad(lines):
@@ -140,6 +148,9 @@ class Mode(object):
             lines[i] += line + sep
         for i, line in enumerate(commands):
             lines[i] += line + sep
+
+        for i, line in enumerate(lines):
+            lines[i] = line.rstrip()
 
         return lines
 
@@ -210,11 +221,9 @@ class GridMode(Mode):
         windows.focus(4)
         buffers.result.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(5)
+
         windows.focus(5)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
     def _layout_1(self):
         self._number_of_windows = 3
@@ -235,11 +244,9 @@ class GridMode(Mode):
         windows.focus(3)
         buffers.two.open()
 
-        # HUD
-        windows.split()
-        windows.focus(4)
-        buffers.hud.open()
-        vim.command('wincmd K')
+        self.open_hud(4)
+
+        windows.focus(3)
 
     def _layout_2(self):
         self._number_of_windows = 4
@@ -260,11 +267,9 @@ class GridMode(Mode):
         windows.focus(3)
         buffers.two.open()
 
-        # HUD
-        windows.split()
-        windows.focus(4)
-        buffers.hud.open()
-        vim.command('wincmd K')
+        self.open_hud(4)
+
+        windows.focus(3)
 
 
     def _diff_0(self):
@@ -373,11 +378,9 @@ class LoupeMode(Mode):
         windows.focus(1)
         self._current_buffer.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(2)
+
         windows.focus(2)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
 
     def key_original(self):
@@ -470,11 +473,9 @@ class CompareMode(Mode):
         windows.focus(2)
         self._current_buffer_second.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(3)
+
         windows.focus(3)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
     def _layout_1(self):
         self._number_of_windows = 2
@@ -491,11 +492,9 @@ class CompareMode(Mode):
         windows.focus(2)
         self._current_buffer_second.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(3)
+
         windows.focus(3)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
 
     def key_original(self):
@@ -705,11 +704,9 @@ class PathMode(Mode):
         windows.focus(3)
         buffers.result.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(4)
+
         windows.focus(4)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
     def _layout_1(self):
         self._number_of_windows = 3
@@ -730,11 +727,9 @@ class PathMode(Mode):
         windows.focus(3)
         buffers.result.open()
 
-        # HUD
-        windows.split()
+        self.open_hud(4)
+
         windows.focus(4)
-        buffers.hud.open()
-        vim.command('wincmd K')
 
 
     def key_original(self):

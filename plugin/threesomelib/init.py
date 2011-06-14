@@ -55,23 +55,34 @@ def setlocal_buffers():
     buffers.original.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    if setting('wrap'):
+        vim.command('setlocal ' + setting('wrap'))
 
     buffers.one.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    if setting('wrap'):
+        vim.command('setlocal ' + setting('wrap'))
 
     buffers.two.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    if setting('wrap'):
+        vim.command('setlocal ' + setting('wrap'))
+
+    buffers.result.open()
+    if setting('wrap'):
+        vim.command('setlocal ' + setting('wrap'))
 
     buffers.hud.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
     vim.command('setlocal nobuflisted')
     vim.command('setlocal buftype=nofile')
-    vim.command('setlocal winfixheight')
     vim.command('setlocal noundofile')
     vim.command('setlocal nolist')
+    vim.command('setlocal ft=threesome')
+    vim.command('setlocal nowrap')
     vim.command('resize ' + setting('hud_size', '3'))
 
 def create_hud():
