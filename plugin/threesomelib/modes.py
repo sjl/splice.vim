@@ -604,10 +604,16 @@ class CompareMode(Mode):
         if buffers.one not in active and buffers.two not in active:
             return
 
+        current_diff = self._current_diff_mode
+        with windows.remain():
+            self._diff_1()  # diff the windows
+
         if buffers.current == buffers.result:
             vim.command('diffget')
         elif buffers.current in (buffers.one, buffers.two):
             vim.command('diffput')
+
+        self.diff(current_diff)
 
 
     def goto_result(self):
@@ -765,7 +771,16 @@ class PathMode(Mode):
 
 
     def key_use(self):
-        pass
+        current_diff = self._current_diff_mode
+        with windows.remain():
+            self._diff_3()  # diff the middle and result windows
+
+        if buffers.current == buffers.result:
+            vim.command('diffget')
+        elif buffers.current in (buffers.one, buffers.two):
+            vim.command('diffput')
+
+        self.diff(current_diff)
 
 
     def goto_result(self):
