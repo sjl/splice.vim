@@ -7,3 +7,4 @@ syntax: glob
 *.un~
 .ropeproject
 tags
+tests/one
