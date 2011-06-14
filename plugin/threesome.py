@@ -63,3 +63,6 @@ def ThreesomeNext():
 def ThreesomePrev():
     threesome.modes.current_mode.key_prev()
 
+def ThreesomeUse():
+    threesome.modes.current_mode.key_use()
+

@@ -47,6 +47,7 @@ def bind_global_keys():
     keys.bind('n', ':ThreesomeNext<cr>')
     keys.bind('N', ':ThreesomePrev<cr>')
     keys.bind('<space>', ':ThreesomeLayout<cr>')
+    keys.bind('u', ':ThreesomeUse<cr>')
 
     keys.bind('q', ':wa<cr>:qa<cr>')
     keys.bind('CC', ':cq<cr>')

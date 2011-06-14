@@ -596,7 +596,18 @@ class CompareMode(Mode):
 
 
     def key_use(self):
-        pass
+        active = (self._current_buffer_first, self._current_buffer_second)
+
+        if buffers.result not in active:
+            return
+
+        if buffers.one not in active and buffers.two not in active:
+            return
+
+        if buffers.current == buffers.result:
+            vim.command('diffget')
+        elif buffers.current in (buffers.one, buffers.two):
+            vim.command('diffput')
 
 
     def goto_result(self):
