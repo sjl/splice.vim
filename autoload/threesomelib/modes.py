@@ -131,9 +131,9 @@ class Mode(object):
 
         modes = pad([
             r'Threesome Modes',
-            r'x[G]rid   y[C]ompare'.replace('x', self._id == 'grid' and '*' or ' ')
+            r'x[g]rid   y[c]ompare'.replace('x', self._id == 'grid' and '*' or ' ')
                                    .replace('y', self._id == 'comp' and '*' or ' '),
-            r'x[L]oupe  y[P]ath'.replace('x', self._id == 'loup' and '*' or ' ')
+            r'x[l]oupe  y[p]ath'.replace('x', self._id == 'loup' and '*' or ' ')
                                 .replace('y', self._id == 'path' and '*' or ' '),
         ])
         diagram = pad(self.hud_diagram())
