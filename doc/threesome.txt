@@ -6,12 +6,7 @@
 
                This plugin is still under active development.
 
-    It is not even remotely ready yet.  Lots of things are unimplemented.
-
-                      It will probably eat your data.
-
-       Seriously. If you use it and complain about it eating your data
-                 I am going to make fun of you on Twitter.
+         It probably won't eat your data, but don't hate me if it does.
 
 ==============================================================================
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -600,6 +595,8 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.1.0
+    * Preliminary "it probably won't eat your data" release!
 v0.0.8
     * A bunch of cleanup.
 v0.0.7
