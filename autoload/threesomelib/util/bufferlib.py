@@ -78,5 +78,14 @@ class _BufferList(object):
                  buffers.two.name: 'Two',
                  buffers.result.name: 'Result' }
 
+    class remain:
+        def __enter__(self):
+            self.curbuf = vim.eval('bufnr(bufname("%"))')
+            self.pos = windows.pos()
+
+        def __exit__(self, type, value, traceback):
+            vim.command('%dbuffer' % self.curbuf)
+            vim.current.window.cursor = self.pos
+
 buffers = _BufferList()
 

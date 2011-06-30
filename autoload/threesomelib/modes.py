@@ -387,6 +387,7 @@ class GridMode(Mode):
 
 
     def activate(self):
+        keys.unbind('u')
         keys.bind('u1', ':ThreesomeUse1<cr>')
         keys.bind('u2', ':ThreesomeUse2<cr>')
         return super(GridMode, self).activate()
@@ -394,6 +395,7 @@ class GridMode(Mode):
     def deactivate(self):
         keys.unbind('u1')
         keys.unbind('u2')
+        keys.bind('u', ':ThreesomeUse<cr>')
         return super(GridMode, self).deactivate()
 
 
@@ -885,20 +887,24 @@ path = PathMode()
 
 def key_grid():
     global current_mode
+    current_mode.deactivate()
     current_mode = grid
     grid.activate()
 
 def key_loupe():
     global current_mode
+    current_mode.deactivate()
     current_mode = loupe
     loupe.activate()
 
 def key_compare():
     global current_mode
+    current_mode.deactivate()
     current_mode = compare
     compare.activate()
 
 def key_path():
     global current_mode
+    current_mode.deactivate()
     current_mode = path
     path.activate()
