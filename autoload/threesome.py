@@ -12,6 +12,7 @@ for p in vim.eval("&runtimepath").split(','):
 
 import threesomelib.init as threesome
 
+
 # Wrapper functions ----------------------------------------------------------------
 
 def ThreesomeInit():

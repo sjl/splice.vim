@@ -3,11 +3,9 @@
 " Description: vim global plugin for resolving three-way merge conflicts
 " Maintainer:  Steve Losh <steve@stevelosh.com>
 " License:     MIT X11
-" Notes:       Alpha.  Not ready for real use yet.
-"
 " ============================================================================
 
-"{{{ Init
+" Init {{{
 
 " Vim version check {{{
 
@@ -44,112 +42,112 @@ endif
 "}}}
 " Configuration variables {{{
 
-if !exists('g:threesome_disable') " {{{
+if !exists('g:threesome_disable') "{{{
     let g:threesome_disable = 0
 endif " }}}
-if !exists('g:threesome_initial_mode') " {{{
+if !exists('g:threesome_initial_mode') "{{{
     let g:threesome_initial_mode = 'grid'
-endif " }}}
-if !exists('g:threesome_initial_layout_grid') " {{{
+endif "}}}
+if !exists('g:threesome_initial_layout_grid') "{{{
     let g:threesome_initial_layout_grid = 0
-endif " }}}
-if !exists('g:threesome_initial_layout_loupe') " {{{
+endif "}}}
+if !exists('g:threesome_initial_layout_loupe') "{{{
     let g:threesome_initial_layout_loupe = 0
-endif " }}}
-if !exists('g:threesome_initial_layout_compare') " {{{
+endif "}}}
+if !exists('g:threesome_initial_layout_compare') "{{{
     let g:threesome_initial_layout_compare = 0
-endif " }}}
-if !exists('g:threesome_initial_layout_path') " {{{
+endif "}}}
+if !exists('g:threesome_initial_layout_path') "{{{
     let g:threesome_initial_layout_path = 0
-endif " }}}
-if !exists('g:threesome_initial_diff_grid') " {{{
+endif "}}}
+if !exists('g:threesome_initial_diff_grid') "{{{
     let g:threesome_initial_diff_grid = 0
-endif " }}}
-if !exists('g:threesome_initial_diff_loupe') " {{{
+endif "}}}
+if !exists('g:threesome_initial_diff_loupe') "{{{
     let g:threesome_initial_diff_loupe = 0
-endif " }}}
-if !exists('g:threesome_initial_diff_compare') " {{{
+endif "}}}
+if !exists('g:threesome_initial_diff_compare') "{{{
     let g:threesome_initial_diff_compare = 0
-endif " }}}
-if !exists('g:threesome_initial_diff_path') " {{{
+endif "}}}
+if !exists('g:threesome_initial_diff_path') "{{{
     let g:threesome_initial_diff_path = 0
-endif " }}}
-if !exists('g:threesome_initial_scrollbind_grid') " {{{
+endif "}}}
+if !exists('g:threesome_initial_scrollbind_grid') "{{{
     let g:threesome_initial_scrollbind_grid = 0
-endif " }}}
-if !exists('g:threesome_initial_scrollbind_loupe') " {{{
+endif "}}}
+if !exists('g:threesome_initial_scrollbind_loupe') "{{{
     let g:threesome_initial_scrollbind_loupe = 0
-endif " }}}
-if !exists('g:threesome_initial_scrollbind_compare') " {{{
+endif "}}}
+if !exists('g:threesome_initial_scrollbind_compare') "{{{
     let g:threesome_initial_scrollbind_compare = 0
-endif " }}}
-if !exists('g:threesome_initial_scrollbind_path') " {{{
+endif "}}}
+if !exists('g:threesome_initial_scrollbind_path') "{{{
     let g:threesome_initial_scrollbind_path = 0
-endif " }}}
+endif "}}}
 
-"}}}
+" }}}
 
-"}}}
-"{{{ Wrappers
+" }}}
+" Wrappers {{{
 
-function! threesome#ThreesomeInit()"{{{
+function! threesome#ThreesomeInit() "{{{
     let python_module = fnameescape(globpath(&runtimepath, 'autoload/threesome.py'))
     exe 'pyfile ' . python_module
     python ThreesomeInit()
-endfunction"}}}
+endfunction "}}}
 
-function! threesome#ThreesomeGrid()"{{{
+function! threesome#ThreesomeGrid() "{{{
     python ThreesomeGrid()
-endfunction"}}}
-function! threesome#ThreesomeLoupe()"{{{
+endfunction "}}}
+function! threesome#ThreesomeLoupe() "{{{
     python ThreesomeLoupe()
-endfunction"}}}
-function! threesome#ThreesomeCompare()"{{{
+endfunction "}}}
+function! threesome#ThreesomeCompare() "{{{
     python ThreesomeCompare()
-endfunction"}}}
-function! threesome#ThreesomePath()"{{{
+endfunction "}}}
+function! threesome#ThreesomePath() "{{{
     python ThreesomePath()
-endfunction"}}}
+endfunction "}}}
 
-function! threesome#ThreesomeOriginal()"{{{
+function! threesome#ThreesomeOriginal() "{{{
     python ThreesomeOriginal()
-endfunction"}}}
-function! threesome#ThreesomeOne()"{{{
+endfunction "}}}
+function! threesome#ThreesomeOne() "{{{
     python ThreesomeOne()
-endfunction"}}}
-function! threesome#ThreesomeTwo()"{{{
+endfunction "}}}
+function! threesome#ThreesomeTwo() "{{{
     python ThreesomeTwo()
-endfunction"}}}
-function! threesome#ThreesomeResult()"{{{
+endfunction "}}}
+function! threesome#ThreesomeResult() "{{{
     python ThreesomeResult()
-endfunction"}}}
+endfunction "}}}
 
-function! threesome#ThreesomeDiff()"{{{
+function! threesome#ThreesomeDiff() "{{{
     python ThreesomeDiff()
-endfunction"}}}
-function! threesome#ThreesomeDiffoff()"{{{
+endfunction "}}}
+function! threesome#ThreesomeDiffoff() "{{{
     python ThreesomeDiffoff()
-endfunction"}}}
-function! threesome#ThreesomeScroll()"{{{
+endfunction "}}}
+function! threesome#ThreesomeScroll() "{{{
     python ThreesomeScroll()
-endfunction"}}}
-function! threesome#ThreesomeLayout()"{{{
+endfunction "}}}
+function! threesome#ThreesomeLayout() "{{{
     python ThreesomeLayout()
-endfunction"}}}
-function! threesome#ThreesomeNext()"{{{
+endfunction "}}}
+function! threesome#ThreesomeNext() "{{{
     python ThreesomeNext()
-endfunction"}}}
-function! threesome#ThreesomePrev()"{{{
+endfunction "}}}
+function! threesome#ThreesomePrev() "{{{
     python ThreesomePrev()
-endfunction"}}}
-function! threesome#ThreesomeUse()"{{{
+endfunction "}}}
+function! threesome#ThreesomeUse() "{{{
     python ThreesomeUse()
-endfunction"}}}
-function! threesome#ThreesomeUse1()"{{{
+endfunction "}}}
+function! threesome#ThreesomeUse1() "{{{
     python ThreesomeUse1()
-endfunction"}}}
-function! threesome#ThreesomeUse2()"{{{
+endfunction "}}}
+function! threesome#ThreesomeUse2() "{{{
     python ThreesomeUse2()
-endfunction"}}}
+endfunction "}}}
 
-"}}}
+" }}}

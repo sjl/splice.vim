@@ -2,4 +2,4 @@ import sys
 
 
 def error(m):
-    sys.stdout.write(str(m) + '\n')
+    sys.stderr.write(str(m) + '\n')

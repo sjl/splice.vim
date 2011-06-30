@@ -3,8 +3,6 @@
 " Description: vim global plugin for resolving three-way merge conflicts
 " Maintainer:  Steve Losh <steve@stevelosh.com>
 " License:     MIT X11
-" Notes:       Alpha.  Not ready for real use yet.
-"
 " ============================================================================
 
 " Init {{{
@@ -15,8 +13,7 @@ endif
 let loaded_threesome = 1
 
 " }}}
-
-"{{{ Commands
+" Commands {{{
 
 command! -nargs=0 ThreesomeInit call threesome#ThreesomeInit()
 
@@ -40,4 +37,4 @@ command! -nargs=0 ThreesomeUse call threesome#ThreesomeUse()
 command! -nargs=0 ThreesomeUse1 call threesome#ThreesomeUse1()
 command! -nargs=0 ThreesomeUse2 call threesome#ThreesomeUse2()
 
-"}}}
+" }}}
