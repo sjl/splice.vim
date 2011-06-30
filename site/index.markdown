@@ -27,8 +27,8 @@ Installation
 
 Use [Pathogen][] to install the plugin from your choice of repositories:
 
-    hg clone https://bitbucket.org/sjl/threesome.vim ~/.vim/bundle
-    git clone https://github.com/sjl/threesome.vim.git ~/.vim/bundle
+    hg clone https://bitbucket.org/sjl/threesome.vim ~/.vim/bundle/threesome
+    git clone https://github.com/sjl/threesome.vim.git ~/.vim/bundle/threesome
 
 [Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 
