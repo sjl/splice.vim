@@ -12,3 +12,4 @@ tests/two
 tests/original
 tests/result
 tests/*.err
+site/index.html
