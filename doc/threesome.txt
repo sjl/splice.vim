@@ -595,6 +595,8 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.1.1
+    * Fix a bug when the user doesn't use :set hidden.
 v0.1.0
     * Preliminary "it probably won't eat your data" release!
 v0.0.8
