@@ -96,6 +96,8 @@ def init():
     setlocal_buffers()
     bind_global_keys()
 
+    vim.command('set hidden')
+
     initial_mode = setting('initial_mode', 'grid').lower()
     if initial_mode not in ['grid', 'loupe', 'compare', 'path']:
         initial_mode = 'grid'
