@@ -51,7 +51,8 @@ CONTENTS                                                  *Threesome-contents*
         5.13 threesome_initial_scrollbind_compare .. |ThreesomeConfig_is_compare|
         5.14 threesome_initial_scrollbind_path ..... |ThreesomeConfig_is_path|
         5.15 threesome_initial_mode ................ |ThreesomeConfig_im|
-        5.16 threesome_wrap ........................ |ThreesomeConfig_wrap|
+        5.16 threesome_leader ...................... |ThreesomeConfig_leader|
+        5.17 threesome_wrap ........................ |ThreesomeConfig_wrap|
     6. License ..................................... |ThreesomeLicense|
     7. Bugs ........................................ |ThreesomeBugs|
     8. Contributing ................................ |ThreesomeContributing|
@@ -558,7 +559,22 @@ Options: "grid", "loupe", "compare", or "path"
 Default: "grid"
 
 ------------------------------------------------------------------------------
-5.16 g:threesome_wrap                                   *ThreesomeConfig_wrap*
+5.16 g:threesome_leader                               *ThreesomeConfig_leader*
+
+Set this to change the leader Threesome will bind all of its mappings to.
+
+For example: >
+
+    let g:threesome_leader = "<leader>t"
+
+Will make all Threesome commands start with <leader>t instead of the default
+<localleader>.
+
+Options: Any valid key mapping string
+Default: "<localleader>"
+
+------------------------------------------------------------------------------
+5.17 g:threesome_wrap                                   *ThreesomeConfig_wrap*
 
 Set this to "wrap" or "nowrap" to set |wrap| or |nowrap| on all windows by
 default.
@@ -595,6 +611,8 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                              *ThreesomeChangelog*
 
+v0.2.0
+    * Add threesome_leader as a config option.
 v0.1.1
     * Fix a bug when the user doesn't use :set hidden.
 v0.1.0
