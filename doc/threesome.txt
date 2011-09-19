@@ -15,7 +15,7 @@
 
 Threesome is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
-Mercurial and Git.
+Mercurial, Git and Bazaar.
 
 ==============================================================================
 CONTENTS                                                  *Threesome-contents*
@@ -23,6 +23,7 @@ CONTENTS                                                  *Threesome-contents*
     1. Version Control Integration ................. |ThreesomeVCS|
         1.1 Mercurial .............................. |ThreesomeVCS_hg|
         1.2 Git .................................... |ThreesomeVCS_git|
+        1.3 Bazaar ................................. |ThreesomeVCS_bzr|
     2. Basic Usage ................................. |ThreesomeUsage|
         2.1 Files .................................. |ThreesomeUsage_files|
         2.2 Modes .................................. |ThreesomeUsage_modes|
@@ -99,6 +100,23 @@ Add the following lines to "~/.gitconfig": >
 If a "git merge" or "git pull" fails with merge conflicts you can now run
 "git mergetool".  Git will loop over all the files with conflicts and allow
 you to resolve them with Vim and Threesome.
+
+------------------------------------------------------------------------------
+1.3 Bazaar                                                  *ThreesomeVCS_bzr*
+
+For Bazaar 2.4 or greater, add the following line to bazaar.conf:
+>
+    bzr.mergetool.threesome = vim {base} {this} {other} {result} -c 'ThreesomeInit'
+<
+Optionally, change the default merge tool by setting:
+>
+    bzr.default_mergetool = threesome
+<
+For earlier versions of Bazaar, set the following entry in bazaar.conf:
+>
+    external_merge = vim %b %t %o %r -c 'ThreesomeInit'
+<
+You can now use Vim with Threesome from "bzr qconflicts".
 
 ==============================================================================
 2. Basic Usage                                                *ThreesomeUsage*
