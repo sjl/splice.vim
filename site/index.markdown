@@ -63,6 +63,22 @@ Add the following lines to `~/.gitconfig`:
 
 **Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you prefer to keep the editor in the console.
 
+### Bazaar
+
+For Bazaar 2.4 or greater, add the following line to bazaar.conf:
+
+    bzr.mergetool.threesome = vim {base} {this} {other} {result} -c 'ThreesomeInit'
+
+Optionally, change the default merge tool by setting:
+
+    bzr.default_mergetool = threesome
+
+For earlier versions of Bazaar, set the following entry in bazaar.conf:
+
+    external_merge = vim %b %t %o %r -c 'ThreesomeInit'
+
+**Note:** replace `mvim` with `gvim` if you're on Linux, or just plain `vim` if you prefer to keep the editor in the console.
+
 More Information
 ----------------
 
