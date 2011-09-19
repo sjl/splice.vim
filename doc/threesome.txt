@@ -647,3 +647,5 @@ The UI is a combination of ideas from Conflict2Diff.vim, Fugitive.vim, and
 Adobe Lightroom.
 
 ==============================================================================
+
+ vim:ts=4:et:ft=help:
