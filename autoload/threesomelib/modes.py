@@ -108,11 +108,11 @@ class Mode(object):
 
     def key_next(self):
         self.goto_result()
-        vim.command(r'exe "silent! normal! /\^\=\=\=\=\=\=\=\$\<cr>"')
+        vim.command(r'exe "silent! normal! /\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
 
     def key_prev(self):
         self.goto_result()
-        vim.command(r'exe "silent! normal! ?\^\=\=\=\=\=\=\=\$\<cr>"')
+        vim.command(r'exe "silent! normal! ?\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
 
 
     def open_hud(self, winnr):
