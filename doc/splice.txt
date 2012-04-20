@@ -620,6 +620,7 @@ Fork the project on BitBucket or GitHub and send a pull request.
 v1.0.0
     * Rename to Splice.
     * Change the default prefix to '-' instead of <localleader>.
+    * Various bugfixes.
 v0.2.0
     * Add threesome_leader as a config option.
 v0.1.1
