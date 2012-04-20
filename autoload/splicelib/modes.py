@@ -130,7 +130,7 @@ class Mode(object):
         sep = '    |    '
 
         modes = pad([
-            r'Threesome Modes',
+            r'Splice Modes',
             r'x[g]rid   y[c]ompare'.replace('x', self._id == 'grid' and '*' or ' ')
                                    .replace('y', self._id == 'comp' and '*' or ' '),
             r'x[l]oupe  y[p]ath'.replace('x', self._id == 'loup' and '*' or ' ')
@@ -138,7 +138,7 @@ class Mode(object):
         ])
         diagram = pad(self.hud_diagram())
         commands = pad([
-            r'Threesome Commands',
+            r'Splice Commands',
             r'd: cycle diffs   n: next conflict   space: cycle layouts   u: use hunk   o: original   1: one   q: save and quit',
             r'D: diffs off     N: prev conflict   s: toggle scrollbind                 r: result     2: two   CC: exit with error',
         ])
@@ -388,14 +388,14 @@ class GridMode(Mode):
 
     def activate(self):
         keys.unbind('u')
-        keys.bind('u1', ':ThreesomeUse1<cr>')
-        keys.bind('u2', ':ThreesomeUse2<cr>')
+        keys.bind('u1', ':SpliceUse1<cr>')
+        keys.bind('u2', ':SpliceUse2<cr>')
         return super(GridMode, self).activate()
 
     def deactivate(self):
         keys.unbind('u1')
         keys.unbind('u2')
-        keys.bind('u', ':ThreesomeUse<cr>')
+        keys.bind('u', ':SpliceUse<cr>')
         return super(GridMode, self).deactivate()
 
 
@@ -656,7 +656,7 @@ class CompareMode(Mode):
             return
 
         # Otherwise, open file two in window 2.
-        open_two(curwindow)
+        open_two(3)
 
     def key_result(self):
         windows.focus(3)

@@ -1,8 +1,8 @@
-Threesome
+Splice
 =========
 
-Threesome is a Vim plugin for resolving conflicts during three-way merges.
+Splice is a Vim plugin for resolving conflicts during three-way merges.
 
-Visit [the site](http://sjl.bitbucket.org/threesome.vim/) for more information.
+Visit [the site](http://sjl.bitbucket.org/splice.vim/) for more information.
 
 

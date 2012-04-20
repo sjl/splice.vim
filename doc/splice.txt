@@ -1,128 +1,115 @@
-*threesome.txt*   A plugin for resolving three-way merge conflicts.
+*splice.txt*   A plugin for resolving three-way merge conflicts.
 
-==============================================================================
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-==============================================================================
-
-               This plugin is still under active development.
-
-         It probably won't eat your data, but don't hate me if it does.
-
-==============================================================================
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-==============================================================================
-
-
-Threesome is a Vim plugin for resolving conflicts during three-way merges.
+Splice is a Vim plugin for resolving conflicts during three-way merges.
 It's designed to be used as a merge tool for version control systems like
 Mercurial, Git and Bazaar.
 
 ==============================================================================
-CONTENTS                                                  *Threesome-contents*
+CONTENTS                                                     *Splice-contents*
 
-    1. Version Control Integration ................. |ThreesomeVCS|
-        1.1 Mercurial .............................. |ThreesomeVCS_hg|
-        1.2 Git .................................... |ThreesomeVCS_git|
-        1.3 Bazaar ................................. |ThreesomeVCS_bzr|
-    2. Basic Usage ................................. |ThreesomeUsage|
-        2.1 Files .................................. |ThreesomeUsage_files|
-        2.2 Modes .................................. |ThreesomeUsage_modes|
-    3. Key Bindings ................................ |ThreesomeKeys|
-        3.1 Mode Selection Keys .................... |ThreesomeKeys_mode|
-        3.2 File Selection Keys .................... |ThreesomeKeys_file|
-        3.3 Other Keys ............................. |ThreesomeKeys_other|
-    4. Modes ....................................... |ThreesomeModes|
-        4.1 Grid ................................... |ThreesomeModes_grid|
-        4.2 Loupe .................................. |ThreesomeModes_loupe|
-        4.3 Compare ................................ |ThreesomeModes_compare|
-        4.4 Path ................................... |ThreesomeModes_path|
-    5. Configuration ............................... |ThreesomeConfig|
-        5.1 threesome_debug ........................ |ThreesomeConfig_debug|
-        5.2 threesome_disable ...................... |ThreesomeConfig_disable|
-        5.3 threesome_initial_diff_grid ............ |ThreesomeConfig_id_grid|
-        5.4 threesome_initial_diff_loupe ........... |ThreesomeConfig_id_loupe|
-        5.5 threesome_initial_diff_compare ......... |ThreesomeConfig_id_compare|
-        5.6 threesome_initial_diff_path ............ |ThreesomeConfig_id_path|
-        5.7 threesome_initial_layout_grid .......... |ThreesomeConfig_il_grid|
-        5.8 threesome_initial_layout_loupe ......... |ThreesomeConfig_il_loupe|
-        5.9 threesome_initial_layout_compare ....... |ThreesomeConfig_il_compare|
-        5.10 threesome_initial_layout_path ......... |ThreesomeConfig_il_path|
-        5.11 threesome_initial_scrollbind_grid ..... |ThreesomeConfig_is_grid|
-        5.12 threesome_initial_scrollbind_loupe .... |ThreesomeConfig_is_loupe|
-        5.13 threesome_initial_scrollbind_compare .. |ThreesomeConfig_is_compare|
-        5.14 threesome_initial_scrollbind_path ..... |ThreesomeConfig_is_path|
-        5.15 threesome_initial_mode ................ |ThreesomeConfig_im|
-        5.16 threesome_leader ...................... |ThreesomeConfig_leader|
-        5.17 threesome_wrap ........................ |ThreesomeConfig_wrap|
-    6. License ..................................... |ThreesomeLicense|
-    7. Bugs ........................................ |ThreesomeBugs|
-    8. Contributing ................................ |ThreesomeContributing|
-    9. Changelog ................................... |ThreesomeChangelog|
-   10. Credits ..................................... |ThreesomeCredits|
+    1. Version Control Integration ............... |SpliceVCS|
+        1.1 Mercurial ............................ |SpliceVCS_hg|
+        1.2 Git .................................. |SpliceVCS_git|
+        1.3 Bazaar ............................... |SpliceVCS_bzr|
+    2. Basic Usage ............................... |SpliceUsage|
+        2.1 Files ................................ |SpliceUsage_files|
+        2.2 Modes ................................ |SpliceUsage_modes|
+    3. Key Bindings .............................. |SpliceKeys|
+        3.1 Mode Selection Keys .................. |SpliceKeys_mode|
+        3.2 File Selection Keys .................. |SpliceKeys_file|
+        3.3 Other Keys ........................... |SpliceKeys_other|
+    4. Modes ..................................... |SpliceModes|
+        4.1 Grid ................................. |SpliceModes_grid|
+        4.2 Loupe ................................ |SpliceModes_loupe|
+        4.3 Compare .............................. |SpliceModes_compare|
+        4.4 Path ................................. |SpliceModes_path|
+    5. Configuration ............................. |SpliceConfig|
+        5.1 splice_debug ......................... |SpliceConfig_debug|
+        5.2 splice_disable ....................... |SpliceConfig_disable|
+        5.3 splice_initial_diff_grid ............. |SpliceConfig_id_grid|
+        5.4 splice_initial_diff_loupe ............ |SpliceConfig_id_loupe|
+        5.5 splice_initial_diff_compare .......... |SpliceConfig_id_compare|
+        5.6 splice_initial_diff_path ............. |SpliceConfig_id_path|
+        5.7 splice_initial_layout_grid ........... |SpliceConfig_il_grid|
+        5.8 splice_initial_layout_loupe .......... |SpliceConfig_il_loupe|
+        5.9 splice_initial_layout_compare ........ |SpliceConfig_il_compare|
+        5.10 splice_initial_layout_path .......... |SpliceConfig_il_path|
+        5.11 splice_initial_scrollbind_grid ...... |SpliceConfig_is_grid|
+        5.12 splice_initial_scrollbind_loupe ..... |SpliceConfig_is_loupe|
+        5.13 splice_initial_scrollbind_compare ... |SpliceConfig_is_compare|
+        5.14 splice_initial_scrollbind_path ...... |SpliceConfig_is_path|
+        5.15 splice_initial_mode ................. |SpliceConfig_im|
+        5.16 splice_prefix ....................... |SpliceConfig_prefix|
+        5.17 splice_wrap ......................... |SpliceConfig_wrap|
+    6. License ................................... |SpliceLicense|
+    7. Bugs ...................................... |SpliceBugs|
+    8. Contributing .............................. |SpliceContributing|
+    9. Changelog ................................. |SpliceChangelog|
+   10. Credits ................................... |SpliceCredits|
 
 
 ==============================================================================
-1. Version Control Integration                                  *ThreesomeVCS*
+1. Version Control Integration                                     *SpliceVCS*
 
-Threesome is meant to be called by your version control system when it needs
-you to resolve merge conflicts.  You will need to configure your VCS to do
-this before you can use Threesome.
+Splice is meant to be called by your version control system when it needs you
+to resolve merge conflicts.  You will need to configure your VCS to do this
+before you can use Splice.
 
 *Note: If you'd like to use a Vim GUI instead of console vim, replace
        "vim" in the following commands with your choice of "mvim" or "gvim".
 
 ------------------------------------------------------------------------------
-1.1 Mercurial                                                *ThreesomeVCS_hg*
+1.1 Mercurial                                                   *SpliceVCS_hg*
 
 Add the following lines to "~/.hgrc": >
 
     [merge-tools]
-    threesome.executable = vim
-    threesome.args = -f $base $local $other $output -c 'ThreesomeInit'
-    threesome.premerge = keep
-    threesome.priority = 1
+    splice.executable = vim
+    splice.args = -f $base $local $other $output -c 'SpliceInit'
+    splice.premerge = keep
+    splice.priority = 1
 
-Mercurial will now open Vim with Threesome whenever a file has merge conflicts
+Mercurial will now open Vim with Splice whenever a file has merge conflicts
 which need to be resolved.
 
 ------------------------------------------------------------------------------
-1.2 Git                                                     *ThreesomeVCS_git*
+1.2 Git                                                        *SpliceVCS_git*
 
 Add the following lines to "~/.gitconfig": >
 
     [merge]
-    tool = threesome
+    tool = splice
 
-    [mergetool "threesome"]
-    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    [mergetool "splice"]
+    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
     trustExitCode = true
 
 If a "git merge" or "git pull" fails with merge conflicts you can now run
 "git mergetool".  Git will loop over all the files with conflicts and allow
-you to resolve them with Vim and Threesome.
+you to resolve them with Vim and Splice.
 
 ------------------------------------------------------------------------------
-1.3 Bazaar                                                  *ThreesomeVCS_bzr*
+1.3 Bazaar                                                     *SpliceVCS_bzr*
 
 For Bazaar 2.4 or greater, add the following line to bazaar.conf:
 >
-    bzr.mergetool.threesome = vim {base} {this} {other} {result} -c 'ThreesomeInit'
+    bzr.mergetool.splice = vim {base} {this} {other} {result} -c 'SpliceInit'
 <
 Optionally, change the default merge tool by setting:
 >
-    bzr.default_mergetool = threesome
+    bzr.default_mergetool = splice
 <
 For earlier versions of Bazaar, set the following entry in bazaar.conf:
 >
-    external_merge = vim %b %t %o %r -c 'ThreesomeInit'
+    external_merge = vim %b %t %o %r -c 'SpliceInit'
 <
-You can now use Vim with Threesome from "bzr qconflicts".
+You can now use Vim with Splice from "bzr qconflicts".
 
 ==============================================================================
-2. Basic Usage                                                *ThreesomeUsage*
+2. Basic Usage                                                   *SpliceUsage*
 
-Threesome takes a lot of inspiration for its user interface from Adobe
-Lightroom, a photo editing program.
+Splice takes a lot of inspiration for its user interface from Adobe Lightroom,
+a photo editing program.
 
 When resolving merge conflicts your goal is:
 
@@ -131,57 +118,57 @@ When resolving merge conflicts your goal is:
   - Save the result to disk.
   - Exit Vim with a non-error status code to tell the VCS the merge succeeded.
 
-Threesome has several "modes" to help you work with the various files.
+Splice has several "modes" to help you work with the various files.
 
 ------------------------------------------------------------------------------
-2.1 Files                                               *ThreesomeUsage_files*
+2.1 Files                                                  *SpliceUsage_files*
 
 When resolving a merge there are four files you will work with:
 
-Original                                       *ThreesomeUsage_files_original*
+Original                                       *SpliceUsage_files_original*
     The original file, as it appears in the parent revision of the two
     revisions being merged.
 
-One                                                 *ThreesomeUsage_files_one*
+One                                                 *SpliceUsage_files_one*
     The file as it appears in the first revision being merged.
 
     This is usually the "current" revision, or the one you are at when you
     run "hg merge REV").
 
-Two                                                 *ThreesomeUsage_files_two*
+Two                                                 *SpliceUsage_files_two*
     The file as it appears in the second revision being merged.
 
     This is usually the "target" revision, or the one you specify in the
     "hg merge REV" command).
 
-Result                                           *ThreesomeUsage_files_result*
+Result                                           *SpliceUsage_files_result*
     The result of merging the two revisions of the file.
 
     This is the file that your version control system expects to contain the
     final result once you're done.
 
 ------------------------------------------------------------------------------
-2.2 Modes                                               *ThreesomeUsage_modes*
+2.2 Modes                                                  *SpliceUsage_modes*
 
-Threesome has four "modes" or "views" for working with the files.
+Splice has four "modes" or "views" for working with the files.
 
-Grid                                               *ThreesomeUsage_modes_grid*
+Grid                                               *SpliceUsage_modes_grid*
     Shows all four files at once to give you an overview of the merge.
 
-    See |ThreesomeModes-grid| for more information.
+    See |SpliceModes-grid| for more information.
 
-Loupe                                             *ThreesomeUsage_modes_loupe*
+Loupe                                             *SpliceUsage_modes_loupe*
     Shows a single file at a time for close examination of a single file.
 
-    See |ThreesomeModes-loupe| for more information.
+    See |SpliceModes-loupe| for more information.
 
-Compare                                         *ThreesomeUsage_modes_compare*
+Compare                                         *SpliceUsage_modes_compare*
     Shows two files at a time for examining the movement of changes between
     pairs of files.
 
-    See |ThreesomeModes-compare| for more information.
+    See |SpliceModes-compare| for more information.
 
-Path                                               *ThreesomeUsage_modes_path*
+Path                                               *SpliceUsage_modes_path*
     Shows three files at a time:
 
       - The original
@@ -191,16 +178,18 @@ Path                                               *ThreesomeUsage_modes_path*
     Used for examining how a change moves through one "path" or "branch"
     of the merge.
 
-    See |ThreesomeModes-path| for more information.
+    See |SpliceModes-path| for more information.
 
 
 ==============================================================================
-3. Key Bindings                                                *ThreesomeKeys*
+3. Key Bindings                                                   *SpliceKeys*
 
-Threesome makes use of <localleader> for all of its key bindings to avoid
-clashing with global mappings. If you've never used <localleader> now
-would be a good time to read the |maplocalleader| documentation and
-configure a key for it.
+All of Splice's key mappings are prefixed with a single key to group them
+together and avoid shadowing other mappings.  By default this key is '-'
+(minus/hyphen).
+
+See the |SpliceConfig_prefix| setting if you'd like to change this prefix to
+something else.
 
 All keybindings are used across (almost) all modes.
 
@@ -208,85 +197,85 @@ The behavior of some of them changes depending on the current mode, but the
 effects should be fairly intuitive.
 
 ------------------------------------------------------------------------------
-3.1 Mode Selection Keys                                   *ThreesomeKeys_mode*
+3.1 Mode Selection Keys                                      *SpliceKeys_mode*
 
-<localleader>g                                       *Grid*
+<prefix>g                                       *Grid*
                         Switch to grid view.
 
-<localleader>l                                      *Loupe*
+<prefix>l                                      *Loupe*
                         Switch to loupe view.
 
-<localleader>c                                    *Compare*
+<prefix>c                                    *Compare*
                         Switch to compare view.
 
-<localleader>p                                       *Path*
+<prefix>p                                       *Path*
                         Switch to path view.
 
 ------------------------------------------------------------------------------
-3.2 File Selection Keys                                    *ThreesomeKeys_file*
+3.2 File Selection Keys                                      *SpliceKeys_file*
 
-<localleader>o                                   *Original*
+<prefix>o                                   *Original*
                         Select the original file.
 
-<localleader>1                                        *One*
+<prefix>1                                        *One*
                         Select file one.
 
-<localleader>2                                        *Two*
+<prefix>2                                        *Two*
                         Select file two.
 
-<localleader>r                                     *Result*
+<prefix>r                                     *Result*
                         Select the result file.
 
 ------------------------------------------------------------------------------
-3.3 Other Keys                                           *ThreesomeKeys_other*
+3.3 Other Keys                                              *SpliceKeys_other*
 
-<localleader>d                                       *Diff*
+<prefix>d                                       *Diff*
                         Cycle through various diff combinations.
 
-<localleader>D                                    *DiffOff*
+<prefix>D                                    *DiffOff*
                         Turn off all diffs.
 
-<localleader>u                                    *UseHunk*
+<prefix>u                                    *UseHunk*
                         Place a hunk from file one or two into
                         the result file.
 
-<localleader>s                                     *Scroll*
+<prefix>s                                     *Scroll*
                         Toggle scroll locking on and off.
 
-<localleader><space>                               *Layout*
+<prefix><space>                               *Layout*
                         Cycle through various layouts of the
                         current view.
 
-<localleader>n                                       *Next*
+<prefix>n                                       *Next*
                         Move to the next unresolved conflict.
 
-<localleader>N                                   *Previous*
+<prefix>N                                   *Previous*
                         Move to the previous unresolved conflict.
 
-<localleader>q                                       *Quit*
+<prefix>q                                       *Quit*
                         Save the result file and exit Vim.
 
                         Indicates to the VCS that the merge was
                         successful and it should use the current
                         contents of the result file as the result.
 
-<localleader>CC                                    *Cancel*
+<prefix>CC                                    *Cancel*
                         Exits Vim with an error code (like |:cquit|).
                         Indicates to the VCS that the merge was
                         NOT successful.
 
 ==============================================================================
-4. Modes                                                      *ThreesomeModes*
+4. Modes                                                         *SpliceModes*
 
 This section describes each mode in detail.
 
 ------------------------------------------------------------------------------
-4.1 Grid                                                 *ThreesomeModes_grid*
+4.1 Grid                                                    *SpliceModes_grid*
 
 The grid view is used to get an overview of all files at once to get a birds'
 eye view of the merge.
 
-Grid Layouts                                     *ThreesomeModes_grid_layouts*
+Grid Layouts                                     *SpliceModes_grid_layouts*
 ------------
 
     Layout 0                 Layout 1                        Layout 2
@@ -301,33 +290,33 @@ Grid Layouts                                     *ThreesomeModes_grid_layouts*
     |                   |    |        |        |        |    |               |
     +-------------------+    +--------------------------+    +---------------+
 
-Grid-Specific Key Bindings                          *ThreesomeModes_grid_keys*
+Grid-Specific Key Bindings                          *SpliceModes_grid_keys*
 --------------------------
 
-<localleader>o                                   *Original-Grid*
+<prefix>o                                   *Original-Grid*
                         Select the original file, but only in layout 1.
 
-<localleader>u                                    *UseHunk-Grid*
+<prefix>u                                    *UseHunk-Grid*
                         Disabled in this mode.
 
-<localleader>u1                                  *UseHunk1-Grid*
+<prefix>u1                                  *UseHunk1-Grid*
                         Place a hunk from file one into the result file.
 
-<localleader>u2                                  *UseHunk2-Grid*
+<prefix>u2                                  *UseHunk2-Grid*
                         Place a hunk from file two into the result file.
 
-Grid Diffs                                         *ThreesomeModes_grid_diffs*
+Grid Diffs                                         *SpliceModes_grid_diffs*
 ----------
 
 1. No diff.
 2. Diff all files.
 
 ------------------------------------------------------------------------------
-4.2 Loupe                                               *ThreesomeModes_loupe*
+4.2 Loupe                                                  *SpliceModes_loupe*
 
 The loupe view is used to focus on and examine a single file in detail.
 
-Loupe Layouts                                   *ThreesomeModes_loupe_layouts*
+Loupe Layouts                                   *SpliceModes_loupe_layouts*
 -------------
 
     Layout 0
@@ -340,24 +329,24 @@ Loupe Layouts                                   *ThreesomeModes_loupe_layouts*
     |                 |
     +-----------------+
 
-Loupe-Specific Key Bindings                        *ThreesomeModes_loupe_keys*
+Loupe-Specific Key Bindings                        *SpliceModes_loupe_keys*
 ---------------------------
 
-<localleader>u                                    *UseHunk-Loupe*
+<prefix>u                                    *UseHunk-Loupe*
                         Disabled in this mode.
 
-Loupe Diffs                                       *ThreesomeModes_loupe_diffs*
+Loupe Diffs                                       *SpliceModes_loupe_diffs*
 -----------
 
 No diffs are possible in loupe mode.
 
 ------------------------------------------------------------------------------
-4.3 Compare                                           *ThreesomeModes_compare*
+4.3 Compare                                              *SpliceModes_compare*
 
 The compare view is used to examine the differences between two files at
 a time.
 
-Compare Layouts                               *ThreesomeModes_compare_layouts*
+Compare Layouts                               *SpliceModes_compare_layouts*
 ---------------
 
     Layout 0                 Layout 1
@@ -373,27 +362,27 @@ Compare Layouts                               *ThreesomeModes_compare_layouts*
     | Two     | Two     |    |                   |
     +-------------------+    +-------------------+
 
-Compare-Specific Key Bindings                    *ThreesomeModes_compare_keys*
+Compare-Specific Key Bindings                    *SpliceModes_compare_keys*
 -----------------------------
 
-<localleader>u                                    *UseHunk-Compare*
+<prefix>u                                    *UseHunk-Compare*
                         If the result file and file one/two are
                         both visible, place a hunk from one/two
                         into the result file.  Otherwise: disabled.
 
-Compare Diffs                                   *ThreesomeModes_compare_diffs*
+Compare Diffs                                   *SpliceModes_compare_diffs*
 -------------
 
 1. No diff.
 2. Diff both files.
 
 ------------------------------------------------------------------------------
-4.4 Path                                                 *ThreesomeModes_path*
+4.4 Path                                                    *SpliceModes_path*
 
 The path view is used to view the flow of changed through one "path" or
 "branch" of the merge.
 
-Path Layouts                                     *ThreesomeModes_path_layouts*
+Path Layouts                                     *SpliceModes_path_layouts*
 ------------
 
     Layout 0                        Layout 1
@@ -409,15 +398,15 @@ Path Layouts                                     *ThreesomeModes_path_layouts*
     +--------------------------+    +-------------------+
     
 
-Path-Specific Key Bindings                          *ThreesomeModes_path_keys*
+Path-Specific Key Bindings                          *SpliceModes_path_keys*
 --------------------------
 
-<localleader>u                                    *UseHunk-Path*
+<prefix>u                                    *UseHunk-Path*
                         Place a hunk from file one or two (whichever
                         is currently in the center window) into the
                         result file.
 
-Path Diffs                                         *ThreesomeModes_path_diffs*
+Path Diffs                                         *SpliceModes_path_diffs*
 ----------
 
 1. No diff.
@@ -426,116 +415,116 @@ Path Diffs                                         *ThreesomeModes_path_diffs*
 4. Diff the original and result windows.
 
 ==============================================================================
-5. Configuration                                             *ThreesomeConfig*
+5. Configuration                                                *SpliceConfig*
 
-You can tweak the behavior of Threesome by setting a few variables in your
+You can tweak the behavior of Splice by setting a few variables in your
 |vimrc| file. For example: >
 
-    let g:threesome_initial_mode = "compare"
-    let g:threesome_initial_layout_grid = 2
-    let g:threesome_initial_layout_compare = 1
+    let g:splice_initial_mode = "compare"
+    let g:splice_initial_layout_grid = 2
+    let g:splice_initial_layout_compare = 1
 
 ------------------------------------------------------------------------------
-5.1 g:threesome_debug                                  *ThreesomeConfig_debug*
+5.1 g:splice_debug                                        *SpliceConfig_debug*
 
-Set this to 1 to force Threesome to reload every time its file is sourced.
+Set this to 1 to force Splice to reload every time its file is sourced.
 
 Options: 0 or 1
-Default: 0 (Threesome is loaded only once)
+Default: 0 (Splice is loaded only once)
 
 ------------------------------------------------------------------------------
-5.2 g:threesome_disable                              *ThreesomeConfig_disable*
+5.2 g:splice_disable                                    *SpliceConfig_disable*
 
-Set this to 1 to disable Threesome entirely.
+Set this to 1 to disable Splice entirely.
 
 Useful if you use the same ~/.vim folder on multiple machines and some of
 them may not have Python support.
 
 Options: 0 or 1
-Default: 0 (Threesome is enabled as usual)
+Default: 0 (Splice is enabled as usual)
 
 ------------------------------------------------------------------------------
-5.3 g:threesome_initial_diff_grid                    *ThreesomeConfig_id_grid*
+5.3 g:splice_initial_diff_grid                          *SpliceConfig_id_grid*
 
 Set this to change the diff the grid mode starts in.
 
-See |ThreesomeModes-grid-diffs| for the list of diffs.
+See |SpliceModes-grid-diffs| for the list of diffs.
 
 Options: 0, or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.4 g:threesome_initial_diff_loupe                  *ThreesomeConfig_id_loupe*
+5.4 g:splice_initial_diff_loupe                        *SpliceConfig_id_loupe*
 
 Set this to change the diff the loupe mode starts in.
 
-See |ThreesomeModes-loupe-diffs| for the list of diffs.
+See |SpliceModes-loupe-diffs| for the list of diffs.
 
 Options: 0
 Default: 0
 
 ------------------------------------------------------------------------------
-5.5 g:threesome_initial_diff_compare              *ThreesomeConfig_id_compare*
+5.5 g:splice_initial_diff_compare                    *SpliceConfig_id_compare*
 
 Set this to change the diff the compare mode starts in.
 
-See |ThreesomeModes-compare-diffs| for the list of diffs.
+See |SpliceModes-compare-diffs| for the list of diffs.
 
 Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.6 g:threesome_initial_diff_path                    *ThreesomeConfig_id_path*
+5.6 g:splice_initial_diff_path                          *SpliceConfig_id_path*
 
 Set this to change the diff the path mode starts in.
 
-See |ThreesomeModes-path-diffs| for the list of diffs.
+See |SpliceModes-path-diffs| for the list of diffs.
 
 options: 0, 1, 2, 3, or 4
 Default: 0
 
 ------------------------------------------------------------------------------
-5.7 g:threesome_initial_layout_grid                  *ThreesomeConfig_il_grid*
+5.7 g:splice_initial_layout_grid                        *SpliceConfig_il_grid*
 
 Set this to change the layout the grid mode starts in.
 
-See |ThreesomeModes-grid-layouts| for the list of layouts.
+See |SpliceModes-grid-layouts| for the list of layouts.
 
 Options: 0, 1, or 2
 Default: 0
 
 ------------------------------------------------------------------------------
-5.8 g:threesome_initial_layout_loupe                *ThreesomeConfig_il_loupe*
+5.8 g:splice_initial_layout_loupe                      *SpliceConfig_il_loupe*
 
 Set this to change the layout the loupe mode starts in.
 
-See |ThreesomeModes-loupe-layouts| for the list of layouts.
+See |SpliceModes-loupe-layouts| for the list of layouts.
 
 Options: 0
 Default: 0
 
 ------------------------------------------------------------------------------
-5.9 g:threesome_initial_layout_compare            *ThreesomeConfig_il_compare*
+5.9 g:splice_initial_layout_compare                  *SpliceConfig_il_compare*
 
 Set this to change the layout the compare mode starts in.
 
-See |ThreesomeModes-compare-layouts| for the list of layouts.
+See |SpliceModes-compare-layouts| for the list of layouts.
 
 Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.10 g:threesome_initial_layout_path                 *ThreesomeConfig_il_path*
+5.10 g:splice_initial_layout_path                       *SpliceConfig_il_path*
 
 Set this to change the layout the path mode starts in.
 
-See |ThreesomeModes-path-layouts| for the list of layouts.
+See |SpliceModes-path-layouts| for the list of layouts.
 
 Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.11 g:threesome_initial_scrollbind_grid             *ThreesomeConfig_is_grid*
+5.11 g:splice_initial_scrollbind_grid                   *SpliceConfig_is_grid*
 
 Set this to 1 to enable |scrollbind| by default in grid mode.
 
@@ -543,7 +532,7 @@ Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.12 g:threesome_initial_scrollbind_loupe           *ThreesomeConfig_is_loupe*
+5.12 g:splice_initial_scrollbind_loupe                 *SpliceConfig_is_loupe*
 
 Set this to 1 to enable |scrollbind| by default in loupe mode.
 
@@ -551,7 +540,7 @@ Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.13 g:threesome_initial_scrollbind_compare       *ThreesomeConfig_is_compare*
+5.13 g:splice_initial_scrollbind_compare             *SpliceConfig_is_compare*
 
 Set this to 1 to enable |scrollbind| by default in compare mode.
 
@@ -559,7 +548,7 @@ Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.14 g:threesome_initial_scrollbind_path             *ThreesomeConfig_is_path*
+5.14 g:splice_initial_scrollbind_path                   *SpliceConfig_is_path*
 
 Set this to 1 to enable |scrollbind| by default in path mode.
 
@@ -567,68 +556,70 @@ Options: 0 or 1
 Default: 0
 
 ------------------------------------------------------------------------------
-5.15 g:threesome_initial_mode                             *ThreesomeConfig_im*
+5.15 g:splice_initial_mode                                   *SpliceConfig_im*
 
-Set this to change the mode Threesome initially starts up in.
+Set this to change the mode Splice initially starts up in.
 
-See |ThreesomeModes| for a description of each mode.
+See |SpliceModes| for a description of each mode.
 
 Options: "grid", "loupe", "compare", or "path"
 Default: "grid"
 
 ------------------------------------------------------------------------------
-5.16 g:threesome_leader                               *ThreesomeConfig_leader*
+5.16 g:splice_prefix                                     *SpliceConfig_prefix*
 
-Set this to change the leader Threesome will bind all of its mappings to.
+Set this to change the prefix Splice will bind all of its mappings to.
 
 For example: >
 
-    let g:threesome_leader = "<leader>t"
+    let g:splice_prefix = "<leader>t"
 
-Will make all Threesome commands start with <leader>t instead of the default
-<localleader>.
+Will make all Splice commands start with <leader>t instead of the default '-'.
 
 Options: Any valid key mapping string
-Default: "<localleader>"
+Default: "-"
 
 ------------------------------------------------------------------------------
-5.17 g:threesome_wrap                                   *ThreesomeConfig_wrap*
+5.17 g:splice_wrap                                         *SpliceConfig_wrap*
 
 Set this to "wrap" or "nowrap" to set |wrap| or |nowrap| on all windows by
 default.
 
-By default Threesome will use your default settings.
+By default Splice will use your default settings.
 
 Options: "wrap", "nowrap"
 Default: None (use the default settings)
 
 ==============================================================================
-6. License                                                  *ThreesomeLicense*
+6. License                                                     *SpliceLicense*
 
-Threesome is copyright Steve Losh & contributors, 2011+ and is licensed
+Splice is copyright Steve Losh & contributors, 2011+ and is licensed
 under the MIT/X11 license.
 
 ==============================================================================
-7. Bugs                                                        *ThreesomeBugs*
+7. Bugs                                                           *SpliceBugs*
 
 Please report any bugs you may find on the GitHub issue tracker:
 
-    http://github.com/sjl/threesome.vim/issues
+    http://github.com/sjl/splice.vim/issues
 
 ==============================================================================
-8. Contributing                                        *ThreesomeContributing*
+8. Contributing                                           *SpliceContributing*
 
-Think you can make Threesome better?  Awesome.  New contributors are always
+Think you can make Splice better?  Awesome.  New contributors are always
 welcome.
 
 Fork the project on BitBucket or GitHub and send a pull request.
 
-    BitBucket: http://bitbucket.org/sjl/threesome.vim
-    GitHub:    http://github.com/sjl/threesome.vim
+    BitBucket: http://bitbucket.org/sjl/splice.vim
+    GitHub:    http://github.com/sjl/splice.vim
 
 ==============================================================================
-9. Changelog                                              *ThreesomeChangelog*
+9. Changelog                                                 *SpliceChangelog*
 
+v1.0.0
+    * Rename to Splice.
+    * Change the default prefix to '-' instead of <localleader>.
 v0.2.0
     * Add threesome_leader as a config option.
 v0.1.1
@@ -654,10 +645,10 @@ v0.0.1
     * Oh god nothing works please don't use this for real work yet.
 
 ==============================================================================
-10. Credits                                                 *ThreesomeCredits*
+10. Credits                                                    *SpliceCredits*
 
-Threesome was originally written by Steve Losh after he got fed up with the
-lack of a powerful, intuitive, beautiful three-way merge program on OS X.
+Splice was originally written by Steve Losh after he got fed up with the lack
+of a powerful, intuitive, beautiful three-way merge program on OS X.
 
 A lot of the inspiration for the layout of the code came from vim-orgmode.
 

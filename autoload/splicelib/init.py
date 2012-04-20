@@ -31,23 +31,23 @@ def process_result():
     buffers.result.set_lines(lines)
 
 def bind_global_keys():
-    keys.bind('g', ':ThreesomeGrid<cr>')
-    keys.bind('l', ':ThreesomeLoupe<cr>')
-    keys.bind('c', ':ThreesomeCompare<cr>')
-    keys.bind('p', ':ThreesomePath<cr>')
+    keys.bind('g', ':SpliceGrid<cr>')
+    keys.bind('l', ':SpliceLoupe<cr>')
+    keys.bind('c', ':SpliceCompare<cr>')
+    keys.bind('p', ':SplicePath<cr>')
 
-    keys.bind('o', ':ThreesomeOriginal<cr>')
-    keys.bind('1', ':ThreesomeOne<cr>')
-    keys.bind('2', ':ThreesomeTwo<cr>')
-    keys.bind('r', ':ThreesomeResult<cr>')
+    keys.bind('o', ':SpliceOriginal<cr>')
+    keys.bind('1', ':SpliceOne<cr>')
+    keys.bind('2', ':SpliceTwo<cr>')
+    keys.bind('r', ':SpliceResult<cr>')
 
-    keys.bind('d', ':ThreesomeDiff<cr>')
-    keys.bind('D', ':ThreesomeDiffoff<cr>')
-    keys.bind('s', ':ThreesomeScroll<cr>')
-    keys.bind('n', ':ThreesomeNext<cr>')
-    keys.bind('N', ':ThreesomePrev<cr>')
-    keys.bind('<space>', ':ThreesomeLayout<cr>')
-    keys.bind('u', ':ThreesomeUse<cr>')
+    keys.bind('d', ':SpliceDiff<cr>')
+    keys.bind('D', ':SpliceDiffoff<cr>')
+    keys.bind('s', ':SpliceScroll<cr>')
+    keys.bind('n', ':SpliceNext<cr>')
+    keys.bind('N', ':SplicePrev<cr>')
+    keys.bind('<space>', ':SpliceLayout<cr>')
+    keys.bind('u', ':SpliceUse<cr>')
 
     keys.bind('q', ':wa<cr>:qa<cr>')
     keys.bind('CC', ':cq<cr>')
@@ -82,12 +82,12 @@ def setlocal_buffers():
     vim.command('setlocal buftype=nofile')
     vim.command('setlocal noundofile')
     vim.command('setlocal nolist')
-    vim.command('setlocal ft=threesome')
+    vim.command('setlocal ft=splice')
     vim.command('setlocal nowrap')
     vim.command('resize ' + setting('hud_size', '3'))
 
 def create_hud():
-    vim.command('new __Threesome_HUD__')
+    vim.command('new __Splice_HUD__')
 
 
 def init():

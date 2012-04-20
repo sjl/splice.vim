@@ -50,7 +50,7 @@ class _BufferList(object):
 
     @property
     def hud(self):
-        return Buffer(int(vim.eval("bufnr('__Threesome_HUD__')")) - 1)
+        return Buffer(int(vim.eval("bufnr('__Splice_HUD__')")) - 1)
 
 
     @property

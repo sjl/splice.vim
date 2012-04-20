@@ -5,13 +5,13 @@ from ..settings import setting
 
 def bind(key, to, options='', mode=None, leader=None):
     if not leader:
-        leader = setting('leader', '<localleader>')
+        leader = setting('leader', '-')
 
     vim.command('nnoremap %s %s%s %s' % (options, leader, key, to))
 
 def unbind(key, options='', leader=None):
     if not leader:
-        leader = setting('leader', '<localleader>')
+        leader = setting('leader', '-')
 
     vim.command('unmap %s %s%s' % (options, leader, key))
 
