@@ -84,6 +84,13 @@ endif "}}}
 if !exists('g:splice_initial_scrollbind_path') "{{{
     let g:splice_initial_scrollbind_path = 0
 endif "}}}
+if !exists('g:splice_prefix') "{{{
+    if exists('g:splice_leader')
+        let g:splice_prefix = g:splice_leader
+    else
+        let g:splice_prefix = '-'
+    endif
+endif "}}}
 
 " }}}
 
