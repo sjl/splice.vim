@@ -650,6 +650,15 @@ class CompareMode(Mode):
                 open_two(curwindow)
                 return
 
+        # If file one and the result are showing, then we open file two in the
+        # current window.
+        windows.focus(2)
+        if buffers.current == buffers.one:
+            windows.focus(3)
+            if buffers.current == buffers.result:
+                open_two(curwindow)
+                return
+
         # If file one is in window 2, then we open file two in window 2.
         windows.focus(3)
         if buffers.current == buffers.two:
