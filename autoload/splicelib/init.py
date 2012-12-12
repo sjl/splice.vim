@@ -53,25 +53,32 @@ def bind_global_keys():
     keys.bind('CC', ':cq<cr>')
 
 def setlocal_buffers():
+    buffers.result.open()
+    filetype = vim.eval('&filetype')
+
     buffers.original.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    vim.command('set filetype=%s' % filetype)
     if setting('wrap'):
         vim.command('setlocal ' + setting('wrap'))
 
     buffers.one.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    vim.command('set filetype=%s' % filetype)
     if setting('wrap'):
         vim.command('setlocal ' + setting('wrap'))
 
     buffers.two.open()
     vim.command('setlocal noswapfile')
     vim.command('setlocal nomodifiable')
+    vim.command('set filetype=%s' % filetype)
     if setting('wrap'):
         vim.command('setlocal ' + setting('wrap'))
 
     buffers.result.open()
+    vim.command('set filetype=%s' % filetype)
     if setting('wrap'):
         vim.command('setlocal ' + setting('wrap'))
 
