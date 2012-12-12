@@ -80,7 +80,7 @@ class _BufferList(object):
 
     class remain:
         def __enter__(self):
-            self.curbuf = vim.eval('bufnr(bufname("%"))')
+            self.curbuf = int(vim.eval('bufnr(bufname("%"))'))
             self.pos = windows.pos()
 
         def __exit__(self, type, value, traceback):

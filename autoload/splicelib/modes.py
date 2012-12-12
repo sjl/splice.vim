@@ -13,8 +13,9 @@ class Mode(object):
 
 
     def diff(self, diffmode):
-        with windows.remain():
-            getattr(self, '_diff_%d' % diffmode)()
+        with buffers.remain():
+            with windows.remain():
+                getattr(self, '_diff_%d' % diffmode)()
 
         # Reset the scrollbind to whatever it was before we diffed.
         if not diffmode:
