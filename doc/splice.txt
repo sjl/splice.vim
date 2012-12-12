@@ -626,6 +626,11 @@ Fork the project on BitBucket or GitHub and send a pull request.
 ==============================================================================
 9. Changelog                                                 *SpliceChangelog*
 
+v1.0.1
+    * Fix the splice_prefix setting to actually take effect as documented.
+    * Fix the grid view showing the wrong buffers sometimes.
+    * Set the filetype in each buffer.
+    * Fix showing files 2 and result in compare mode.
 v1.0.0
     * Rename to Splice.
     * Change the default prefix to '-' instead of <localleader>.
