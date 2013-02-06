@@ -4,10 +4,6 @@ import vim
 def focus(winnr):
     vim.command('%dwincmd w' % winnr)
 
-def close(winnr):
-    focus(winnr)
-    vim.command('wincmd c')
-
 def close_all():
     focus(1)
     vim.command('wincmd o')
