@@ -7,7 +7,10 @@ ap = os.path.abspath
 class Buffer(object):
     def __init__(self, i):
         self.number = i + 1
-        self._buffer = vim.buffers[i]
+        for b in vim.buffers:
+            if b.number == self.number:
+                self._buffer = b
+            break
         self.name = self._buffer.name
 
     def open(self, winnr=None):
