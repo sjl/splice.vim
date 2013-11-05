@@ -6,8 +6,11 @@ ap = os.path.abspath
 
 class Buffer(object):
     def __init__(self, i):
-        self.number = i + 1
-        self._buffer = vim.buffers[i]
+        self.number = i
+        for b in vim.buffers:
+            if b.number == self.number:
+                self._buffer = b
+                break
         self.name = self._buffer.name
 
     def open(self, winnr=None):
@@ -34,23 +37,23 @@ class Buffer(object):
 class _BufferList(object):
     @property
     def original(self):
-        return Buffer(0)
-
-    @property
-    def one(self):
         return Buffer(1)
 
     @property
-    def two(self):
+    def one(self):
         return Buffer(2)
 
     @property
-    def result(self):
+    def two(self):
         return Buffer(3)
 
     @property
+    def result(self):
+        return Buffer(4)
+
+    @property
     def hud(self):
-        return Buffer(int(vim.eval("bufnr('__Splice_HUD__')")) - 1)
+        return Buffer(int(vim.eval("bufnr('__Splice_HUD__')")))
 
 
     @property
