@@ -7,24 +7,32 @@ ap = os.path.abspath
 class Buffer(object):
     def __init__(self, i):
         self.number = i
+        self._buffer = None
         for b in vim.buffers:
             if b.number == self.number:
                 self._buffer = b
+                self.name = self._buffer.name
                 break
-        self.name = self._buffer.name
 
     def open(self, winnr=None):
         if winnr is not None:
             windows.focus(winnr)
-        vim.command('%dbuffer' % self.number)
+        try:
+            vim.command('%dbuffer' % self.number)
+        except vim.error:
+            #inexistent buffer
+            pass
+
 
     def set_lines(self, lines):
-        self._buffer[:] = lines
+        if self._buffer:
+            self._buffer[:] = lines
 
     @property
     def lines(self):
-        for line in self._buffer:
-            yield line
+        if self._buffer:
+            for line in self._buffer:
+                yield line
 
 
     def __eq__(self, other):
