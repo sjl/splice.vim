@@ -1,6 +1,6 @@
 import os
 import vim
-import windows
+from . import windows
 
 ap = os.path.abspath
 

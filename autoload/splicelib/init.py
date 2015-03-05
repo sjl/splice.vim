@@ -1,7 +1,7 @@
 import vim
-import modes
-from settings import setting
-from util import buffers, keys, windows
+from . import modes
+from .settings import setting
+from .util import buffers, keys, windows
 
 
 CONFLICT_MARKER_START = '<<<<<<<'

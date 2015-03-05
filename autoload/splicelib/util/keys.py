@@ -1,6 +1,6 @@
 from __future__ import with_statement
 import vim
-from bufferlib import buffers
+from .bufferlib import buffers
 from ..settings import setting
 
 

@@ -1,8 +1,8 @@
 from __future__ import with_statement
 
 import vim
-from util import buffers, keys, windows
-from settings import boolsetting, setting
+from .util import buffers, keys, windows
+from .settings import boolsetting, setting
 
 
 current_mode = None

@@ -27,6 +27,12 @@ import sys, vim
 if sys.version_info[:2] < (2, 5):
     vim.command('let s:has_supported_python = 0')
 ENDPYTHON
+    let s:splice_pyfile = 'pyfile'
+    command! -nargs=1 SplicePython python <args>
+elseif has('python3')
+    let s:has_supported_python = 3
+    let s:splice_pyfile = 'py3file'
+    command! -nargs=1 SplicePython python3 <args>
 else
     let s:has_supported_python = 0
 endif
@@ -99,62 +105,62 @@ endif "}}}
 
 function! splice#SpliceInit() "{{{
     let python_module = fnameescape(globpath(&runtimepath, 'autoload/splice.py'))
-    exe 'pyfile ' . python_module
-    python SpliceInit()
+    exe s:splice_pyfile . ' ' . python_module
+    SplicePython SpliceInit()
 endfunction "}}}
 
 function! splice#SpliceGrid() "{{{
-    python SpliceGrid()
+    SplicePython SpliceGrid()
 endfunction "}}}
 function! splice#SpliceLoupe() "{{{
-    python SpliceLoupe()
+    SplicePython SpliceLoupe()
 endfunction "}}}
 function! splice#SpliceCompare() "{{{
-    python SpliceCompare()
+    SplicePython SpliceCompare()
 endfunction "}}}
 function! splice#SplicePath() "{{{
-    python SplicePath()
+    SplicePython SplicePath()
 endfunction "}}}
 
 function! splice#SpliceOriginal() "{{{
-    python SpliceOriginal()
+    SplicePython SpliceOriginal()
 endfunction "}}}
 function! splice#SpliceOne() "{{{
-    python SpliceOne()
+    SplicePython SpliceOne()
 endfunction "}}}
 function! splice#SpliceTwo() "{{{
-    python SpliceTwo()
+    SplicePython SpliceTwo()
 endfunction "}}}
 function! splice#SpliceResult() "{{{
-    python SpliceResult()
+    SplicePython SpliceResult()
 endfunction "}}}
 
 function! splice#SpliceDiff() "{{{
-    python SpliceDiff()
+    SplicePython SpliceDiff()
 endfunction "}}}
 function! splice#SpliceDiffoff() "{{{
-    python SpliceDiffoff()
+    SplicePython SpliceDiffoff()
 endfunction "}}}
 function! splice#SpliceScroll() "{{{
-    python SpliceScroll()
+    SplicePython SpliceScroll()
 endfunction "}}}
 function! splice#SpliceLayout() "{{{
-    python SpliceLayout()
+    SplicePython SpliceLayout()
 endfunction "}}}
 function! splice#SpliceNext() "{{{
-    python SpliceNext()
+    SplicePython SpliceNext()
 endfunction "}}}
 function! splice#SplicePrev() "{{{
-    python SplicePrev()
+    SplicePython SplicePrev()
 endfunction "}}}
 function! splice#SpliceUse() "{{{
-    python SpliceUse()
+    SplicePython SpliceUse()
 endfunction "}}}
 function! splice#SpliceUse1() "{{{
-    python SpliceUse1()
+    SplicePython SpliceUse1()
 endfunction "}}}
 function! splice#SpliceUse2() "{{{
-    python SpliceUse2()
+    SplicePython SpliceUse2()
 endfunction "}}}
 
 " }}}
