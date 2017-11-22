@@ -249,7 +249,7 @@ class GridMode(Mode):
         windows.focus(3)
 
     def _layout_2(self):
-        self._number_of_windows = 4
+        self._number_of_windows = 3
         self._current_layout = 2
 
         # Open the layout
