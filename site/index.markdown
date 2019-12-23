@@ -3,7 +3,7 @@ Lightroom's user interface.  [Watch the demo screencast][screencast] in HD on
 Vimeo to get an idea of how it works.
 
 * **Full Documentation:** `:help splice`
-* **Source (Mercurial):** <https://hg.sr.ht/sjl/splice.vim>
+* **Source (Mercurial):** <https://hg.sr.ht/~sjl/splice.vim>
 * **Source (Git):** <https://github.com/sjl/splice.vim>
 * **Issues:** <https://github.com/sjl/splice.vim/issues>
 * **License:** [MIT/X11][license]
