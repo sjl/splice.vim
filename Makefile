@@ -15,7 +15,7 @@ site/build/index.html: $(docfiles)
 	cd site && ~/.virtualenvs/d/bin/d
 
 pubdocs: site/build/index.html
-	hg -R ~/src/sjl.bitbucket.org pull -u
-	rsync --delete -az site/build/ ~/src/sjl.bitbucket.org/splice.vim
-	hg -R ~/src/sjl.bitbucket.org commit -Am 'splice.vim: Update site.'
-	hg -R ~/src/sjl.bitbucket.org push
+	hg -R ~/src/docs.stevelosh.com pull -u
+	rsync --delete -az site/build/ ~/src/docs.stevelosh.com/splice.vim
+	hg -R ~/src/docs.stevelosh.com commit -Am 'splice.vim: Update site.'
+	hg -R ~/src/docs.stevelosh.com push

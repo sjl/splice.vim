@@ -3,7 +3,7 @@ Splice
 
 Splice is a Vim plugin for resolving conflicts during three-way merges.
 
-Visit [the site](https://sjl.bitbucket.io/splice.vim/) for more information.
+Visit [the site](https://docs.stevelosh.com/splice.vim/) for more information.
 
 Troubleshooting
 ---------------
