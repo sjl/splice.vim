@@ -7,7 +7,7 @@ Installation
 
 Use [Pathogen][] to install the plugin from your choice of repositories:
 
-    hg clone https://hg.sr.ht/~sjl/splice.vim ~/.vim/bundle/splice
+    hg clone https://hg.stevelosh.com/splice.vim ~/.vim/bundle/splice
     git clone https://github.com/sjl/splice.vim.git ~/.vim/bundle/splice
 
 [Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332

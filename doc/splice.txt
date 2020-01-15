@@ -620,8 +620,8 @@ welcome.
 
 Fork the project on Source Hut or GitHub and send a pull request.
 
-    Source Hut: https://hg.sr.ht/~sjl/splice.vim
-    GitHub:     https://github.com/sjl/splice.vim
+    Mercurial: https://hg.stevelosh.com/splice.vim
+    GitHub:    https://github.com/sjl/splice.vim
 
 ==============================================================================
 9. Changelog                                                 *SpliceChangelog*
