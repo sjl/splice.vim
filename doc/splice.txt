@@ -618,7 +618,7 @@ Please report any bugs you may find on the GitHub issue tracker:
 Think you can make Splice better?  Awesome.  New contributors are always
 welcome.
 
-Fork the project on Source Hut or GitHub and send a pull request.
+Email a patch to steve@stevelosh.com or send a pull request.
 
     Mercurial: https://hg.stevelosh.com/splice.vim
     GitHub:    https://github.com/sjl/splice.vim
