@@ -1,22 +1,16 @@
-import os
 import vim
 from . import windows
-
-ap = os.path.abspath
 
 class Buffer(object):
     def __init__(self, i):
         self.number = i
-        for b in vim.buffers:
-            if b.number == self.number:
-                self._buffer = b
-                break
+        self._buffer = vim.buffers[i]
         self.name = self._buffer.name
 
     def open(self, winnr=None):
         if winnr is not None:
             windows.focus(winnr)
-        vim.command('%dbuffer' % self.number)
+        vim.current.buffer = self._buffer
 
     def set_lines(self, lines):
         self._buffer[:] = lines
@@ -58,16 +52,8 @@ class _BufferList(object):
 
     @property
     def current(self):
-        bufname = ap(vim.eval('bufname("%")'))
-
-        if bufname == ap(self.original.name):
-            return self.original
-        elif bufname == ap(self.one.name):
-            return self.one
-        elif bufname == ap(self.two.name):
-            return self.two
-        elif bufname == ap(self.result.name):
-            return self.result
+        bufnr = vim.current.buffer.number
+        return Buffer(bufnr) if bufnr <= 4 else None
 
     @property
     def all(self):
@@ -83,11 +69,11 @@ class _BufferList(object):
 
     class remain:
         def __enter__(self):
-            self.curbuf = int(vim.eval('bufnr(bufname("%"))'))
+            self.curbuf = vim.current.buffer
             self.pos = windows.pos()
 
         def __exit__(self, type, value, traceback):
-            vim.command('%dbuffer' % self.curbuf)
+            vim.current.buffer = self.curbuf
             vim.current.window.cursor = self.pos
 
 buffers = _BufferList()
