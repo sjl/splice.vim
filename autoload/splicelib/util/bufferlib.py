@@ -11,6 +11,7 @@ class Buffer(object):
         if winnr is not None:
             windows.focus(winnr)
         vim.current.buffer = self._buffer
+        # vim.command('%dbuffer' % self.number)
 
     def set_lines(self, lines):
         self._buffer[:] = lines
@@ -54,6 +55,7 @@ class _BufferList(object):
     def current(self):
         bufnr = vim.current.buffer.number
         return Buffer(bufnr) if bufnr <= 4 else None
+        #... bufname = ap(vim.eval('bufname("%")')) 
 
     @property
     def all(self):
@@ -70,10 +72,12 @@ class _BufferList(object):
     class remain:
         def __enter__(self):
             self.curbuf = vim.current.buffer
+            # self.curbuf = int(vim.eval('bufnr(bufname("%"))'))
             self.pos = windows.pos()
 
         def __exit__(self, type, value, traceback):
             vim.current.buffer = self.curbuf
+            # vim.command('%dbuffer' % self.curbuf)
             vim.current.window.cursor = self.pos
 
 buffers = _BufferList()
