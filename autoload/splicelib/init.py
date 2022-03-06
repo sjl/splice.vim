@@ -1,7 +1,7 @@
 import vim
 from . import modes
 from .settings import setting
-from .util import buffers, keys, windows
+from .util import buffers, windows
 
 
 CONFLICT_MARKER_START = '<<<<<<<'
@@ -29,28 +29,6 @@ def process_result():
         lines.append(line)
 
     buffers.result.set_lines(lines)
-
-def bind_global_keys():
-    keys.bind('g', ':SpliceGrid<cr>')
-    keys.bind('l', ':SpliceLoupe<cr>')
-    keys.bind('c', ':SpliceCompare<cr>')
-    keys.bind('p', ':SplicePath<cr>')
-
-    keys.bind('o', ':SpliceOriginal<cr>')
-    keys.bind('1', ':SpliceOne<cr>')
-    keys.bind('2', ':SpliceTwo<cr>')
-    keys.bind('r', ':SpliceResult<cr>')
-
-    keys.bind('d', ':SpliceDiff<cr>')
-    keys.bind('D', ':SpliceDiffoff<cr>')
-    keys.bind('s', ':SpliceScroll<cr>')
-    keys.bind('n', ':SpliceNext<cr>')
-    keys.bind('N', ':SplicePrev<cr>')
-    keys.bind('<space>', ':SpliceLayout<cr>')
-    keys.bind('u', ':SpliceUse<cr>')
-
-    keys.bind('q', ':wa<cr>:qa<cr>')
-    keys.bind('CC', ':cq<cr>')
 
 def setlocal_buffers():
     buffers.result.open()
@@ -101,7 +79,7 @@ def init():
     process_result()
     create_hud()
     setlocal_buffers()
-    bind_global_keys()
+    # key binding done on vim side before init
 
     vim.command('set hidden')
 

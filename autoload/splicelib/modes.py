@@ -1,7 +1,7 @@
 from __future__ import with_statement
 
 import vim
-from .util import buffers, keys, windows
+from .util import buffers, windows
 from .settings import boolsetting, setting
 
 
@@ -388,15 +388,11 @@ class GridMode(Mode):
 
 
     def activate(self):
-        keys.unbind('u')
-        keys.bind('u1', ':SpliceUse1<cr>')
-        keys.bind('u2', ':SpliceUse2<cr>')
+        vim.command('SpliceActivateGridBindings')
         return super(GridMode, self).activate()
 
     def deactivate(self):
-        keys.unbind('u1')
-        keys.unbind('u2')
-        keys.bind('u', ':SpliceUse<cr>')
+        vim.command('SpliceDeactivateGridBindings')
         return super(GridMode, self).deactivate()
 
 

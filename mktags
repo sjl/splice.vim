@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ctags -R --sort=foldcase \
+    --extras=+f \
+    autoload plugin

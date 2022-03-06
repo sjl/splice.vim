@@ -1,0 +1,69 @@
+
+
+? disable mappings by default
+    NO. Doesn't make sense to have an option to disable mappings.
+    Espcially considering typically only runs from SCM.
+
+? can vim script be written compatibly, some kind of vim9ifavailable setting
+
+? python interface to vim is nice, magic variables/lists/arrays of vim objects.
+  Is there something like this in vim?
+
+Logging
+    vim function Log(string)
+
+    " splice_log_file defaults to $HOME/SPLICE_LOG
+    let g:splice_log_file = $HOME .. '/play/SPLICE_LOG'
+    " splice_log_enabled defaults to false
+    let g:splice_log_enable = v:true
+
+KeyBinding
+    Stay compatible with v1.1.0, circa 2012. DirDiff latest is like this.
+    NOTE: the Splice bindings are only done after SpliceInit is invoked
+          so if Splice is only used from SCM, these bindings should
+          not interfere with other plugins. In particular, some of these
+          bindings overwrite DirDiff bindings.
+
+    Highest priority are per command mappings
+        g:splice_bind_<command> = '<mapping>'
+        where <command> ::= Grid | Loupe | ...
+    For example
+        g:splice_bind_Grid = '-g'  " this is the current default
+        g:splice_bind_Grid = '<M-g>'  " use the meta key
+
+    There is a flag to control whether or not to setup mappings for the
+    Splice commands.
+        g:splice_bind_enable
+    This flag Defaults to 1 for compatibility. But it is recommended to
+    explicitly set this if you want mappings. The default may change in
+    the future to avoid changing user mappings by default.
+
+    Per command mappings take precedence. Any commands not mapped with
+    "g:splice_bind_*" will get the default mapping. If a command mapping
+    is an empty string, '', or set to 'None', it will not be mapped.
+
+    Copy/paste to assist setup; these are the defaults (<prefix> == '-')
+        g:splice_bind_Grid             = '-g'
+        g:splice_bind_Loupe            = '-l'
+        g:splice_bind_Compare          = '-c'
+        g:splice_bind_Path             = '-p'
+
+        g:splice_bind_Original         = '-o'
+        g:splice_bind_One              = '-1'
+        g:splice_bind_Two              = '-2'
+        g:splice_bind_Result           = '-r'
+
+        g:splice_bind_Diff             = '-d'
+        g:splice_bind_DiffOff          = '-D'
+        g:splice_bind_UseHunk          = '-u'
+        g:splice_bind_Scroll           = '-s'
+        g:splice_bind_Layout           = '-<space>'
+        g:splice_bind_Next             = '-n'
+        g:splice_bind_Previous         = '-N'
+
+        g:splice_bind_Quit             = '-q'
+        g:splice_bind_Cancel           = '-CC'
+
+        g:splice_bind_UseHunk1         = '-u1'
+        g:splice_bind_UseHunk2         = '-u2'
+
