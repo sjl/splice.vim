@@ -1,3 +1,31 @@
+TODO:   Use contruct like: buffers.result.winnr (NOTE: the -1)
+        Make winnr a property rather than method
+
+TODO:   Add help tag 'Splice' *before* the table of contents
+
+TODO:   search.vim
+        Do HighlightConflict at very beginning.
+        Handle it separately from NextHightlight
+
+TODO:   show conflicts on startup
+
+TODO:   Understand scrollbind,syncbind,scrollopt
+        'diff' mode, diff.txt
+
+TODO:   <M-n>,<M-N> highlight conflict in all windows
+
+DONE:   boolsetting bug, BUT: see comment with defaults in splice.vim
+
+TODO:   The help has 'splice_initial_diff_*' never referenced.
+        What are they?
+
+=== Do the other premerge options work? keep-merge3, keep-mergediff
+
+=== If vim version or python problem,
+    execute (or option) :cq when popup dismissed
+
+=== boolsetting bug, see comment with defaults in splice.vim
+
 
 
 ? disable mappings by default

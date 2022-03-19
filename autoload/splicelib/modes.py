@@ -2,7 +2,9 @@ from __future__ import with_statement
 
 import vim
 from .util import buffers, windows
-from .settings import boolsetting, setting
+from .settings import boolsetting, setting, init_cur_window_wrap
+from .init import CONFLICT_MARKER_MARK 
+from .util.log import log
 
 
 current_mode = None
@@ -37,8 +39,7 @@ class Mode(object):
                 for buffer in buffers.all:
                     buffer.open()
                     vim.command('diffoff')
-                    if setting('wrap'):
-                        vim.command('setlocal ' + setting('wrap'))
+                    init_cur_window_wrap()
 
                 curbuffer.open()
 
@@ -109,11 +110,13 @@ class Mode(object):
 
     def key_next(self):
         self.goto_result()
-        vim.command(r'exe "silent! normal! /\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
+        vim.command("ISpliceNextConflict true")
+        #vim.command(r'exe "silent! normal! /\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
 
     def key_prev(self):
         self.goto_result()
-        vim.command(r'exe "silent! normal! ?\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
+        vim.command("ISpliceNextConflict false")
+        #vim.command(r'exe "silent! normal! ?\\v^\\=\\=\\=\\=\\=\\=\\=*$\<cr>"')
 
 
     def open_hud(self, winnr):
@@ -190,6 +193,7 @@ class GridMode(Mode):
         self._current_layout = int(setting('initial_layout_grid', 0))
         self._current_diff_mode = int(setting('initial_diff_grid', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_grid')
+        log(f"MODES: initial_scrollbind_grid: {self._current_scrollbind}")
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 3
@@ -380,19 +384,25 @@ class GridMode(Mode):
 
     def goto_result(self):
         if self._current_layout == 0:
-            windows.focus(5)
+            winnr = 5
         elif self._current_layout == 1:
-            windows.focus(3)
+            winnr = 3
         elif self._current_layout == 2:
-            windows.focus(3)
+            winnr = 3
+        w2 = buffers.result.winnr
+        if w2 != winnr:
+            log(f'mode.goto_result: ERROR: winnr: {winnr}, w2: {w2}')
+        log(f'mode.{self._id}.goto_result: winnr: {winnr}, w2: {w2}')
+
+        windows.focus(winnr)
 
 
     def activate(self):
-        vim.command('SpliceActivateGridBindings')
+        vim.command('ISpliceActivateGridBindings')
         return super(GridMode, self).activate()
 
     def deactivate(self):
-        vim.command('SpliceDeactivateGridBindings')
+        vim.command('ISpliceDeactivateGridBindings')
         return super(GridMode, self).deactivate()
 
 
@@ -422,6 +432,7 @@ class LoupeMode(Mode):
         self._current_layout = int(setting('initial_layout_loupe', 0))
         self._current_diff_mode = int(setting('initial_diff_loupe', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_loupe')
+        log(f"MODES: 'initial_scrollbind_loupe: {self._current_scrollbind}")
 
         self._number_of_diff_modes = 1
         self._number_of_layouts = 1
@@ -501,6 +512,7 @@ class CompareMode(Mode):
         self._current_layout = int(setting('initial_layout_compare', 0))
         self._current_diff_mode = int(setting('initial_diff_compare', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_compare')
+        log(f"MODES: 'initial_scrollbind_compare: {self._current_scrollbind}")
 
         self._number_of_diff_modes = 2
         self._number_of_layouts = 2
@@ -721,6 +733,7 @@ class PathMode(Mode):
         self._current_layout = int(setting('initial_layout_path', 0))
         self._current_diff_mode = int(setting('initial_diff_path', 0))
         self._current_scrollbind = boolsetting('initial_scrollbind_path')
+        log(f"MODES: 'initial_scrollbind_path: {self._current_scrollbind}")
 
         self._number_of_diff_modes = 5
         self._number_of_layouts = 2

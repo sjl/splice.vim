@@ -1,8 +1,12 @@
 import vim
-
+from .log import log
 
 def focus(winnr):
-    vim.command('%dwincmd w' % winnr)
+    log('focus', 'WIN: focus ' + str(winnr)
+            + (' ERROR' if winnr > len(vim.windows) or winnr < 1 else ''))
+    if winnr <= len(vim.windows) and winnr > 0:
+        vim.current.window = vim.windows[winnr-1]
+    #vim.command('%dwincmd w' % winnr)
 
 def close_all():
     focus(1)
@@ -15,7 +19,8 @@ def vsplit():
     vim.command('wincmd v')
 
 def currentnr():
-    return int(vim.eval('winnr()'))
+    return vim.current.window.number
+    #return int(vim.eval('winnr()'))
 
 def pos():
     return vim.current.window.cursor

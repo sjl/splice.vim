@@ -15,7 +15,8 @@ class Buffer(object):
             windows.focus(winnr)
         if self._buffer:
             vim.current.buffer = self._buffer
-            # vim.command('%dbuffer' % self.number)
+            #vim.command('%dbuffer' % self.number)
+        return self._buffer
 
     def set_lines(self, lines):
         if self._buffer:
@@ -26,6 +27,15 @@ class Buffer(object):
         if self._buffer:
             for line in self._buffer:
                 yield line
+
+    @property
+    def winnr(self):
+        return int(vim.eval("bufwinnr(" + str(self._buffer.number) + ")"))
+
+    ### # TODO: just have buffer field instead of _buffer 
+    ### @property
+    ### def buffer(self):
+    ###     return self._buffer
 
 
     def __eq__(self, other):

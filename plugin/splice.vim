@@ -5,19 +5,30 @@
 " License:     MIT X11
 " ============================================================================
 
-" Init {{{
+" Init
 
-"call test_override('autoload', 1)
-"import autoload 'splicelib/util/keys.vim'
+" Vim version check
 
-if !exists('g:splice_debug') && (exists('g:splice_disable') || exists('loaded_splice') || &cp)
+vim9script
+
+# call test_override('autoload', 1)
+import autoload 'splice.vim'
+
+command! -nargs=0 SpliceInit call splice.SpliceBoot()
+
+var patch = 4589
+var longv = 8020000 + patch
+
+if v:versionlong < longv || !has('vim9script')
+    splice.RecordBootFailure(
+        ["Splice unavailable: requires Vim 8.2." .. patch .. "+/vim9script"])
     finish
 endif
-let loaded_splice = 1
 
-" }}}
-" Commands {{{
+# TODO: wonder what this condition is all about, seems to have been optimized away
+var loaded_splice: number
+if !exists('g:splice_debug') && (exists('g:splice_disable') || loaded_splice > 0 || &cp)
+    finish
+endif
+loaded_splice = 1
 
-command! -nargs=0 SpliceInit call splice#SpliceInit()
-
-" }}}
