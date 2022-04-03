@@ -39,7 +39,7 @@ var defaultBindings = {
     DiffOff:  'D',
     UseHunk:  'u',
     Scroll:   's',
-    Layout:   '<space>',
+    Layout:   '<Space>',
     Next:     'n',
     Previous: 'N',
 
@@ -49,6 +49,36 @@ var defaultBindings = {
     UseHunk1: 'u1',
     UseHunk2: 'u2'
     }
+
+# Want things in order for display.
+# Could use [ [k, v], [k, v] ... ]
+# Except that ActivateGrid bind/unbind needs random access
+# So be lazy, also have a list. include '' for formatting.
+var bindingsInOrder = [
+    'Grid',
+    'Loupe',
+    'Compare',
+    'Path',
+    '',
+    'Original',
+    'One',
+    'Two',
+    'Result',
+    '',
+    'Diff',
+    'DiffOff',
+    'Scroll',
+    'Layout',
+    'Next',
+    'Previous',
+    '',
+    'Quit',
+    'Cancel',
+    '',
+    'UseHunk',
+    'UseHunk1',
+    'UseHunk2',
+    ]
 
 # For uniformity, and to avoid special casing, provide Quit/Cancel commands
 export def SpliceQuit()
@@ -125,6 +155,20 @@ export def DeactivateGridBindings()
     Bind('UseHunk')
 enddef
 
+# return [ 'action\tdefault\tsetting' ... ] with some separator blank lines
+export def BindingList(): list<string>
+    var result: list<string>
+    for action in bindingsInOrder
+        if !! action
+            var default = defaultBindings[action]
+            result->add(action .. "\t" .. default .. "\t" .. GetMapping(action))
+        else
+            result->add('')
+        endif
+    endfor
+    return result
+enddef
+
 if testing
     log.Log('INIT')
     InitializeBindings()
@@ -132,5 +176,8 @@ if testing
     ActivateGridBindings()
     log.Log('DE-ACTIVATE-GRID')
     DeactivateGridBindings()
+    for i in BindingList()
+        echo !! i ? i : ' '
+    endfor
 endif
 

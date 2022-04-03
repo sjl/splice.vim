@@ -1,3 +1,5 @@
+import re
+
 import vim
 
 # Invoked as either Log(msg) or Log(category, msg).
@@ -13,3 +15,9 @@ def log(arg1, arg2=None):
     if not arg1.encode('utf-8') in vim.vars['splice_logging_exclude']:
         vim.command('call log.Log("PY: ' + arg2 + '")')
 
+def log_stack(s):
+    for i in s:
+        i = i.replace('"', '')
+        i = re.sub(r'File.*splice.vim/autoload/', '', i)
+        i = re.sub(r'File.*splice.vim/plugin/', '', i)
+        log(i)

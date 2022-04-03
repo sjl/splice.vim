@@ -10,6 +10,7 @@ import autoload 'splicelib/util/keys.vim'
 import autoload 'splicelib/util/log.vim'
 import autoload 'splicelib/util/search.vim'
 import autoload 'splicelib/util/vim_assist.vim'
+import autoload 'splicelib/hud.vim'
 
 var PutIfAbsent = vim_assist.PutIfAbsent
 
@@ -296,7 +297,7 @@ def SetupSpliceCommands()
     command! -nargs=0 SpliceResult   SplicePython SpliceResult()
 
     command! -nargs=0 SpliceDiff     SplicePython SpliceDiff()
-    command! -nargs=0 SpliceDiffoff  SplicePython SpliceDiffoff()
+    command! -nargs=0 SpliceDiffOff  SplicePython SpliceDiffOff()
     command! -nargs=0 SpliceScroll   SplicePython SpliceScroll()
     command! -nargs=0 SpliceLayout   SplicePython SpliceLayout()
     command! -nargs=0 SpliceNext     SplicePython SpliceNext()
@@ -313,6 +314,7 @@ def SetupSpliceCommands()
     command! -nargs=0 ISpliceDeactivateGridBindings keys.DeactivateGridBindings()
     command! -nargs=? ISpliceNextConflict search.MoveToConflict(<args>)
     command! -nargs=0 ISpliceAllConflict search.HighlightConflict()
+    command! -nargs=* ISpliceDrawHUD hud.DrawHUD(<args>)
 enddef
 
 export def SpliceInit9()

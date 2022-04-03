@@ -55,7 +55,9 @@ def setlocal_buffers():
     b.options['buftype'] = 'nofile'
     b.options['undofile'] = False
     w.options['list'] = False
-    b.options['filetype'] = 'splice'
+    # following needs to be done with a vim command otherwise syntax not on
+    #b.options['filetype'] = 'splice'
+    vim.command('setlocal filetype=splice')
     w.options['wrap'] = False
     vim.command('resize ' + setting('hud_size', '3'))
 

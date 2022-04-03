@@ -9,19 +9,38 @@
 
 " Vim version check
 
+if ! has('vim9script')
+    echomsg 'This version of Splice requires vim9script'
+    echomsg ' '
+    echomsg 'Since the merge can not be completed, the merge'
+    echomsg 'should be aborted so it can be completed later.'
+    echomsg ' '
+    echomsg 'NOTE: the vim command ":cq" aborts the merge.'
+    echomsg ' '
+    echomsg ' '
+
+    finish
+endif
+
 vim9script
+
+#import autoload 'splicelib/hud.vim'
+#
+#hud.AnyThing()
+#
+#finish
 
 # call test_override('autoload', 1)
 import autoload 'splice.vim'
 
 command! -nargs=0 SpliceInit call splice.SpliceBoot()
 
-var patch = 4589
+var patch = 4632
 var longv = 8020000 + patch
 
-if v:versionlong < longv || !has('vim9script')
+if v:versionlong < longv
     splice.RecordBootFailure(
-        ["Splice unavailable: requires Vim 8.2." .. patch .. "+/vim9script"])
+        ["Splice unavailable: requires Vim 8.2." .. patch])
     finish
 endif
 

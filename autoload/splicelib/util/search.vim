@@ -56,6 +56,9 @@ enddef
 
 var id_conflict: list<number>
 
+#
+# Highlight all the conflicts in this buffer
+#
 export def HighlightConflict()
     #log.Log('conf ids before:' .. string(id_conflict))
     if use_props

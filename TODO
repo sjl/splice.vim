@@ -1,3 +1,7 @@
+TODO:   In keys.vim, GetMapping() return null not ''
+
+TODO:   shortcut, popup with key bindings
+
 TODO:   Use contruct like: buffers.result.winnr (NOTE: the -1)
         Make winnr a property rather than method
 

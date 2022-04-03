@@ -1,10 +1,13 @@
 from __future__ import with_statement
 
+import traceback
+
 import vim
 from .util import buffers, windows
 from .settings import boolsetting, setting, init_cur_window_wrap
 from .init import CONFLICT_MARKER_MARK 
 from .util.log import log
+from .util.log import log_stack
 
 
 current_mode = None
@@ -27,6 +30,7 @@ class Mode(object):
         next_diff_mode = self._current_diff_mode + 1
         if next_diff_mode >= self._number_of_diff_modes:
             next_diff_mode = 0
+        log(f'diff_mode {next_diff_mode}')
         self.diff(next_diff_mode)
 
 
@@ -132,6 +136,7 @@ class Mode(object):
             return [line.ljust(l) for line in lines]
 
         sep = '    |    '
+        #sep = '    ║    '
 
         modes = pad([
             r'Splice Modes',
@@ -163,6 +168,33 @@ class Mode(object):
     def redraw_hud(self):
         with windows.remain():
             windows.focus(1)
+
+            self.hud_prep()
+
+            use_vim_hud = 1
+
+            # use the stack trace for why redraw hud called twice per command
+            # log_stack(traceback.format_stack(None, 6))
+
+
+            #tmp = f"ISpliceDrawHUD "
+
+            # bad programmer
+            mod = self._id
+            if mod == 'loup':
+                mod = 'loupe'
+            elif mod == 'comp':
+                mod = 'compare'
+
+            tmp = f"ISpliceDrawHUD {use_vim_hud}, " \
+                    + f"'{mod}', {self._current_layout}" \
+                    + ("" if not self._lay_first else f", '{self._lay_first}'") \
+                    + ("" if not self._lay_second else f", '{self._lay_second}'")
+            log(tmp)
+            vim.command(tmp)
+            # AND WE'RE DONE ON THIS SIDE
+            if use_vim_hud:
+                return
 
             vim.command('setlocal modifiable')
             buffers.hud.set_lines(self.hud_lines())
@@ -406,6 +438,10 @@ class GridMode(Mode):
         return super(GridMode, self).deactivate()
 
 
+    def hud_prep(self):
+        self._lay_first = None
+        self._lay_second = None
+
     def hud_diagram(self):
         if self._current_layout == 0:
             return [
@@ -495,6 +531,10 @@ class LoupeMode(Mode):
     def goto_result(self):
         self.key_result()
 
+
+    def hud_prep(self):
+        self._lay_first = buffers.labels[self._current_buffer.name]
+        self._lay_second = None
 
     def hud_diagram(self):
         buf = buffers.labels[self._current_buffer.name]
@@ -710,6 +750,10 @@ class CompareMode(Mode):
         self.key_result()
 
 
+    def hud_prep(self):
+        self._lay_first = buffers.labels[self._current_buffer_first.name]
+        self._lay_second = buffers.labels[self._current_buffer_second.name]
+
     def hud_diagram(self):
         first = buffers.labels[self._current_buffer_first.name]
         second = buffers.labels[self._current_buffer_second.name]
@@ -877,6 +921,14 @@ class PathMode(Mode):
     def goto_result(self):
         windows.focus(4)
 
+
+    def hud_prep(self):
+        if self._current_mid_buffer == buffers.one:
+            buf = 'One'
+        else:
+            buf = 'Two'
+        self._lay_first = buf
+        self._lay_second = None
 
     def hud_diagram(self):
         if self._current_mid_buffer == buffers.one:

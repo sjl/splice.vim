@@ -63,8 +63,8 @@ def SpliceDiff():
     log('SpliceDiff')
     splice.modes.current_mode.key_diff()
 
-def SpliceDiffoff():
-    log('SpliceDiffoff')
+def SpliceDiffOff():
+    log('SpliceDiffOff')
     splice.modes.current_mode.key_diffoff()
 
 def SpliceScroll():
