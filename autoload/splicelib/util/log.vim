@@ -49,3 +49,39 @@ export def LogInit(_fname: string)
     endif
 enddef
 
+const E = {
+    ENOTFILE: "Current buffer, '%s', doesn't support '%s'",
+}
+
+def FilterFalse(winid: number, key: string): bool
+    return false
+enddef
+
+def PopupError(msg: list<string>)
+
+    popup_create(msg, {
+        minwidth: 20,
+        tabpage: -1,
+        zindex: 300,
+        border: [],
+        padding: [1, 2, 1, 2],
+        close: 'click',
+        mousemoved: 'any', moved: 'any',
+        mapping: false, filter: FilterFalse
+        })
+enddef
+
+def VPrintf(fmt: string, _args: list<any> = []): string
+    var args = _args->map((_, v) => string(v))
+    var printf_args = !!args ? ", " .. args->join(", ") : ''
+    var x = 'printf("' .. fmt .. '"' .. printf_args .. ')'
+    return execute('echon ' .. x)
+enddef
+
+export def SplicePopup(e_idx: string, ...extra: list<any>)
+    var msg = VPrintf(E[e_idx], extra)
+    Log(msg)
+    PopupError([msg])
+enddef
+
+#defcompile

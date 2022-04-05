@@ -906,6 +906,14 @@ class PathMode(Mode):
 
 
     def key_use(self):
+        if not buffers.current:
+            bname = 'Splice_HUD' \
+                    if buffers.hud.number == vim.current.buffer.number \
+                    else vim.current.buffer.name
+            vim.command("ISplicePopup 'ENOTFILE', " \
+                    + f"'{bname}', " \
+                    + "'UseHunk'")
+            return
         current_diff = self._current_diff_mode
         with windows.remain():
             self._diff_3()  # diff the middle and result windows

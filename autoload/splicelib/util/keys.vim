@@ -4,7 +4,7 @@ vim9script
 var testing = false
 
 if ! testing
-    import autoload 'splicelib/util/log.vim'
+    import autoload './log.vim'
 else
     import './log.vim'
     log.LogInit($HOME .. '/play/SPLICE_LOG')

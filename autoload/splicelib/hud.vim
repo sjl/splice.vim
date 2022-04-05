@@ -1,12 +1,14 @@
 vim9script
 
+# NOTE: simplification/rewrite when vim9 classes. "class Mode"
+
 var testing = false
 
 var Log: func
 
 if ! testing
-    import autoload 'splicelib/util/log.vim'
-    import autoload 'splicelib/util/vim_assist.vim'
+    import autoload './util/log.vim'
+    import autoload './util/vim_assist.vim'
     Log = log.Log
 else
     import './vim_assist.vim'
@@ -16,7 +18,10 @@ else
     def TLog(s: string)
         echomsg s
     enddef
-    Log = TLog
+    #Log = TLog
+    import './log.vim-splice' as log
+    Log = log.Log
+    log.LogInit('/home/err/play/SPLICE_LOG')
 endif
 
 if exists('&mousemoveevent')
@@ -25,6 +30,10 @@ endif
 
 const Pad = vim_assist.Pad
 const Replace = vim_assist.Replace
+
+#
+# TODO: define settings for highlights
+#
 
 var hl_label = 'SpliceLabel'
 var hl_sep = 'SpliceLabel'
@@ -40,8 +49,6 @@ highlight SpliceLabel term=bold ctermfg=4 guifg=Blue
 
 # The HUD is made up of 3 lines and 3 sections: modes, layout, commands.
 # Each section is 3 lines high. Each section is a fixed width.
-
-# NOTE: simplification/rewrite when vim9 classes
 
 # use vertical double bar if possible
 const sepchar = &encoding == 'utf-8' && &ambiwidth == 'single'
@@ -62,13 +69,73 @@ const label_modes = 'Splice Modes:'
 const label_layout = 'Layout:'
 const label_commands = 'Splice Commands:'
 
-def ExecuteCommand(cmd: string)
-    if testing
-        echo 'Execute: ' .. cmd
-    else
-        execute 'Splice' .. cmd
+#
+# Track last window position.
+# Use it to go back to the prev window before executing a command.
+#
+# FAILS: var last_win: list<any>
+var last_win = null_list
+
+def ClearWinPos()
+    last_win = null_list
+enddef
+
+def RestoreWinPos()
+    if last_win != null
+        # copy before it's change by win_gotoid
+        var lw = last_win->deepcopy()
+        if win_gotoid(lw[0])
+            setpos('.', lw[1])
+        endif
+        last_win = null_list
     endif
 enddef
+
+# only save positions for our magic merge windows
+def SaveWinPos()
+    var bnr = bufnr()
+    last_win = bnr >= 1 && bnr <= 4
+                ? [ win_getid(), getcurpos() ] : null_list
+enddef
+
+augroup hud
+    autocmd!
+    autocmd WinLeave * SaveWinPos()
+augroup END
+
+
+def ExecuteCommand(cmd: string)
+    if testing
+        RestoreWinPos()
+        echo 'Execute: ' .. cmd
+    else
+        RestoreWinPos()
+        var splice_cmd = 'Splice' .. cmd
+        Log('Execute: ' .. splice_cmd)
+        execute splice_cmd
+    endif
+enddef
+
+#
+# Diagrams from modes.py
+#
+
+# Grid
+#   Layout 0                 Layout 1                        Layout 2
+#   +-------------------+    +--------------------------+    +---------------+
+#   |     Original      |    | One    | Result | Two    |    |      One      |
+#   |2                  |    |        |        |        |    |2              |
+#   +-------------------+    |        |        |        |    +---------------+
+#   |  One    |    Two  |    |        |        |        |    |     Result    |
+#   |3        |4        |    |        |        |        |    |3              |
+#   +-------------------+    |        |        |        |    +---------------+
+#   |      Result       |    |        |        |        |    |      Two      |
+#   |5                  |    |2       |3       |4       |    |4              |
+#   +-------------------+    +--------------------------+    +---------------+
+
+
+
+
 
 #
 # modes_diagram
@@ -115,12 +182,9 @@ const hunks = [ ' u: use hunk', 'u1: use hunk', 'u2:  hunk2  ' ]
 #echo commands_marker
 
 #
-# TODO: get rid of the "Layout ->" from the diagram
-#       and aply it later. Maybe each section becomes
-#       Splice Modes:, Layout:, Splice Commands
-#       and the Layout section can be sqeezed considerably
+#       Each HUD section annotated: Splice Modes:, Layout:, Splice Commands:.
 #
-#       This is the widest, give it an extra 3 spaces in front.
+#       The vim9 implementation allows:
 #               Layout:
 #                  Original  XXX  Result
 #
@@ -131,19 +195,7 @@ const hunks = [ ' u: use hunk', 'u1: use hunk', 'u2:  hunk2  ' ]
 #               Layout:
 #                          XXXXXXXX
 #                          YYYYYY
-#
-#       So the idea is to center each diagram, then prepad 3.
-#
-#       - Find the possible longest line of all the diagrams,
-#         call that diagram_width.
-#       - Whe rendering a HUD, first substite the vari_files,
-#         then center the diagram.
-#       ###- 
-#       ###  then use diagram_width to center the diagram.
-#       - N is 3 as described above (maybe 1)
-#       - then right align centered diagram to diagram_width + N
-#       - then prepad with N spaces
-#       - overlay "Layout:" on the first row
+#       which reduces max width of HUD
 
 var grid_diagram_0 =<< EOF
 Original
@@ -200,6 +252,8 @@ XXX
 Result
 END
 
+# TODO: BuildDiagrams is really just FindDiagramMaxWidth.
+#       Don't need need extra level of nesting.
 # During startup, this list is tranformed so that
 # the inner entries look like (see BuildDiagrams())
 # [ xxx_diagram_i, offset, length ]
@@ -226,21 +280,37 @@ var diagrams_2: list<list<any>> = [
 #       mode_display_length ]           # chars on screen "[g]rid" == 6
 #                                       # starts pos after [line, col]
 # 
+# each modes value:  dict of
+#   m_line:     hud line, 1 based
+#   m_col:      hud col, 0 based, of activate '*'
+#   m_idx:      index into diagrams_2
+#   m_nfile:       number of files expected for X,Y substitution
+#   m_len:      chars on screen, "[g]rid" == 6
+# 
+# { m_line:, m_col0:, m_idx:, m_nfile:, m_len: }
 const modes = {
-    grid:       [ [ 2, 0],  0, 0, 6 ],
-    loupe:      [ [ 3, 0],  1, 1, 7 ],
-    compare:    [ [ 2, 10], 2, 2, 9 ],
-    path:       [ [ 3, 10], 3, 1, 6 ]
-    }
+    grid:       { m_line: 2, m_col: 0,   m_idx: 0, m_nfile: 0, m_len: 6 },
+    loupe:      { m_line: 3, m_col: 0,   m_idx: 1, m_nfile: 1, m_len: 7 },
+    compare:    { m_line: 2, m_col: 10,  m_idx: 2, m_nfile: 2, m_len: 9 },
+    path:       { m_line: 3, m_col: 10,  m_idx: 3, m_nfile: 1, m_len: 6 }
+}
+#const modes = {
+#    grid:       [ [ 2, 0],  0, 0, 6 ],
+#    loupe:      [ [ 3, 0],  1, 1, 7 ],
+#    compare:    [ [ 2, 10], 2, 2, 9 ],
+#    path:       [ [ 3, 10], 3, 1, 6 ]
+#    }
 # [ diagram, offset, length ]
 ##### wellllllll
 # [ diagram, length ]
-def GetLayoutDiagramData(mode: string, layout: number): list<any>
-    return diagrams_2[modes->get(mode)[1]][layout]
-enddef
-def GetModeStarPos(mode: string): list<number>
-    return modes->get(mode)[0]
-enddef
+#def GetLayoutDiagramData(mode: string, layout: number): list<any>
+#    return diagrams_2[modes->get(mode).m_idx][layout]
+#enddef
+#def GetModeStarPos(mode: string): list<number>
+#    #return modes->get(mode)[0]
+#    var d = modes[mode]
+#    return [ d.m_line, d.m_col ]
+#enddef
 
 
 #
@@ -265,6 +335,10 @@ def BuildDiagrams()
     #echo diagrams_2
 
     var diagrams = diagrams_2->flattennew(1)
+
+    lockvar diagram_width
+    lockvar! diagrams_2
+    return
 
     #
     ###### ?DON'T NEED THIS PAD?, handle it all in BuildDiagram
@@ -292,7 +366,6 @@ def BuildDiagrams()
     #    # all offsets for given diagram equal, grab the first
     #    stuff->insert(offsets[0], 1)
     #endfor
-    lockvar! diagrams_2
 enddef
 
 
@@ -361,14 +434,16 @@ def BuildActions()
         line += 1
     endfor
 
-    for item in modes->items()
+    # Add in the Grid, Loupe, ... actions
+    for [ k, v ] in modes->items()
         # make key Grid, not grid, to correspond to command name
-        var name = item[0][0]->toupper() .. item[0][1 : ]
-        var [lino, col] = item[1][0]
-        var length = item[1][3]
+        var name = k[0]->toupper() .. k[1 : ]
+        #var [lino, col] = item[1][0]
+        var [lino, col] = [ v.m_line, v.m_col ]
+        #var length = item[1][3]
         # +1 makes it 1 based, +1 to skip activation position
         col += 2
-        t_actions[name] = [ lino, col, col + length ]
+        t_actions[name] = [ lino, col, col + v.m_len ]
     endfor
 
     actions = t_actions
@@ -453,7 +528,7 @@ def AddActionProps(d: dict<any> = null_dict)
     #endif
 enddef
 
-# Add the pop_command textprop to each command in HUD.
+# Add the action textprop to each command in HUD.
 def HighlightActions(bnr: number)
     #prop_remove({type: prop_action, bufnr: bnr, all: true})
     #var props = {type: prop_action, bufnr: bnr}
@@ -470,11 +545,11 @@ enddef
 def HighlightMode(mode: string, bnr: number)
     var props = {type: prop_act, bufnr: bnr, all: true}
     prop_remove({type: prop_act, bufnr: bnr, all: true})
-    var val = modes->get(mode)
-    var [ active_line, active_col ] = val[0]
+    var v = modes->get(mode)
+    #var [ active_line, active_col ] = val[0]
     # include the '*' increase length
-    props.length = val[3] + 1
-    prop_add(active_line, active_col + 1, props)
+    props.length = v.m_len + 1
+    prop_add(v.m_line, v.m_col + 1, props)
 enddef
 
 # Labels and seperators. The labels are on the first line of the buffer
@@ -517,15 +592,20 @@ enddef
 
 def BuildDiagram(mode: string, layout: number,
         vari_files: list<string>): list<string>
-    var num_vari_files = modes->get(mode)[2]
+    #var num_vari_files = modes->get(mode)[2]
+    var num_vari_files =  modes->get(mode).m_nfile
     if len(vari_files) != num_vari_files
         throw 'Wrong number of file names for '
             .. mode .. ': ' .. string(vari_files)
     endif
 
-    var diagram_data = GetLayoutDiagramData(mode, layout)
+    #var diagram_data = GetLayoutDiagramData(mode, layout)
+    var diagram_data = diagrams_2[modes[mode].m_idx][layout]
     var diagram = diagram_data[0]->deepcopy()
+
     ### var dia_width = len(diagram[0])
+
+    # substite X* Y* with vari_files
     if !!num_vari_files
         diagram->map((_, s) => {
             var t = substitute(s, '\v\CX+', vari_files[0], '')
@@ -542,22 +622,19 @@ def BuildDiagram(mode: string, layout: number,
 
     #diagram->Pad('c', diagram_width)
 
-    # get the width of the longest line, after subsitution
+    # get the width after subsitution
     diagram->Pad('c')
     var width = diagram[0]->len()
 
-    #
-    # Want to shift a centered diagram right
-    # if it would still fit in diagram_width.
-    ##### DISPLAY diagram_width, width, width after pad, final width
+    # Shift a centered diagram right when it still fit in diagram_width.
     if width + 5 <= diagram_width
         diagram->Pad('c', diagram_width - 5)
         diagram->map((_, s) => '     ' .. s)
     else
         diagram->Pad('r', diagram_width)
     endif
-
-    # put Layout: in the diagram
+        
+    # overlay "Layout:" upper-left of the diagram
     diagram[0] = diagram[0]->Replace(0, len(label_layout) - 1, label_layout)
 
 
@@ -570,35 +647,110 @@ def BuildHud(mode: string, layout: number,
     var diagram = BuildDiagram(mode, layout, vari_files)
     var result = []
     var modes_dia = modes_diagram->deepcopy()
-    var [ active_line, active_col ] = modes->get(mode)[0]
+    #var [ active_line, active_col ] = modes->get(mode)[0]
+    var v = modes->get(mode)
+    var [ active_line, active_col ] = [ v.m_line, v.m_col ]
     # get line 0 based
     active_line -= 1
     modes_dia[active_line] = modes_dia[active_line]
-        ->Replace(active_col, active_col, '*')
+                \->Replace(active_col, active_col, '*')
 
     var j = 0
     while j < 3
         result->add(modes_dia[j] .. sep
-            #.. diagrams_2->flattennew(1)[i][0][j] .. sep
             .. diagram[j] .. sep
             .. commands[j] ..  sep)
         j += 1
     endwhile
     return result
 enddef
-def DumpHud(mode: string, layout: number, vari_files: list<string>)
-    for i in BuildHud(mode, layout, vari_files)
-        echo i
-    endfor
-enddef
+#def DumpHud(mode: string, layout: number, vari_files: list<string>)
+#    for i in BuildHud(mode, layout, vari_files)
+#        echo i
+#    endfor
+#enddef
 #DumpHud(3)
 
 
-var created_hud: list<number>
+# An actions item.
+var current_hud_rollover = null_list
+
+# NOTE: if return needs to differentiate wrong window
+#       then could return null vs []
+# NOTE: <buffer> <LeftRelease> works, but <buffer> <MouseMove>
+#        doesn't work, so must do bnr != hudbufnr
+
+# Return null or item from actions dictionary
+def GetHudItemUnderMouse(mpos: dict<number>): list<any>
+
+    if winbufnr(mpos.winid) != hudbufnr
+        #if testing | echo 'click nop: clickbuf:' bnr 'hudbufnr:' hudbufnr | endif
+        return null_list
+    endif
+    var mpos_line = mpos.line
+    var mpos_col = mpos.column
+
+    # check if mouse in current rollover
+    if current_hud_rollover != null
+        var [ i_line, i_start, i_end ] = current_hud_rollover[1]
+        if mpos_line == i_line && mpos_col >= i_start && mpos_col < i_end
+            return current_hud_rollover
+        endif
+    endif
+
+    for item in actions->items()
+        var [ i_line, i_start, i_end ] = item[1]
+        if mpos_line == i_line && mpos_col >= i_start && mpos_col < i_end
+            return item
+        endif
+    endfor
+    # echo 'Button, but no action'
+    return null_list
+enddef
+
+# Mouse button, look for command action.
+def Release()
+    var item = getmousepos()->GetHudItemUnderMouse()
+    if item != null
+        ExecuteCommand(item[0])
+    else
+        # Click in hud that's not a command. Forget last position
+        ClearWinPos()
+    endif
+enddef
+
+# Mouse move, handle command button rollover
+def Move()
+    var item = getmousepos()->GetHudItemUnderMouse()
+    if current_hud_rollover != null
+        if current_hud_rollover is item
+            # echo 'cache hit:' item
+            return
+        else
+            prop_remove({type: prop_rollover, bufnr: hudbufnr, all: true},
+                current_hud_rollover[1][0])
+            current_hud_rollover = null_list
+        endif
+    endif
+    if item != null
+        var [ line, start, end ] = item[1]
+        prop_add(line, start,
+            {end_col: end, type: prop_rollover, bufnr: hudbufnr, all: true})
+        current_hud_rollover = item
+    endif
+enddef
+
+# This is only for after replacing the hud lines
+def RefreshMouseCache()
+    current_hud_rollover = null_list
+    Move()
+enddef
 
 #
 # Main
 #
+
+var created_hud: list<number>
 
 var hudbufnr: number = -1
 
@@ -638,6 +790,7 @@ def InstallHUD(mode: string, layout: number, bnr: number,
 
     hudbufnr = bnr
     DoInit_2(mode, bnr)
+    RefreshMouseCache()
 enddef
 
 if testing
@@ -685,34 +838,6 @@ export def AnyThing()
     Log('THIS IS FROM AnyThing IN HUD.VIM')
 enddef
 
-def CreateDebugHud(mode: string, layout: number, xxx: number,
-        ...vari_files: list<string>): number
-    # xxx is ignored, but same signature and InstallHUD
-
-    #set co=200
-
-    :1wincmd w
-    new __Splice_HUD__
-    wincmd J
-    var n = bufnr()
-
-    InitHudBuffer()
-    var hud = BuildHud(mode, layout, vari_files)
-
-    &modifiable = true
-    deletebufline('', 1, '$')
-    setline(1, hud)
-    &modifiable = false
-
-    DoInit_2(mode, n)
-    hudbufnr = n
-
-    if created_hud->index(n) < 0
-        created_hud->add(n)
-    endif
-    return n
-enddef
-
 # The first init doesn't depend on hudbufnr
 var did_init_1 = false
 def DoInit_1()
@@ -724,7 +849,11 @@ def DoInit_1()
     layout_offset = modes_diagram[0]->len()  + sep->len()
     #### actions_offset = layout_offset + diagrams_2[0][0][0][0]->len() + sep->len()
     actions_offset = layout_offset + diagram_width + sep->len()
-    var end_offset = actions_offset + commands[0]->len() + sep->len()
+    lockvar layout_offset
+    lockvar actions_offset
+
+
+    #var end_offset = actions_offset + commands[0]->len() + sep->len()
     # sep_offsets_plus_1 = [ layout_offset - len(sep_pad) - len(sepchar) + 1,
     #                    actions_offset - len(sep_pad) - len(sepchar) + 1,
     #                    end_offset - len(sep_pad) - len(sepchar) + 1,
@@ -752,138 +881,101 @@ def DoInit_2(mode: string, bnr: number)
 enddef
 
 
-# An actions item.
-var current_hud_rollover = null_list
-
-# NOTE: if return needs to differentiate wrong window
-#       then could return null vs []
-# NOTE: <buffer> <LeftRelease> works, but <buffer> <MouseMove>
-#        doesn't work, so must do bnr != hudbufnr
-
-# Return null or item from actions dictionary
-def GetHudItemUnderMouse(mpos: dict<number>): list<any>
-
-    if winbufnr(mpos.winid) != hudbufnr
-        #if testing | echo 'click nop: clickbuf:' bnr 'hudbufnr:' hudbufnr | endif
-        return null_list
-    endif
-    var m_line = mpos.line
-    var m_col = mpos.column
-
-    # check if mouse in current rollover
-    if current_hud_rollover != null
-        var [ i_line, i_start, i_end ] = current_hud_rollover[1]
-        if m_line == i_line && m_col >= i_start && m_col < i_end
-            return current_hud_rollover
-        endif
-    endif
-
-    for item in actions->items()
-        var [ i_line, i_start, i_end ] = item[1]
-        if m_line == i_line && m_col >= i_start && m_col < i_end
-            return item
-        endif
-    endfor
-    # echo 'Button, but no action'
-    return null_list
-enddef
-
-# Mouse button, look for command action.
-def Release()
-    var item = getmousepos()->GetHudItemUnderMouse()
-    if item != null
-        ExecuteCommand(item[0])
-    endif
-enddef
-
-# Mouse move, handle command button rollover
-def Move()
-    var item = getmousepos()->GetHudItemUnderMouse()
-    if current_hud_rollover != null
-        if current_hud_rollover is item
-            # echo 'cache hit:' item
-            return
-        else
-            prop_remove({type: prop_rollover, bufnr: hudbufnr, all: true},
-                current_hud_rollover[1][0])
-            current_hud_rollover = null_list
-        endif
-    endif
-    if item != null
-        var [ line, start, end ] = item[1]
-        prop_add(line, start,
-            {end_col: end, type: prop_rollover, bufnr: hudbufnr, all: true})
-        current_hud_rollover = item
-    endif
-enddef
-
-def DumpProps(props: list<dict<any>>)
-    for d in props
-        echo d
-    endfor
-enddef
-
 # The idea is to draw the HUD once, heavily sprinkled with text_props,
 # then adjust contents when needed.
 # Text props may be used to mark locations then used check for mouse clicks.
 
-if testing
-    var hud_idx = 0
-
-    var hud_cmds = [
-        "CreateDebugHud('grid',    0, -1)",
-        "CreateDebugHud('grid',    1, -1)",
-        "CreateDebugHud('grid',    2, -1)",
-        "CreateDebugHud('loupe',   0, -1, 'fn0')",
-        "CreateDebugHud('loupe',   0, -1, 'Result')",
-        "CreateDebugHud('compare', 0, -1, 'fn1', 'fn2')",
-        "CreateDebugHud('compare', 1, -1, 'fn3', 'fn4')",
-        "CreateDebugHud('compare', 0, -1, 'Original', 'Result')",
-        "CreateDebugHud('compare', 1, -1, 'Original', 'Result')",
-        "CreateDebugHud('path',    0, -1, 'fn5')",
-        "CreateDebugHud('path',    1, -1, 'fn6')",
-        ]
-
-    def NextHud(forw: bool = true)
-        DoInit_1()
-
-        if !forw
-            hud_idx -= 2
-            if hud_idx < 0 | hud_idx += len(hud_cmds) | endif
-            echom 'hud_idx:' hud_idx
-        endif
-        var cmd: string
-        cmd = hud_cmds[hud_idx]
-        #cmd = "CreateDebugHud('path', 1, -1, 'fn1')"
-        #cmd = "CreateDebugHud('compare', 0, -1, 'fn1', 'fn2')"
-        execute cmd
-        if len(created_hud) > 1
-            echo 'created_hud MULTIPLE:' created_hud
-        endif
-        hud_idx += 1
-        hud_idx %= len(hud_cmds)
-    enddef
-
-    command! -nargs=0 NN {
-        win_gotoid(bufwinid(hudbufnr))
-        :close
-        NextHud()
-        }
-
-    command! -nargs=0 BB {
-        win_gotoid(bufwinid(hudbufnr))
-        :close
-        NextHud(false)
-        }
-
-    defcompile
-
-    NextHud()
-
-    #DoInit_2(hudbufnr)
+if ! testing
+    finish
 endif
 
+Log('TESTING, TESTING, 1 2 3 TESTING')
+
+
+def CreateDebugHud(mode: string, layout: number, xxx: number,
+        ...vari_files: list<string>): number
+    # xxx is ignored, but same signature and InstallHUD
+
+    #set co=200
+
+    :1wincmd w
+    new __Splice_HUD__
+    wincmd J
+    var n = bufnr()
+
+    InitHudBuffer()
+    var hud = BuildHud(mode, layout, vari_files)
+
+    &modifiable = true
+    deletebufline('', 1, '$')
+    setline(1, hud)
+    &modifiable = false
+
+    DoInit_2(mode, n)
+    hudbufnr = n
+
+    # handy for debug on HUD
+    nnoremap <buffer> q :q<CR>
+
+    if created_hud->index(n) < 0
+        created_hud->add(n)
+    endif
+    return n
+enddef
+
+var hud_idx = 0
+
+var hud_cmds = [
+    "CreateDebugHud('grid',    0, -1)",
+    "CreateDebugHud('grid',    1, -1)",
+    "CreateDebugHud('grid',    2, -1)",
+    "CreateDebugHud('loupe',   0, -1, 'fn0')",
+    "CreateDebugHud('loupe',   0, -1, 'Result')",
+    "CreateDebugHud('compare', 0, -1, 'fn1', 'fn2')",
+    "CreateDebugHud('compare', 1, -1, 'fn3', 'fn4')",
+    "CreateDebugHud('compare', 0, -1, 'Original', 'Result')",
+    "CreateDebugHud('compare', 1, -1, 'Original', 'Result')",
+    "CreateDebugHud('path',    0, -1, 'fn5')",
+    "CreateDebugHud('path',    1, -1, 'fn6')",
+    ]
+
+def NextHud(forw: bool = true)
+    DoInit_1()
+
+    if !forw
+        hud_idx -= 2
+        if hud_idx < 0 | hud_idx += len(hud_cmds) | endif
+        echom 'hud_idx:' hud_idx
+    endif
+    var cmd: string
+    cmd = hud_cmds[hud_idx]
+    #cmd = "CreateDebugHud('path', 1, -1, 'fn1')"
+    #cmd = "CreateDebugHud('compare', 0, -1, 'fn1', 'fn2')"
+    execute cmd
+    if len(created_hud) > 1
+        echo 'created_hud MULTIPLE:' created_hud
+    endif
+    hud_idx += 1
+    hud_idx %= len(hud_cmds)
+enddef
+
+command! -nargs=0 NN {
+    win_gotoid(bufwinid(hudbufnr))
+    :close
+    NextHud()
+    }
+
+command! -nargs=0 BB {
+    win_gotoid(bufwinid(hudbufnr))
+    :close
+    NextHud(false)
+    }
+
 defcompile
+
+NextHud()
+
+#DoInit_2(hudbufnr)
 
 finish
 
@@ -946,6 +1038,12 @@ if false
     echo ruler
 endif
 ################################################################################
+
+def DumpProps(props: list<dict<any>>)
+    for d in props
+        echo d
+    endfor
+enddef
 
 vim9script noclear
 echo ruler0

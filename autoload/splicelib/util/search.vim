@@ -1,6 +1,6 @@
 vim9script
 
-import autoload 'splicelib/util/log.vim'
+import autoload './log.vim'
 
 var debug = false
 

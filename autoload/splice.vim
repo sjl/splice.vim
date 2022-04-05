@@ -6,11 +6,11 @@ vim9script
 # License:     MIT X11
 # ============================================================================
 
-import autoload 'splicelib/util/keys.vim'
-import autoload 'splicelib/util/log.vim'
-import autoload 'splicelib/util/search.vim'
-import autoload 'splicelib/util/vim_assist.vim'
-import autoload 'splicelib/hud.vim'
+import autoload './splicelib/util/keys.vim'
+import autoload './splicelib/util/log.vim'
+import autoload './splicelib/util/search.vim'
+import autoload './splicelib/util/vim_assist.vim'
+import autoload './splicelib/hud.vim'
 
 var PutIfAbsent = vim_assist.PutIfAbsent
 
@@ -132,6 +132,10 @@ endif
 
 # NOTE: reuse startup_error_msgs
 
+def FilterFalse(winid: number, key: string): bool
+    return false
+enddef
+
 def UserConfigError(msg: list<string>)
 
     var contents =<< trim END
@@ -150,8 +154,10 @@ def UserConfigError(msg: list<string>)
         zindex: 300,
         drag: 1,
         border: [],
-        close: 'click',
         padding: [1, 2, 1, 2],
+        close: 'click',
+        #mousemoved: 'any', moved: 'any',
+        mapping: false, filter: FilterFalse
         })
 
     var bufnr = winbufnr(winid)
@@ -241,6 +247,8 @@ enddef
 
 def ReportStartupIssues()
     if startup_error_msgs != []
+        # TODO: timer_start, 200ms?
+        #       avoids vim width issue (I think that was it)
         UserConfigError(startup_error_msgs)
     endif
 enddef
@@ -315,10 +323,13 @@ def SetupSpliceCommands()
     command! -nargs=? ISpliceNextConflict search.MoveToConflict(<args>)
     command! -nargs=0 ISpliceAllConflict search.HighlightConflict()
     command! -nargs=* ISpliceDrawHUD hud.DrawHUD(<args>)
+
+    command! -nargs=* ISplicePopup log.SplicePopup(<args>)
 enddef
 
 export def SpliceInit9()
     log.Log('SpliceInit')
+    set guioptions+=l
     # startup_error_msgs should already be empty
     startup_error_msgs = []
     InitDefaults()
