@@ -4,24 +4,50 @@ vim9script
 
 var testing = false
 
+var hl_label: string
+var hl_sep: string
+var hl_command: string
+var hl_rollover: string
+var hl_active: string
+# TODO: use hl_active for current mode, diff on, scrollbind on
+
 var Log: func
 
 if ! testing
     import autoload './util/log.vim'
     import autoload './util/vim_assist.vim'
+    import autoload '../splice.vim'
+
+    hl_label = splice.hl_label
+    hl_sep = splice.hl_sep
+    hl_command = splice.hl_command
+    hl_rollover = splice.hl_rollover
+    hl_active = splice.hl_active
+
     Log = log.Log
 else
     import './vim_assist.vim'
     import './hud_sub.vim'
+    import './log.vim-splice' as log
+
     const DumpDia = hud_sub.DumpDia
     const DisplayHuds = hud_sub.DisplayHuds
     def TLog(s: string)
         echomsg s
     enddef
     #Log = TLog
-    import './log.vim-splice' as log
     Log = log.Log
     log.LogInit('/home/err/play/SPLICE_LOG')
+
+    hl_label = 'SpliceLabel'
+    hl_sep = 'SpliceLabel'
+    hl_command = 'SpliceCommand'
+    hl_rollover = 'Pmenu'
+    hl_active = 'Keyword'
+
+    highlight SpliceCommand term=bold cterm=bold gui=bold
+    highlight SpliceLabel term=underline ctermfg=6 guifg=DarkCyan
+
 endif
 
 if exists('&mousemoveevent')
@@ -35,17 +61,6 @@ const Replace = vim_assist.Replace
 # TODO: define settings for highlights
 #
 
-var hl_label = 'SpliceLabel'
-var hl_sep = 'SpliceLabel'
-var hl_command = 'SpliceCommand'
-var hl_rollover = 'Pmenu'
-# TODO: use hl_active for current mode, diff on, scrollbind on
-var hl_active = 'Keyword'
-
-highlight SpliceCommand term=bold cterm=bold gui=bold
-#highlight SpliceCommand term=bold cterm=bold gui=bold guibg=LightGrey ctermbg=7
-highlight SpliceLabel term=bold ctermfg=4 guifg=Blue
-#highlight SpliceLabel term=underline ctermfg=2 gui=bold guifg=SeaGreen
 
 # The HUD is made up of 3 lines and 3 sections: modes, layout, commands.
 # Each section is 3 lines high. Each section is a fixed width.
@@ -53,15 +68,12 @@ highlight SpliceLabel term=bold ctermfg=4 guifg=Blue
 # use vertical double bar if possible
 const sepchar = &encoding == 'utf-8' && &ambiwidth == 'single'
     ? nr2char(0x2551) : '|'
-#var sep = '  ' .. sepchar .. '  '
 const sep_pad = '  '
 const sep = sep_pad .. sepchar .. sep_pad
 
 var diagram_width: number
 var layout_offset: number
 var actions_offset: number
-#var end_offset: number
-#var sep_offsets_plus_1: list<number>
 
 var actions: dict<list<number>>
 
@@ -73,7 +85,6 @@ const label_commands = 'Splice Commands:'
 # Track last window position.
 # Use it to go back to the prev window before executing a command.
 #
-# FAILS: var last_win: list<any>
 var last_win = null_list
 
 def ClearWinPos()
@@ -252,13 +263,8 @@ XXX
 Result
 END
 
-# TODO: BuildDiagrams is really just FindDiagramMaxWidth.
-#       Don't need need extra level of nesting.
-# During startup, this list is tranformed so that
-# the inner entries look like (see BuildDiagrams())
-# [ xxx_diagram_i, offset, length ]
-# then the list is locked
-var diagrams_2: list<list<any>> = [
+# TODO: Don't need need extra level of nesting.
+const diagrams_2: list<list<any>> = [
     [
         [ grid_diagram_0, ],
         [ grid_diagram_1, ],
@@ -273,56 +279,20 @@ var diagrams_2: list<list<any>> = [
         [ path_diagram_1, ],
     ]]
 
-# each mode item: [ [ line, col ],      # line 1 based, col 0 based.
-#                                       # The location of the activate '*'
-#       diagram_mode_idx,               # index into diagrams_2
-#       num_vari_files,                 # number of files expected
-#       mode_display_length ]           # chars on screen "[g]rid" == 6
-#                                       # starts pos after [line, col]
-# 
 # each modes value:  dict of
 #   m_line:     hud line, 1 based
 #   m_col:      hud col, 0 based, of activate '*'
 #   m_idx:      index into diagrams_2
-#   m_nfile:       number of files expected for X,Y substitution
+#   m_nfile:    number of files for X,Y substitution
 #   m_len:      chars on screen, "[g]rid" == 6
-# 
-# { m_line:, m_col0:, m_idx:, m_nfile:, m_len: }
 const modes = {
     grid:       { m_line: 2, m_col: 0,   m_idx: 0, m_nfile: 0, m_len: 6 },
     loupe:      { m_line: 3, m_col: 0,   m_idx: 1, m_nfile: 1, m_len: 7 },
     compare:    { m_line: 2, m_col: 10,  m_idx: 2, m_nfile: 2, m_len: 9 },
     path:       { m_line: 3, m_col: 10,  m_idx: 3, m_nfile: 1, m_len: 6 }
 }
-#const modes = {
-#    grid:       [ [ 2, 0],  0, 0, 6 ],
-#    loupe:      [ [ 3, 0],  1, 1, 7 ],
-#    compare:    [ [ 2, 10], 2, 2, 9 ],
-#    path:       [ [ 3, 10], 3, 1, 6 ]
-#    }
-# [ diagram, offset, length ]
-##### wellllllll
-# [ diagram, length ]
-#def GetLayoutDiagramData(mode: string, layout: number): list<any>
-#    return diagrams_2[modes->get(mode).m_idx][layout]
-#enddef
-#def GetModeStarPos(mode: string): list<number>
-#    #return modes->get(mode)[0]
-#    var d = modes[mode]
-#    return [ d.m_line, d.m_col ]
-#enddef
 
-
-#
-# diagrams: starts as a list of the raw diagrams.
-# Pad each diagram separately, then center each diagram to the same width.
-# one triplet per diagram, triplet is in nested structure diagrams_2
-#       [ ..., [ diagram, offset, length ], ... ]
-# diagram: [ 's1', 's2', 's3' ]
-# offset: start of the raw diagram with the padded/centered diagram
-# length: length of the diagram without center padding
-#
-def BuildDiagrams()
+def FindMaxDiagramWidth()
     # find the width of the longest possible diagram string
     var n = 0
     for s in diagrams_2->flattennew(3)
@@ -332,49 +302,18 @@ def BuildDiagrams()
     endfor
     # "+ 2" for a little space around the longest line
     diagram_width = n + 2
-    #echo diagrams_2
-
-    var diagrams = diagrams_2->flattennew(1)
 
     lockvar diagram_width
-    lockvar! diagrams_2
-    return
-
-    #
-    ###### ?DON'T NEED THIS PAD?, handle it all in BuildDiagram
-    # Within a given diagram center the lines.
-    #for v in diagrams
-    #    Pad(v[0], 'c')
-    #endfor
-
-    # Find the max size of all the diagrams, just look at first line.
-    # Convert to: [ [ diagram, length ], ... ]. Do the offsets next.
-    #var max = 0
-    #for v in diagrams
-    #    var l = len(v[0][0])
-    #    if max < l | max = l | endif
-    #    v->add(l)
-    #endfor
-
-    ##### Equalized/center all the diagrams.
-    ##### Convert to: [ [ diagram, offset, length ] ]
-    # FOR NOW, DON'T COMPUTE AN OFFSET
-    # Convert to: [ [ diagram, -1, length ] ]
-    #for stuff in diagrams
-    #    var offsets: list<number>
-    #    #Pad(stuff[0], 'c', max, offsets)
-    #    # all offsets for given diagram equal, grab the first
-    #    stuff->insert(offsets[0], 1)
-    #endfor
 enddef
 
 
 # 
 # This list/method only used to populate actions,
-# the index corresponds to left/right, top/bottom
-# presentation of the commands
+# action_by_index corresponds to left/right, top/bottom
+# presentation of the commands. The command_markers
+# are used to determine the boundaries
 #
-# action_by_index needs to be dynamic.
+# TODO: action_by_index needs to be dynamic.
 # For example, 'u: use hunk' vs 'u1: use hunk 1'
 #                               'u2: use hunk 2'
 #
@@ -406,11 +345,7 @@ var action_by_index = [
 #    'Path',
     ]
 
-##### var layout_offset = modes_diagram[0]->len()  + sep->len()
-##### var actions_offset = layout_offset + diagrams_2[0][0][0][0]->len() + sep->len()
-##### 
-##### var actions: dict<list<number>>
-# actions['Action'] = [line, start, end]. Action like 'Next'/'Prev'/'Quit'
+# actions['Action'] = [line, start, end]. Action like 'Next'/'Quit'
 # line/start/end is in buffer, starts at 1. end exclusive
 def BuildActions()
     # action_by_index is the order the commands appear left to right,
@@ -434,13 +369,11 @@ def BuildActions()
         line += 1
     endfor
 
-    # Add in the Grid, Loupe, ... actions
+    # From modes add in the Grid, Loupe, ... actions
     for [ k, v ] in modes->items()
         # make key Grid, not grid, to correspond to command name
         var name = k[0]->toupper() .. k[1 : ]
-        #var [lino, col] = item[1][0]
         var [lino, col] = [ v.m_line, v.m_col ]
-        #var length = item[1][3]
         # +1 makes it 1 based, +1 to skip activation position
         col += 2
         t_actions[name] = [ lino, col, col + v.m_len ]
@@ -448,25 +381,24 @@ def BuildActions()
 
     actions = t_actions
     command_markers = null_list
-    # null out action_by_index ?
+    # TODO: null out action_by_index ?
     lockvar! actions
 enddef
 
 #
-# Commands in HUD get textprops: prop_action and prop_command_rollover
-# These are used to highlight and their positions are used for click.
-# TODO: is hud always the same buffer? Should we remove before add; see created_hud
+# Various textprops for the hud.
 #
 
 const prop_action = 'prop_action'
 const prop_rollover = 'prop_rollover'
 const prop_label = 'prop_label'
 const prop_sep = 'prop_sep'
-const prop_act = 'prop_act'
+const prop_active = 'prop_active'
 
+# NOTE: arg dict has bnr, assumed constant for duration
 var did_action_props = false
-def AddActionProps(d: dict<any> = null_dict)
-    # Assume bnr doesn't change
+def AddHeaderProps(d: dict<any> = null_dict)
+    # Assuming bnr doesn't change
     if did_action_props | return | endif
 
     var props_com = {
@@ -504,58 +436,33 @@ def AddActionProps(d: dict<any> = null_dict)
     prop_type_add(prop_rollover, props_roll)
     prop_type_add(prop_label, props_lab)
     prop_type_add(prop_sep, props_sep)
-    prop_type_add(prop_act, props_act)
+    prop_type_add(prop_active, props_act)
 
     did_action_props = true
-
-    #if ! testing
-    #    prop_type_add(prop_action, props_com)
-    #    prop_type_add(prop_rollover, props_roll)
-    #    prop_type_add(prop_label, props_lab)
-    #else
-    #    # for testing, may have already been added
-    #    # or may want to try something different
-    #    if prop_type_get(prop_action, props_com) == {}
-    #        prop_type_add(prop_action, props_com)
-    #    else
-    #        prop_type_change(prop_action, props_com)
-    #    endif
-    #    if prop_type_get(prop_rollover, props_roll) == {}
-    #        prop_type_add(prop_rollover, props_roll)
-    #    else
-    #        prop_type_change(prop_rollover, props_roll)
-    #    endif
-    #endif
 enddef
 
 # Add the action textprop to each command in HUD.
 def HighlightActions(bnr: number)
-    #prop_remove({type: prop_action, bufnr: bnr, all: true})
-    #var props = {type: prop_action, bufnr: bnr}
     var props = {type: prop_action, bufnr: bnr, all: true}
     prop_remove(props)
 
     for [ line, start, end ] in actions->values()
-        #props['end_col'] = end
         props.end_col = end
         prop_add(line, start, props)
     endfor
 enddef
 
 def HighlightMode(mode: string, bnr: number)
-    var props = {type: prop_act, bufnr: bnr, all: true}
-    prop_remove({type: prop_act, bufnr: bnr, all: true})
+    var props = {type: prop_active, bufnr: bnr, all: true}
+    prop_remove({type: prop_active, bufnr: bnr, all: true})
     var v = modes->get(mode)
-    #var [ active_line, active_col ] = val[0]
-    # include the '*' increase length
+    # increase length to include the '*'
     props.length = v.m_len + 1
     prop_add(v.m_line, v.m_col + 1, props)
 enddef
 
 # Labels and seperators. The labels are on the first line of the buffer
 def HighlightLabels(bnr: number)
-    #prop_remove({type: prop_label, bufnr: bnr, all: true})
-    #var props = {type: prop_label, bufnr: bnr}
     var props = {type: prop_label, bufnr: bnr, all: true}
     prop_remove(props)
 
@@ -565,11 +472,6 @@ def HighlightLabels(bnr: number)
     prop_add(1, layout_offset + 1, props)
     props.length = len(label_commands)
     prop_add(1, actions_offset + 1, props)
-
-    #prop_remove({type: prop_sep, bufnr: bnr, all: true})
-    #props = {type: prop_sep, bufnr: bnr, length: len(sepchar)}
-
-    #props = {type: prop_sep, bufnr: bnr, length: len(sepchar)}
 
     # and the separators
     props.type = prop_sep
@@ -581,29 +483,20 @@ def HighlightLabels(bnr: number)
         prop_add(lino, col, props)
     endwhile
     setpos('.', [bnr, 1, 1, 0])
-
-    #for lino in range(1, 3)
-    #    for col in sep_offsets_plus_1
-    #        prop_add(lino, col, props)
-    #    endfor
-    #endfor
 enddef
 
 
+# return the diagram
 def BuildDiagram(mode: string, layout: number,
         vari_files: list<string>): list<string>
-    #var num_vari_files = modes->get(mode)[2]
     var num_vari_files =  modes->get(mode).m_nfile
     if len(vari_files) != num_vari_files
         throw 'Wrong number of file names for '
             .. mode .. ': ' .. string(vari_files)
     endif
 
-    #var diagram_data = GetLayoutDiagramData(mode, layout)
     var diagram_data = diagrams_2[modes[mode].m_idx][layout]
     var diagram = diagram_data[0]->deepcopy()
-
-    ### var dia_width = len(diagram[0])
 
     # substite X* Y* with vari_files
     if !!num_vari_files
@@ -614,13 +507,7 @@ def BuildDiagram(mode: string, layout: number,
             endif
             return t
             })
-        ### diagram->Pad('l', dia_width)
     endif
-
-    #diagram->Pad('c')
-    #diagram->Pad('r', diagram_width)
-
-    #diagram->Pad('c', diagram_width)
 
     # get the width after subsitution
     diagram->Pad('c')
@@ -636,9 +523,6 @@ def BuildDiagram(mode: string, layout: number,
         
     # overlay "Layout:" upper-left of the diagram
     diagram[0] = diagram[0]->Replace(0, len(label_layout) - 1, label_layout)
-
-
-    #diagram->Pad('c', diagram_width - 3)
     return diagram
 enddef
 
@@ -647,7 +531,6 @@ def BuildHud(mode: string, layout: number,
     var diagram = BuildDiagram(mode, layout, vari_files)
     var result = []
     var modes_dia = modes_diagram->deepcopy()
-    #var [ active_line, active_col ] = modes->get(mode)[0]
     var v = modes->get(mode)
     var [ active_line, active_col ] = [ v.m_line, v.m_col ]
     # get line 0 based
@@ -664,13 +547,6 @@ def BuildHud(mode: string, layout: number,
     endwhile
     return result
 enddef
-#def DumpHud(mode: string, layout: number, vari_files: list<string>)
-#    for i in BuildHud(mode, layout, vari_files)
-#        echo i
-#    endfor
-#enddef
-#DumpHud(3)
-
 
 # An actions item.
 var current_hud_rollover = null_list
@@ -682,11 +558,10 @@ var current_hud_rollover = null_list
 
 # Return null or item from actions dictionary
 def GetHudItemUnderMouse(mpos: dict<number>): list<any>
-
     if winbufnr(mpos.winid) != hudbufnr
-        #if testing | echo 'click nop: clickbuf:' bnr 'hudbufnr:' hudbufnr | endif
         return null_list
     endif
+
     var mpos_line = mpos.line
     var mpos_col = mpos.column
 
@@ -698,13 +573,13 @@ def GetHudItemUnderMouse(mpos: dict<number>): list<any>
         endif
     endif
 
+    # search for action containing mouse pos
     for item in actions->items()
         var [ i_line, i_start, i_end ] = item[1]
         if mpos_line == i_line && mpos_col >= i_start && mpos_col < i_end
             return item
         endif
     endfor
-    # echo 'Button, but no action'
     return null_list
 enddef
 
@@ -740,7 +615,7 @@ def Move()
     endif
 enddef
 
-# This is only for after replacing the hud lines
+# This is only for after replacing the hud lines with new hud lines
 def RefreshMouseCache()
     current_hud_rollover = null_list
     Move()
@@ -781,7 +656,7 @@ def InstallHUD(mode: string, layout: number, bnr: number,
 
     # NOTE: set[buf]line looses text properties, so might as
     #       well rebuild the whole thing every time.
-    #       And get rid of prop_delete when adding props.
+    #       TODO: And get rid of prop_delete when adding props.
 
     &modifiable = true
     deletebufline('', 1, '$')
@@ -807,11 +682,6 @@ else
             mode, layout, vari_files, bnr))
     enddef
 endif
-#
-#def DummyDrawHUD(mode: string, layout: number,
-#        ...vari_files: list<string>)
-#    LogDrawHUD(mode, layout, vari_files, bufnr())
-#enddef
 
 #
 # This is invoked from python when the HUD is the current buffer
@@ -825,8 +695,6 @@ export def DrawHUD(use_vim: bool, mode: string, layout: number,
         return
     endif
 
-    #LogDrawHUD(mode, layout, vari_files, b)
-
     if hudbufnr >= 0 && hudbufnr != b
         throw 'HUD buffer mismatch'
     endif
@@ -838,36 +706,24 @@ export def AnyThing()
     Log('THIS IS FROM AnyThing IN HUD.VIM')
 enddef
 
-# The first init doesn't depend on hudbufnr
+# The init_1 doesn't depend on hudbufnr
 var did_init_1 = false
 def DoInit_1()
     if did_init_1 | return | endif
-    # diagrams_2
-    BuildDiagrams()
-    #DumpDia(diagrams_2)
+    FindMaxDiagramWidth()
 
     layout_offset = modes_diagram[0]->len()  + sep->len()
-    #### actions_offset = layout_offset + diagrams_2[0][0][0][0]->len() + sep->len()
     actions_offset = layout_offset + diagram_width + sep->len()
     lockvar layout_offset
     lockvar actions_offset
 
-
-    #var end_offset = actions_offset + commands[0]->len() + sep->len()
-    # sep_offsets_plus_1 = [ layout_offset - len(sep_pad) - len(sepchar) + 1,
-    #                    actions_offset - len(sep_pad) - len(sepchar) + 1,
-    #                    end_offset - len(sep_pad) - len(sepchar) + 1,
-    # ]
-
-    # actions
     BuildActions()
-    #echo actions
 
     did_init_1 = true
 enddef
 
 def DoInit_2(mode: string, bnr: number)
-    AddActionProps({bufnr: bnr})
+    AddHeaderProps({bufnr: bnr})
     HighlightActions(bnr)
     HighlightLabels(bnr)
     HighlightMode(mode, bnr)
@@ -879,11 +735,6 @@ def DoInit_2(mode: string, bnr: number)
     # would not be detected when the vim focus is in a different buffer.
     nnoremap <special> <MouseMove> <ScriptCmd>Move()<CR>
 enddef
-
-
-# The idea is to draw the HUD once, heavily sprinkled with text_props,
-# then adjust contents when needed.
-# Text props may be used to mark locations then used check for mouse clicks.
 
 if ! testing
     finish

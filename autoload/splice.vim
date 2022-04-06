@@ -13,6 +13,21 @@ import autoload './splicelib/util/vim_assist.vim'
 import autoload './splicelib/hud.vim'
 
 var PutIfAbsent = vim_assist.PutIfAbsent
+var Log = log.Log
+
+#
+# TODO: higlights from settings
+#
+export var hl_label = 'SpliceLabel'
+export var hl_sep = 'SpliceLabel'
+export var hl_command = 'SpliceCommand'
+export var hl_rollover = 'Pmenu'
+export var hl_active = 'Keyword'
+export var hl_alert_popup = 'Pmenu'
+
+highlight SpliceCommand term=bold cterm=bold gui=bold
+highlight SpliceLabel term=underline ctermfg=6 guifg=DarkCyan
+
 
 #export final UNIQ = []
 
@@ -84,14 +99,23 @@ def SpliceBootError()
     SpliceDidNotLoad()
 enddef
 
+var Main: func
+
+var startup_col: number
+def Trampoline(id: number)
+    if startup_col != &co
+        Log(printf("COLUMN MISMATCH: after pause: startup_col: %d, col: %d",
+            startup_col, &co))
+        &columns = startup_col
+    endif
+    Main()
+enddef
+
 export def SpliceBoot()
     log.Log('SpliceBoot')
-    # Check for startup errors.
-    # If there are no errors then invoke SpliceInit9.
-    if has_supported_python != 0 && startup_error_msgs->empty()
-        command! -nargs=0 SpliceInit call splice.SpliceInit9()
-        # use execute so this function can be compiled
-        execute 'SpliceInit9()'
+    if !!has_supported_python && startup_error_msgs->empty()
+        startup_col = &columns
+        timer_start(50, Trampoline)
         return
     endif
 
@@ -327,7 +351,7 @@ def SetupSpliceCommands()
     command! -nargs=* ISplicePopup log.SplicePopup(<args>)
 enddef
 
-export def SpliceInit9()
+def SpliceInit9()
     log.Log('SpliceInit')
     set guioptions+=l
     # startup_error_msgs should already be empty
@@ -342,4 +366,6 @@ export def SpliceInit9()
     log.Log('starting splice')
     SplicePython SpliceInit()
 enddef
+
+Main = SpliceInit9
 

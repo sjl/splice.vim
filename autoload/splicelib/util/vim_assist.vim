@@ -6,6 +6,18 @@ vim9script
 # EQ, IS
 # Replace, ReplaceBuf
 # ##### HexString
+# VPrintf
+
+# Use call ('printf', [fmt] + _args)
+#export def VPrintf(fmt: string, _args: list<any> = []): string
+#    var t = @a
+#    var args = _args->map((_, v) => string(v))
+#    var printf_args = !!args ? ", " .. args->join(", ") : ''
+#    execute('@a = printf("' .. fmt .. '"' .. printf_args .. ')')
+#    var result = @a
+#    @a = t
+#    return result
+#enddef
 
 # just use echo 
 #export def HexString(in: string, space: bool = false, quot: bool = false): string

@@ -1,5 +1,8 @@
 vim9script
 
+import autoload './vim_assist.vim'
+import autoload '../../splice.vim'
+
 # export Log, LogInit
 
 #
@@ -50,38 +53,39 @@ export def LogInit(_fname: string)
 enddef
 
 const E = {
-    ENOTFILE: "Current buffer, '%s', doesn't support '%s'",
+    ENOTFILE: ["Current buffer, '%s', doesn't support '%s'", 'Command Issue'],
 }
 
 def FilterFalse(winid: number, key: string): bool
     return false
 enddef
 
-def PopupError(msg: list<string>)
+def PopupError(msg: list<string>, other: list<any> = [])
 
-    popup_create(msg, {
+    var options = {
         minwidth: 20,
         tabpage: -1,
         zindex: 300,
         border: [],
         padding: [1, 2, 1, 2],
+        highlight: splice.hl_alert_popup,
         close: 'click',
         mousemoved: 'any', moved: 'any',
         mapping: false, filter: FilterFalse
-        })
+        }
+    if len(other) > 0
+        options.title = ' ' .. other[0] .. ' '
+    endif
+
+    popup_create(msg, options)
 enddef
 
-def VPrintf(fmt: string, _args: list<any> = []): string
-    var args = _args->map((_, v) => string(v))
-    var printf_args = !!args ? ", " .. args->join(", ") : ''
-    var x = 'printf("' .. fmt .. '"' .. printf_args .. ')'
-    return execute('echon ' .. x)
-enddef
 
 export def SplicePopup(e_idx: string, ...extra: list<any>)
-    var msg = VPrintf(E[e_idx], extra)
+    var err = E[e_idx]
+    var msg = call('printf', [ err[0] ] + extra)
     Log(msg)
-    PopupError([msg])
+    PopupError([msg], err[ 1 : ])
 enddef
 
 #defcompile

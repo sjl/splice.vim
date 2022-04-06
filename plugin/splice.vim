@@ -24,14 +24,8 @@ endif
 
 vim9script
 
-#import autoload 'splicelib/hud.vim'
-#
-#hud.AnyThing()
-#
-#finish
-
 # call test_override('autoload', 1)
-import autoload 'splice.vim'
+import autoload '../autoload/splice.vim'
 
 command! -nargs=0 SpliceInit call splice.SpliceBoot()
 
