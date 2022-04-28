@@ -910,6 +910,7 @@ class PathMode(Mode):
             bname = 'Splice_HUD' \
                     if buffers.hud.number == vim.current.buffer.number \
                     else vim.current.buffer.name
+            # ISplicePopup 'ENOTFILE', 'bufname', 'UseHunk'
             vim.command("ISplicePopup 'ENOTFILE', " \
                     + f"'{bname}', " \
                     + "'UseHunk'")

@@ -1,6 +1,7 @@
 vim9script
 
 import autoload './log.vim'
+var SplicePopup = log.SplicePopup
 
 var debug = false
 
@@ -89,6 +90,10 @@ export def MoveToConflict(forw: bool = true)
 
     # the next/prev conflict
     var lino = search(CONFLICT_PATTERN, flags)
+    if lino == 0
+        SplicePopup('ENOCONFLICT')
+        return
+    endif
     #log.Log('cur_conf ids before:' .. string(id_cur_conflict))
     if use_props
         id_cur_conflict->DeleteHighlights()

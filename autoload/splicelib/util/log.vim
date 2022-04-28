@@ -52,12 +52,17 @@ export def LogInit(_fname: string)
     endif
 enddef
 
+# TODO: may add some kind of "how to close" info in E
+#       make E dict<dict<any>>
 const E = {
     ENOTFILE: ["Current buffer, '%s', doesn't support '%s'", 'Command Issue'],
+    ENOCONFLICT: ["No more conflicts"],
 }
 
-def FilterFalse(winid: number, key: string): bool
-    return false
+# dismiss on any key
+def FilterClose(winid: number, key: string): bool
+    popup_close(winid)
+    return true
 enddef
 
 def PopupError(msg: list<string>, other: list<any> = [])
@@ -71,7 +76,7 @@ def PopupError(msg: list<string>, other: list<any> = [])
         highlight: splice.hl_alert_popup,
         close: 'click',
         mousemoved: 'any', moved: 'any',
-        mapping: false, filter: FilterFalse
+        mapping: false, filter: FilterClose
         }
     if len(other) > 0
         options.title = ' ' .. other[0] .. ' '
