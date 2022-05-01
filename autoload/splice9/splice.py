@@ -3,12 +3,11 @@ import vim, os, sys
 
 # Add the library to the Python path.
 for p in vim.eval("&runtimepath").split(','):
-    plugin_dir = os.path.join(p, "autoload")
-    if os.path.exists(os.path.join(plugin_dir, "splicelib")):
+    plugin_dir = os.path.join(p, "autoload", "splice9")
+    if os.path.exists(os.path.join(plugin_dir)):
        if plugin_dir not in sys.path:
           sys.path.append(plugin_dir)
        break
-
 
 import splicelib.init as splice
 from splicelib.util.log import log

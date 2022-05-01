@@ -25,7 +25,7 @@ endif
 vim9script
 
 # call test_override('autoload', 1)
-import autoload '../autoload/splice.vim'
+import autoload '../autoload/splice9/splice.vim'
 
 command! -nargs=0 SpliceInit call splice.SpliceBoot()
 

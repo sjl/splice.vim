@@ -358,7 +358,8 @@ def SpliceInit9()
     startup_error_msgs = []
     InitDefaults()
     CheckSettings()
-    var python_module = fnameescape(globpath(&runtimepath, 'autoload/splice.py'))
+    var python_module = fnameescape(globpath(&runtimepath, 'autoload/splice9/splice.py'))
+    echom python_module
     exe splice_pyfile python_module
     SetupSpliceCommands()
     keys.InitializeBindings()
