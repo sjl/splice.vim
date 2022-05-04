@@ -1,17 +1,54 @@
+
+TODO:   option to disable mouse/rollover
+
+TODO:   If not vim9script, map SpliceInit (or whatever) to no vim9 message.
+        Or, make message clear that the plugin should be removed?
+
+TODO:   remove startup column bounce workaround
+
+TODO:   Implement log category filtering on the vim side
+
+TODO:   Get rid of prop_delete since all lines in HUD are deleted.
+
+TODO:   Settings for highlight.
+ 
+TODO:   ActivateGrid/DeactivateGrid probably should be incorporated into
+        mode.vim, not keys, since it also affects which keys do what...
+
+TODO:   Shortcut as button with list and popup when hover?
+        More state info: Diff on/off; scrollbind on/off (use '*' like mode)
+        Which commands valid: grey out , don't higlight rollover
+        Show diff #0-n
+        Make DiffOff a toggle. Can toggle, keep diff#.
+
+        Grid class has 4 "key_use_*" methods; show which does what when.
+
+        UseHunk is a special case. There are three vals.
+            Show either 'u1 & u2', or 'u'.
+            Some dependency on focused window?
+        Which file can be selected: orig, one, two, res
+            May, or may not, depend on focused window.
+            In some cases, rather than loading that file into window,
+            it switches to the window named.
+
+TODO:   Higlight interactions with vim's diff mode.
+        Query vim to find out buffer-line/window-line correspondence
+        for conflict display across all windows. Other uses?
+
 TODO:   In keys.vim, GetMapping() return null not ''
 
-TODO:   shortcut, popup with key bindings
-
-TODO:   Use contruct like: buffers.result.winnr (NOTE: the -1)
-        Make winnr a property rather than method
+TODO:   Use construct like: buffers.result.winnr (NOTE: the -1)
+        Make winnr a property rather than method?
 
 TODO:   Add help tag 'Splice' *before* the table of contents
 
 TODO:   search.vim
         Do HighlightConflict at very beginning.
-        Handle it separately from NextHightlight
+        Handle it separately from NextHightlight.
+        Get rid of 'use_props', it's always true.
+        Check'debug', may no longer be meaningful as used.
 
-TODO:   show conflicts on startup
+TODO:   show conflicts on startup?
 
 TODO:   Understand scrollbind,syncbind,scrollopt
         'diff' mode, diff.txt
@@ -32,14 +69,9 @@ TODO:   The help has 'splice_initial_diff_*' never referenced.
 
 
 
-? disable mappings by default
-    NO. Doesn't make sense to have an option to disable mappings.
-    Espcially considering typically only runs from SCM.
-
-? can vim script be written compatibly, some kind of vim9ifavailable setting
-
-? python interface to vim is nice, magic variables/lists/arrays of vim objects.
-  Is there something like this in vim?
+=============================
+======= Documentation =======
+=============================
 
 Logging
     vim function Log(string)
